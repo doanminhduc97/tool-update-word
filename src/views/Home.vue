@@ -11,23 +11,55 @@
       <p v-if="loading" class="status">Đang tải và phân tích file...</p>
       <div class="wrapper">
         <!-- PREVIEW (mammoth)-->
-        <section v-if="previewHtml" class="preview">
+        <!-- <section v-if="previewHtml" class="preview">
           <h3 class="title-form">Preview hiện tại</h3>
           <div v-html="previewHtml" class="docx-preview"></div>
-        </section>
+        </section> -->
         <!-- FORM chỉnh sửa -->
+        <section v-if="placeholders5.length" class="edit-form">
+          <h3 class="title-form">Thông tin Chung của các file</h3>
+          <form>
+            <div v-for="ph in placeholders5" :key="ph" class="form-group">
+              <label :for="ph">{{ ph }}</label>
+              <input type="text" :id="ph" v-model="formValues5[ph]" required>
+            </div>
+            <button :disabled="updating" @click="applyChanges()">{{ updating ? 'Đang tạo file...' : 'Tạo file mới' }}</button>
+          </form>
+        </section>
         <section v-if="placeholders.length" class="edit-form">
-          <h3 class="title-form">Thông tin cập nhật</h3>
-          <form @submit.prevent="applyChanges">
+          <h3 class="title-form">Thông tin file(Điều lệ.docx)</h3>
+          <form>
             <div v-for="ph in placeholders" :key="ph" class="form-group">
               <label :for="ph">{{ ph }}</label>
               <input type="text" :id="ph" v-model="formValues[ph]" required>
             </div>
-            <div class="form-group">
-              <label for="nameFile"> Tạo tên file </label>
-              <input type="text" id="nameFile" v-model="nameFile">
+          </form>
+        </section>
+        <section v-if="placeholders2.length" class="edit-form">
+          <h3 class="title-form">Thông tin file(GĐN đăng ký doanh nghiệp.docx)</h3>
+          <form>
+            <div v-for="ph in placeholders2" :key="ph" class="form-group">
+              <label :for="ph">{{ ph }}</label>
+              <input type="text" :id="ph" v-model="formValues2[ph]" required>
             </div>
-            <button type="submit" :disabled="updating">{{ updating ? 'Đang tạo file...' : 'Tạo file mới' }}</button>
+          </form>
+        </section>
+        <section v-if="placeholders3.length" class="edit-form">
+          <h3 class="title-form">Thông tin file(Giấy ủy quyền.docx)</h3>
+          <form>
+            <div v-for="ph in placeholders3" :key="ph" class="form-group">
+              <label :for="ph">{{ ph }}</label>
+              <input type="text" :id="ph" v-model="formValues3[ph]" required>
+            </div>
+          </form>
+        </section>
+        <section v-if="placeholders4.length" class="edit-form">
+          <h3 class="title-form">Thông tin file(DANH SÁCH CHỦ SỞ HỮU HƯỞNG LỢI CỦA DOANH NGHIỆP.docx)</h3>
+          <form>
+            <div v-for="ph in placeholders4" :key="ph" class="form-group">
+              <label :for="ph">{{ ph }}</label>
+              <input type="text" :id="ph" v-model="formValues4[ph]" required>
+            </div>
           </form>
         </section>
       </div>
@@ -55,14 +87,24 @@ export default {
     return {
       fileId: "",
       fileContent: "",
-      docLink: '',
+      docLink: 'https://docs.google.com/document/d/1LmxHi_27COvkOnvk-_1sea9iCnBLhbtM/edit?usp=drive_link&ouid=107831693588829116850&rtpof=true&sd=true',
+      link1: 'https://docs.google.com/document/d/1ZeslPYMNwXKrThmUovvDFg4LfjNAlLhL/edit?usp=drive_link&ouid=107831693588829116850&rtpof=true&sd=true',
+      link2: 'https://docs.google.com/document/d/1YzqneGER0Ka24MNSZPUw1-ZXCc_NHdSS/edit?usp=drive_link&ouid=107831693588829116850&rtpof=true&sd=true',
+      link3: 'https://docs.google.com/document/d/1l8UnC6ANaxXUDi2hq0swL6Ce3eRxJz1k/edit?usp=drive_link&ouid=107831693588829116850&rtpof=true&sd=true',
       loading: false,
       updating: false,
       previewHtml: '',
       downloadUrl: '',
       placeholders: [],
+      placeholders2: [],
+      placeholders3: [],
+      placeholders4: [],
+      placeholders5: [],
       formValues: {},
-      nameFile: 'updated',
+      formValues2: {},
+      formValues3: {},
+      formValues4: {},
+      formValues5: {},
       // tokenClient: null,
     };
   },
@@ -108,9 +150,10 @@ export default {
       }
       this.loading = true;
       this.resetAll();
-
       try {
-        const res = await gapi.client.drive.files.get(
+
+        // START file Điều lệ.docx
+        const res1 = await gapi.client.drive.files.get(
           {
             fileId: this.fileId,
             alt: "media",
@@ -120,7 +163,7 @@ export default {
           }
         );
 
-        const buffer = res.body;
+        const buffer = res1.body;
 
         // ✅ Preview HTML
         const { value: html } = await mammoth.convertToHtml({
@@ -146,10 +189,157 @@ export default {
           ),
         ];
 
-        this.placeholders = uniq;
-        console.log("this.placeholders", this.placeholders);
+        // END file Điều lệ.docx
+
+        // START 2. GĐN đăng ký doanh nghiệp.docx
+        let fileId = this.extractDocId(this.link1);
+        const res2 = await gapi.client.drive.files.get(
+          {
+            fileId: fileId,
+            alt: "media",
+          },
+          {
+            responseType: "arraybuffer",
+          }
+        );
+
+        const buffer2 = res2.body;
+
+        // ✅ Đọc placeholder
+        const zip2 = new PizZip(buffer2);
         
-        uniq.forEach(key => (this.formValues[key] = ''));
+        const doc2 = new Docxtemplater(zip2, {
+          paragraphLoop: true,
+          linebreaks: true,
+        });
+        
+        const rawText2 = doc2.getFullText();
+        
+        const matches2 = rawText2.match(/\$\$\s*([^$]+?)\s*\$\$/g) || [];
+        
+        const uniq2 = [
+          ...new Set(
+            matches2.map(m => m.replace(/\$\$/g, '').trim())
+          ),
+        ];
+        
+        // END 2. GĐN đăng ký doanh nghiệp.docx
+
+        // START 3. Giấy ủy quyền.docx
+        let fileId2 = this.extractDocId(this.link2);
+        const res3 = await gapi.client.drive.files.get(
+          {
+            fileId: fileId2,
+            alt: "media",
+          },
+          {
+            responseType: "arraybuffer",
+          }
+        );
+
+        const buffer3 = res3.body;
+        // ✅ Đọc placeholder
+        const zip3 = new PizZip(buffer3);
+        
+        const doc3 = new Docxtemplater(zip3, {
+          paragraphLoop: true,
+          linebreaks: true,
+        });
+        
+        const rawText3 = doc3.getFullText();
+        
+        const matches3 = rawText3.match(/\$\$\s*([^$]+?)\s*\$\$/g) || [];
+
+        const uniq3 = [
+          ...new Set(
+            matches3.map(m => m.replace(/\$\$/g, '').trim())
+          ),
+        ];
+
+        // END 3. Giấy ủy quyền.docx
+
+        // START 4. DANH SÁCH CHỦ SỞ HỮU HƯỞNG LỢI CỦA DOANH NGHIỆP
+
+        let fileId3 = this.extractDocId(this.link3);
+        const res4 = await gapi.client.drive.files.get(
+          {
+            fileId: fileId3,
+            alt: "media",
+          },
+          {
+            responseType: "arraybuffer",
+          }
+        );
+
+        const buffer4 = res4.body;
+        // ✅ Đọc placeholder
+        const zip4 = new PizZip(buffer4);
+        
+        const doc4 = new Docxtemplater(zip4, {
+          paragraphLoop: true,
+          linebreaks: true,
+        });
+        
+        const rawText4 = doc4.getFullText();
+        
+        const matches4 = rawText4.match(/\$\$\s*([^$]+?)\s*\$\$/g) || [];
+
+        const uniq4 = [
+          ...new Set(
+            matches4.map(m => m.replace(/\$\$/g, '').trim())
+          ),
+        ];
+        // END 4. DANH SÁCH CHỦ SỞ HỮU HƯỞNG LỢI CỦA DOANH NGHIỆP
+        
+        const {commonAtLeast2, uniqueByArray} = this.analyzeArrays([uniq, uniq2, uniq3, uniq4]);
+        // console.log(same, uniqueByArray);
+        console.log(uniq, uniq2, uniq3, uniq4);
+        
+        commonAtLeast2.forEach(key => (this.formValues5[key] = ''));
+        uniqueByArray[0].forEach(key => (this.formValues[key] = ''));
+        uniqueByArray[1].forEach(key => (this.formValues2[key] = ''));
+        uniqueByArray[2].forEach(key => (this.formValues3[key] = ''));
+        uniqueByArray[3].forEach(key => (this.formValues4[key] = ''));
+        this.placeholders = uniqueByArray[0];
+        this.placeholders2 = uniqueByArray[1];
+        this.placeholders3 = uniqueByArray[2];
+        this.placeholders4 = uniqueByArray[3];
+        this.placeholders5 = commonAtLeast2;
+
+      } catch (error) {
+        alert("Lỗi khi tải hoặc phân tích file: " + error.message);
+      } finally {
+        this.loading = false;
+      }
+    },
+    analyzeArrays(arrays) {
+      const countMap = new Map();
+
+      // Đếm số mảng chứa mỗi phần tử
+      arrays.forEach(arr => {
+        [...new Set(arr)].forEach(item => {
+          countMap.set(item, (countMap.get(item) || 0) + 1);
+        });
+      });
+
+      // 1. Xuất hiện từ 2 mảng trở lên
+      const commonAtLeast2 = [...countMap]
+        .filter(([_, count]) => count >= 2)
+        .map(([item]) => item);
+
+      // 2. Phần tử riêng từng mảng (chỉ xuất hiện 1 lần)
+      const uniqueByArray = arrays.map(arr => {
+        return [...new Set(arr)].filter(item => countMap.get(item) === 1);
+      });
+
+      return {
+        commonAtLeast2,
+        uniqueByArray
+      };
+    },
+    async getFile1() {
+      try {
+        
 
       } catch (error) {
         alert("Lỗi khi tải hoặc phân tích file: " + error.message);
