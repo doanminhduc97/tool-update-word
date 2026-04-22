@@ -16,12 +16,12 @@
           <div v-html="previewHtml" class="docx-preview"></div>
         </section> -->
         <!-- FORM chỉnh sửa -->
-        <section v-if="placeholders5.length" class="edit-form">
+        <section v-if="placeholdersCommon.length" class="edit-form">
           <h3 class="title-form">Thông tin Chung của các file</h3>
           <form>
-            <div v-for="ph in placeholders5" :key="ph" class="form-group">
+            <div v-for="ph in placeholdersCommon" :key="ph" class="form-group">
               <label :for="ph">{{ ph }}</label>
-              <input type="text" :id="ph" v-model="formValues5[ph]" required>
+              <input type="text" :id="ph" v-model="formValuesCommon[ph]" required>
             </div>
             <button :disabled="updating" @click="applyChanges()">{{ updating ? 'Đang tạo file...' : 'Tạo file mới' }}</button>
           </form>
@@ -64,10 +64,10 @@
         </section>
       </div>
       <!-- Download link -->
-      <section v-if="downloadUrl" class="download">
+      <!-- <section v-if="downloadUrl" class="download">
         <h3>File mới đã sẵn sàng</h3>
-        <a :href="downloadUrl" download="updated.docx" class="btn-download">Tải file</a>
-      </section>
+        <a id="btn-download" class="btn-download">Tải file</a>
+      </section> -->
     </section>
     <!-- <button @click="getFile">Get File</button> -->
 
@@ -99,12 +99,17 @@ export default {
       placeholders2: [],
       placeholders3: [],
       placeholders4: [],
-      placeholders5: [],
+      placeholdersCommon: [],
       formValues: {},
       formValues2: {},
       formValues3: {},
       formValues4: {},
-      formValues5: {},
+      formValuesCommon: {},
+      uniq: [],
+      uniq2: [],
+      uniq3: [],
+      uniq4: [],
+
       // tokenClient: null,
     };
   },
@@ -293,9 +298,11 @@ export default {
         
         const {commonAtLeast2, uniqueByArray} = this.analyzeArrays([uniq, uniq2, uniq3, uniq4]);
         // console.log(same, uniqueByArray);
-        console.log(uniq, uniq2, uniq3, uniq4);
-        
-        commonAtLeast2.forEach(key => (this.formValues5[key] = ''));
+        this.uniq = uniq;
+        this.uniq2 = uniq2;
+        this.uniq3 = uniq3;
+        this.uniq4 = uniq4;
+        commonAtLeast2.forEach(key => (this.formValuesCommon[key] = ''));
         uniqueByArray[0].forEach(key => (this.formValues[key] = ''));
         uniqueByArray[1].forEach(key => (this.formValues2[key] = ''));
         uniqueByArray[2].forEach(key => (this.formValues3[key] = ''));
@@ -304,7 +311,9 @@ export default {
         this.placeholders2 = uniqueByArray[1];
         this.placeholders3 = uniqueByArray[2];
         this.placeholders4 = uniqueByArray[3];
-        this.placeholders5 = commonAtLeast2;
+        this.placeholdersCommon = commonAtLeast2;
+        // console.log(uniq, uniq2, uniq3, uniq4);
+        // console.log(this.placeholders, this.placeholders2, this.placeholders3, this.placeholders4);
 
       } catch (error) {
         alert("Lỗi khi tải hoặc phân tích file: " + error.message);
@@ -337,16 +346,6 @@ export default {
         uniqueByArray
       };
     },
-    async getFile1() {
-      try {
-        
-
-      } catch (error) {
-        alert("Lỗi khi tải hoặc phân tích file: " + error.message);
-      } finally {
-        this.loading = false;
-      }
-    },
     resetAll() {
       this.previewHtml = '';
       this.downloadUrl = '';
@@ -355,10 +354,34 @@ export default {
     },
     // APPLY CHANGES
     async applyChanges() {
-      if (!this.placeholders.length) return;
+      // console.log("formValuesCommon", this.formValuesCommon);
+      // console.log("uniq", this.uniq);
+      for (const key in this.formValuesCommon) {
+        if (this.uniq.indexOf(key) !== -1) {
+          this.formValues[key] = this.formValuesCommon[key];
+        }
+        if (this.uniq2.indexOf(key) !== -1) {
+          this.formValues2[key] = this.formValuesCommon[key];
+        }
+        if (this.uniq3.indexOf(key) !== -1) {
+          this.formValues3[key] = this.formValuesCommon[key];
+        }
+        if (this.uniq4.indexOf(key) !== -1) {
+          this.formValues4[key] = this.formValuesCommon[key];
+        }
+      }
+      console.log(this.formValues);
+      console.log(this.formValues2);
+      console.log(this.formValues3);
+      console.log(this.formValues4);
+      
+      // if (!this.placeholders.length) return;
       this.updating = true;
       try {
         // Lấy lại file gốc (đảm bảo không dùng file đã bị thay đổi)
+        const link1 = this.extractDocId(this.link1);
+        const link2 = this.extractDocId(this.link2);
+        const link3 = this.extractDocId(this.link3);
         const res = await gapi.client.drive.files.get(
               {
                 fileId: this.fileId,
@@ -368,11 +391,43 @@ export default {
                 responseType: "arraybuffer",
               }
             );
-
+        const res2 = await gapi.client.drive.files.get(
+              {
+                fileId: link1,
+                alt: "media",
+              },
+              {
+                responseType: "arraybuffer",
+              }
+            );
+        const res3 = await gapi.client.drive.files.get(
+          {
+            fileId: link2,
+            alt: "media",
+          },
+          {
+            responseType: "arraybuffer",
+          }
+        );
+        const res4 = await gapi.client.drive.files.get(
+          {
+            fileId: link3,
+            alt: "media",
+          },
+          {
+            responseType: "arraybuffer",
+          }
+        );
           const buffer = res.body;
+          const buffer2 = res2.body;
+          const buffer3 = res3.body;
+          const buffer4 = res4.body;
         // const arrayBuffer = await blob.arrayBuffer();
 
         const zip = new PizZip(buffer);
+        const zip2 = new PizZip(buffer2);
+        const zip3 = new PizZip(buffer3);
+        const zip4 = new PizZip(buffer4);
         const doc = new Docxtemplater(zip, {
           paragraphLoop: true,
           linebreaks: true,
@@ -381,21 +436,91 @@ export default {
             end: "$$",
           },
         });
-
+        const doc2 = new Docxtemplater(zip2, {
+          paragraphLoop: true,
+          linebreaks: true,
+          delimiters: {
+            start: "$$",
+            end: "$$",
+          },
+        });
+        const doc3 = new Docxtemplater(zip3, {
+          paragraphLoop: true,
+          linebreaks: true,
+          delimiters: {
+            start: "$$",
+            end: "$$",
+          },
+        });
+        const doc4 = new Docxtemplater(zip4, {
+          paragraphLoop: true,
+          linebreaks: true,
+          delimiters: {
+            start: "$$",
+            end: "$$",
+          },
+        });
         // Thay thế giá trị
         doc.render(this.formValues);
-
+        doc2.render(this.formValues2);
+        doc3.render(this.formValues3);
+        doc4.render(this.formValues4);
+        
         // Tạo blob .docx mới
         const outBlob = doc.getZip().generate({
           type: 'blob',
           mimeType: 'application/vnd.openxmlformats-officedocument.wordprocessingml.document'
         });
-        // Tạo url để người dùng tải về
-        const url = URL.createObjectURL(outBlob);
-        this.downloadUrl = url;
+        const outBlob2 = doc2.getZip().generate({
+          type: 'blob',
+          mimeType: 'application/vnd.openxmlformats-officedocument.wordprocessingml.document'
+        });
+        const outBlob3 = doc3.getZip().generate({
+          type: 'blob',
+          mimeType: 'application/vnd.openxmlformats-officedocument.wordprocessingml.document'
+        });
+        const outBlob4 = doc4.getZip().generate({
+          type: 'blob',
+          mimeType: 'application/vnd.openxmlformats-officedocument.wordprocessingml.document'
+        });
+        let fileArr = [
+          {
+            name: 'Điều lệ',
+            data: outBlob,
+          },
+          {
+            name: 'GĐN đăng ký doanh nghiệp',
+            data: outBlob2,
+          },
+          {
+            name: 'Giấy ủy quyền',
+            data: outBlob3,
+          },
+          {
+            name: 'DANH SÁCH CHỦ SỞ HỮU HƯỞNG LỢI CỦA DOANH NGHIỆP',
+            data: outBlob4,
+          },
+        ]
+        fileArr.forEach(item => {
+          // Tạo url để người dùng tải về
+          const url = URL.createObjectURL(item.data);
+          // this.downloadUrl = url;
+          const link = document.createElement('a');
+          link.href = url;
+          link.download = item.name + ".docx";
+          
+          // Append to document (required for some browsers like Firefox)
+          document.body.appendChild(link);
+          
+          // Trigger the click event
+          link.click();
+          
+          // Clean up by removing the element from the DOM
+          document.body.removeChild(link);
+          // (Tùy chọn) mở hộp thoại Save As ngay lập tức
+          // saveAs(item.data, item.name + '.docx');
+        })
 
-        // (Tùy chọn) mở hộp thoại Save As ngay lập tức
-        saveAs(outBlob, this.nameFile + '.docx');
       } catch (error) {
         alert("không thể tạo file: " + error.message);
       } finally {
@@ -485,7 +610,7 @@ export default {
     justify-content: space-between;
   }
   .title-form {
-    width: 300px;
+  width: 450px;
     font-size: 18px;
     font-weight: 700;
   }
