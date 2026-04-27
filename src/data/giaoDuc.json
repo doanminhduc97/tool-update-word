@@ -1,0 +1,62 @@
+[
+  {
+    "name": "Hoạt động hỗ trợ giáo dục khác \nChi tiết: \n- Việc cung cấp các hoạt động không phải dạy học mà là hỗ trợ cho hệ thống hoặc quá trình giảng dạy: \n+ Tư vấn giáo dục; \n+ Hoạt động tư vấn liên quan đến nghề nghiệp và việc làm; \n+ Hoạt động đưa ra ý kiến hướng dẫn về giáo dục; \n+ Hoạt động đánh giá việc kiểm tra giáo dục; \n+ Hoạt động khảo thí trong giáo dục; \n+ Tổ chức các chương trình trao đổi học sinh; \n- Kinh doanh dịch vụ tư vấn du học",
+    "code": "8569"
+  },
+  {
+    "name": "Giáo dục tiểu học",
+    "code": "8521"
+  },
+  {
+    "name": "Giáo dục trung học cơ sở",
+    "code": "8522"
+  },
+  {
+    "name": "Giáo dục trung học phổ thông",
+    "code": "8523"
+  },
+  {
+    "name": "Đào tạo sơ cấp",
+    "code": "8531"
+  },
+  {
+    "name": "Đào tạo trung cấp",
+    "code": "8532"
+  },
+  {
+    "name": "Đào tạo cao đẳng",
+    "code": "8533"
+  },
+  {
+    "name": "Đào tạo đại học",
+    "code": "8541"
+  },
+  {
+    "name": "Đào tạo thạc sỹ",
+    "code": "8542"
+  },
+  {
+    "name": "Đào tạo tiến sỹ",
+    "code": "8543"
+  },
+  {
+    "name": "Giáo dục thể thao và giải trí",
+    "code": "8551"
+  },
+  {
+    "name": "Giáo dục văn hoá nghệ thuật",
+    "code": "8552"
+  },
+  {
+    "name": "Giáo dục khác chưa được phân vào đâu \nChi tiết: \n- Các trung tâm dạy học có các khoá học dành cho học sinh yếu kém; \n- Các khoá dạy về phê bình dành giải chuyên môn; \n- Dạy ngoại ngữ và dạy kỹ năng đàm thoại; \n- Dạy đọc nhanh; \n- Đào tạo về sự sống; \n- Đào tạo kỹ năng nói trước công chúng; \n- Dạy máy tính (Trừ hoạt động dạy về tôn giáo); \nCác trường của các tổ chức Đảng, đoàn thể",
+    "code": "8559"
+  },
+  {
+    "name": "Giáo dục nhà trẻ",
+    "code": "8511"
+  },
+  {
+    "name": "Giáo dục mẫu giáo",
+    "code": "8512"
+  }
+]

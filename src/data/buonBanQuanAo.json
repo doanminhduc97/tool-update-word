@@ -1,0 +1,124 @@
+[
+  {
+    "name": "Đại lý, môi giới, đấu giá hàng hóa\nChi tiết:\nĐại lý bán hàng hóa\nMôi giới mua bán hàng hóa",
+    "code": "4610"
+  },
+  {
+    "name": "Hoạt động dịch vụ trung gian bán lẻ",
+    "code": "4790"
+  },
+  {
+    "name": "Quảng cáo",
+    "code": "7310"
+  },
+  {
+    "name": "Bán buôn nông, lâm sản nguyên liệu (trừ gỗ, tre, nứa) và động vật sống",
+    "code": "4620"
+  },
+  {
+    "name": "Bán buôn gạo, lúa mì, sản phẩm từ ngũ cốc khác, bột mì",
+    "code": "4631"
+  },
+  {
+    "name": "Bán buôn thực phẩm",
+    "code": "4632"
+  },
+  {
+    "name": "Bán buôn vải, hàng may mặc, giày dép",
+    "code": "4641"
+  },
+  {
+    "name": "Bán buôn giường, tủ, bàn ghế và đồ nội thất tương tự cho gia đình, văn phòng, cửa hàng; thảm, đệm và thiết bị chiếu sáng",
+    "code": "4642"
+  },
+  {
+    "name": "Bán buôn đồ dùng khác cho gia đình",
+    "code": "4649"
+  },
+  {
+    "name": "Bán buôn máy tính, thiết bị ngoại vi và phần mềm",
+    "code": "4651"
+  },
+  {
+    "name": "Bán buôn thiết bị và linh kiện điện tử, viễn thông",
+    "code": "4652"
+  },
+  {
+    "name": "Bán buôn chuyên doanh khác chưa được phân vào đâu",
+    "code": "4679"
+  },
+  {
+    "name": "Bán buôn tổng hợp",
+    "ghi_chu": "Trừ loại nhà nước cấm",
+    "code": "4690"
+  },
+  {
+    "name": "Bán lẻ tổng hợp với lương thực, thực phẩm, đồ uống, thuốc lá, thuốc lào chiếm tỷ trọng lớn",
+    "code": "4711"
+  },
+  {
+    "name": "Bán lẻ tổng hợp khác",
+    "ghi_chu": "Trừ loại nhà nước cấm",
+    "code": "4719"
+  },
+  {
+    "name": "Bán lẻ lương thực",
+    "code": "4721"
+  },
+  {
+    "name": "Bán lẻ thực phẩm",
+    "code": "4722"
+  },
+  {
+    "name": "Bán lẻ thiết bị công nghệ thông tin và truyền thông",
+    "code": "4740"
+  },
+  {
+    "name": "Bán lẻ vải, len, sợi, chỉ khâu và hàng dệt khác",
+    "code": "4751"
+  },
+  {
+    "name": "Bán lẻ đồ ngũ kim, sơn, kính, vật liệu và thiết bị lắp đặt khác trong xây dựng",
+    "code": "4752"
+  },
+  {
+    "name": "Bán lẻ thảm, đệm, chăn, màn, rèm, vật liệu phủ tường và sàn",
+    "code": "4753"
+  },
+  {
+    "name": "Bán lẻ đồ điện gia dụng, giường, tủ, bàn, ghế và đồ nội thất tương tự, đèn và bộ đèn điện, đồ dùng gia đình khác chưa được phân vào đâu",
+    "code": "4759"
+  },
+  {
+    "name": "Bán lẻ sách, báo, tạp chí, văn phòng phẩm",
+    "code": "4761"
+  },
+  {
+    "name": "Bán lẻ thiết bị, dụng cụ thể dục, thể thao",
+    "code": "4762"
+  },
+  {
+    "name": "Bán lẻ trò chơi, đồ chơi",
+    "code": "4763"
+  },
+  {
+    "name": "Bán lẻ sản phẩm văn hóa, giải trí khác chưa phân vào đâu",
+    "code": "4769"
+  },
+  {
+    "name": "Bán lẻ hàng may mặc, giày dép, hàng da và giả da",
+    "code": "4771"
+  },
+  {
+    "name": "Bán lẻ thuốc, dụng cụ y tế, mỹ phẩm và vật phẩm vệ sinh",
+    "code": "4772"
+  },
+  {
+    "name": "Bán lẻ hàng hóa khác mới (trừ ô tô, mô tô, xe máy và các bộ phận phụ trợ)",
+    "code": "4773"
+  },
+  {
+    "name": "Kho bãi và lưu giữ hàng hóa",
+    "code": "5210"
+  }
+]

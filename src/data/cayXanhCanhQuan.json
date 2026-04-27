@@ -1,0 +1,178 @@
+[
+    {
+        "name": "Dịch vụ cảnh quan",
+        "code": "8130"
+    },
+    {
+        "name": "Hoàn thiện công trình xây dựng",
+        "code": "4330"
+    },
+    {
+        "name": "Hoạt động xây dựng chuyên dụng khác",
+        "code": "4390"
+    },
+    {
+        "name": "Xây dựng công trình kỹ thuật dân dụng khác \n- Chi tiết: Thi công công trình công viên cây xanh, khuôn viên sân vườn, hoa tiểu cảnh.",
+        "code": "4299"
+    },
+    {
+        "name": "Lắp đặt hệ thống xây dựng khác \n- Chi tiết: Lắp đặt hệ thống nước tưới tự động",
+        "code": "4329"
+    },
+    {
+        "name": "Bán buôn nông, lâm sản nguyên liệu (trừ gỗ, tre, nứa) và động vật sống \n- Chi tiết: Bán buôn hoa và cây; Bán buôn các loại hoa và cây trồng, kể cả cây cảnh và các loại dùng để làm giống.",
+        "code": "4620"
+    },
+    {
+        "name": "Hoạt động kiến trúc và tư vấn kỹ thuật có liên quan \nDịch vụ tư vấn kiến trúc: thiết kế và phác thảo công trình, lập kế hoạch phát triển đô thị và kiến trúc cảnh quan. Thiết kế kiến trúc công trình. Thiết kế kết cấu công trình xây dựng dân dụng và công nghiệp. Thiết kế cơ – điện công trình. Thiết kế cấp thoát nước – môi trường nước công trình xây dựng. Thiết kế nội ngoại thất công trình (Điều 1 Nghị định 100/2018/NĐ-CP)",
+        "code": "7110"
+    },
+    {
+        "name": "Khai thác gỗ",
+        "code": "0220"
+    },
+    {
+        "name": "Sản xuất sản phẩm khác từ gỗ; sản xuất sản phẩm từ tre, nứa, rơm, rạ và vật liệu tết bện",
+        "code": "1629"
+    },
+    {
+        "name": "Bán buôn kim loại và quặng kim loại \n(trừ vàng và các kim loại quý khác)",
+        "code": "4672"
+    },
+    {
+        "name": "Bán buôn vật liệu, thiết bị lắp đặt khác trong xây dựng \n- Chi tiết: Bán buôn tre, nứa, gỗ cây và gỗ chế biến; Bán buôn gạch xây, ngói, đá, cát, sỏi; Bán buôn kính xây dựng; Bán buôn gạch ốp lát và thiết bị vệ sinh; Bán buôn vật liệu, thiết bị lắp đặt khác trong xây dựng",
+        "code": "4673"
+    },
+    {
+        "name": "Bán buôn chuyên doanh khác chưa được phân vào đâu \n- Chi tiết: Bán buôn hóa chất công nghiệp; Bán buôn phân bón và các hóa chất sử dụng trong nông nghiệp; Bán buôn bột đá, đá hạt, vôi các loại, các loại khoáng phi kim đã chế biến. Mua bán hoa giả, phụ kiện ngành hoa",
+        "code": "4679"
+    },
+    {
+        "name": "Bán buôn đồ dùng khác cho gia đình \n- Chi tiết: Bán buôn hàng gốm, sứ, thủy tinh; Bán buôn đồ điện gia dụng, đèn và bộ đèn điện; Bán buôn giường, tủ, bàn ghế và đồ nội thất tương tự",
+        "code": "4649"
+    },
+    {
+        "name": "Bán lẻ đồ ngũ kim, sơn, kính, vật liệu và thiết bị lắp đặt khác trong xây dựng",
+        "code": "4752"
+    },
+    {
+        "name": "Bán lẻ đồ điện gia dụng, giường, tủ, bàn, ghế và đồ nội thất tương tự, đèn và bộ đèn điện, đồ dùng gia đình khác chưa được phân vào đâu",
+        "code": "4759"
+    },
+    {
+        "name": "Bán lẻ hàng hóa khác mới (trừ ô tô, mô tô, xe máy và xe có động cơ khác) \n- Chi tiết: Bán lẻ hoa, cây cảnh; Bán lẻ hoa tươi, cây cảnh; Bán lẻ hoa, cành lá trang trí nhân tạo; Bán lẻ phân bón, hạt, đất trồng cây cảnh. - Bán lẻ hàng lưu niệm, hàng đan lát, hàng thủ công mỹ nghệ trong các cửa hàng chuyên doanh; - Bán lẻ tranh, ảnh và tác phẩm nghệ thuật khác (trừ đồ cổ) trong các cửa hàng chuyên doanh.",
+        "code": "4773"
+    },
+    {
+        "name": "Bán lẻ hàng hóa đã qua sử dụng \n(Không bao gồm ô tô, mô tô, xe máy và xe có động cơ khác)",
+        "code": "4774"
+    },
+    {
+        "name": "Hoạt động thiết kế chuyên dụng \n- Chi tiết: Thiết kế quy hoạch xây dựng; thiết kế kiến trúc công trình; thiết kế xây dựng công trình dân dụng; Trang trí nội thất, sân vườn, sân khấu, lễ hội, hội nghị.",
+        "code": "7410"
+    },
+    {
+        "name": "Hoạt động dịch vụ trồng trọt \n- Chi tiết: Nghiên cứu khoa học, nhân tạo giống cây trồng, hoa cây cảnh, vườn ươm; Tư vấn ươm, trồng, chăm sóc cây xanh, cây cảnh",
+        "code": "0161"
+    },
+    {
+        "name": "Cắt tạo dáng và hoàn thiện đá",
+        "code": "2396"
+    },
+    {
+        "name": "Trồng rừng, chăm sóc rừng và trồng hoa",
+        "code": "0118"
+    },
+    {
+        "name": "Trồng cây lâu năm khác",
+        "code": "0129"
+    },
+    {
+        "name": "Nhân và chăm sóc cây giống nông nghiệp",
+        "code": "0130"
+    },
+    {
+        "name": "Dịch vụ hỗ trợ tổng hợp",
+        "code": "8110"
+    },
+    {
+        "name": "Vệ sinh chung nhà cửa",
+        "code": "8121"
+    },
+    {
+        "name": "Dịch vụ vệ sinh khác",
+        "code": "8129"
+    },
+    {
+        "name": "Đại lý, môi giới, đấu giá hàng hóa \nChi tiết: Đại lý, môi giới hàng hóa (Không bao gồm môi giới chứng khoán, bảo hiểm tuân thủ)",
+        "code": "4610"
+    },
+    {
+        "name": "Cho thuê máy móc, thiết bị và đồ dùng hữu hình khác không kèm người điều khiển",
+        "code": "7730"
+    },
+    {
+        "name": "Hoạt động tư vấn quản lý kinh doanh và tư vấn quản lý khác",
+        "code": "7020"
+    },
+    {
+        "name": "Lắp đặt hệ thống điện",
+        "code": "4321"
+    },
+    {
+        "name": "Lắp đặt hệ thống cấp, thoát nước, hệ thống sưởi và điều hòa không khí",
+        "code": "4322"
+    },
+    {
+        "name": "Bán buôn thực phẩm",
+        "code": "4632"
+    },
+    {
+        "name": "Bán buôn đồ uống",
+        "code": "4633"
+    },
+    {
+        "name": "Rèn, dập, ép và cán kim loại; luyện bột kim loại",
+        "code": "2591"
+    },
+    {
+        "name": "Gia công cơ khí; xử lý và tráng phủ kim loại",
+        "code": "2592"
+    },
+    {
+        "name": "Sản xuất máy công cụ và máy tạo hình kim loại",
+        "code": "2822"
+    },
+    {
+        "name": "Dệt sắt, thép",
+        "code": "2431"
+    },
+    {
+        "name": "Sản xuất các cấu kiện kim loại",
+        "code": "2511"
+    },
+    {
+        "name": "Nhà hàng và các dịch vụ ăn uống phục vụ lưu động \n(không bao gồm kinh doanh quán bar, phòng hát karaoke, vũ trường)",
+        "code": "5610"
+    },
+    {
+        "name": "Cung cấp dịch vụ ăn uống theo hợp đồng không thường xuyên với khách hàng (Chi tiết: Cung cấp suất ăn theo hợp đồng, hoạt động của căng tin và hàng ăn tự phục vụ...)",
+        "code": "5621"
+    },
+    {
+        "name": "Dịch vụ ăn uống khác \nChi tiết: Cung cấp suất ăn theo hợp đồng, hoạt động của căng tin và hàng ăn tự phục vụ...",
+        "code": "5629"
+    },
+    {
+        "name": "Khai thác đá, cát, sỏi, đất sét",
+        "code": "0810"
+    },
+    {
+        "name": "Nghiên cứu thị trường và thăm dò dư luận",
+        "code": "7320"
+    },
+    {
+        "name": "Tổ chức giới thiệu và xúc tiến thương mại \nChi tiết: - Tổ chức sự kiện; - Việc tổ chức, xúc tiến và/hoặc quản lý các sự kiện như kinh doanh hoặc triển lãm, giới thiệu, hội nghị, có hoặc không có quản lý và cung cấp nhân viên đảm nhận những vấn đề có tổ chức.",
+        "code": "8230"
+    }
+]

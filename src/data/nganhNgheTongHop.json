@@ -1,0 +1,314 @@
+[
+    {
+        "name": "Giáo dục khác chưa được phân vào đâu\nChi tiết: \n- Giáo dục không xác định theo cấp độ tại các trung tâm đào tạo bồi dưỡng;\n- Các dịch vụ dạy kèm (gia sư);\n- Giáo dục dự bị;\n- Các trung tâm dạy học có các khóa học dành cho học sinh yếu kém;\n- Các khóa dạy về phê bình, đánh giá chuyên môn;\n- Dạy ngoại ngữ và dạy kỹ năng đàm thoại;\n- Dạy đọc nhanh;\n- Đào tạo tự vệ;\n- Đào tạo về sự sống;\n- Đào tạo kỹ năng nói trước công chúng;\n- Dạy máy tính.",
+        "code": "8559"
+    },
+    {
+        "name": "Hoạt động dịch vụ máy tính và công nghệ thông tin khác",
+        "code": "6290"
+    },
+    {
+        "name": "Cơ sở hạ tầng công nghệ thông tin, xử lý dữ liệu, lưu trữ và các hoạt động liên quan\nChi tiết: Thiết lập trang thông tin điện tử tổng hợp, thiết lập mạng xã hội.",
+        "code": "6310"
+    },
+    {
+        "name": "Tư vấn máy tính và quản lý cơ sở hạ tầng máy tính",
+        "code": "6220"
+    },
+    {
+        "name": "Lập trình máy tính khác\nChi tiết: Sản xuất phần mềm",
+        "code": "6219"
+    },
+    {
+        "name": "Hoạt động tư vấn quản lý kinh doanh và hoạt động tư vấn quản lý khác\nChi tiết: Tư vấn chiến lược marketing;\nTư vấn vận hành doanh nghiệp;\nTư vấn chỉ đạo và hỗ trợ doanh nghiệp;\ntổ chức quản lý;\nTư vấn quản lý nhân sự;\n(trừ tư vấn tài chính, kế toán, pháp lý).",
+        "code": "7020"
+    },
+    {
+        "name": "Quảng cáo",
+        "code": "7310"
+    },
+    {
+        "name": "Nghiên cứu thị trường và thăm dò dư luận",
+        "code": "7320"
+    },
+    {
+        "name": "Hoạt động quan hệ công chúng",
+        "code": "7330"
+    },
+    {
+        "name": "Hoạt động thiết kế chuyên dụng\nChi tiết: thiết kế đồ họa, thiết kế website \n(trừ thiết kế công trình xây dựng).",
+        "code": "7410"
+    },
+    {
+        "name": "Hoạt động nhiếp ảnh\nChi tiết: Dịch vụ quay phim, chụp hình \n(Trừ sản xuất phim ảnh)",
+        "code": "7420"
+    },
+    {
+        "name": "Hoạt động biểu diễn nghệ thuật\nChi tiết: Tổ chức biểu diễn nghệ thuật chuyên nghiệp (trừ kinh doanh vũ trường, phòng trà ca nhạc và không thực hiện các hiệu ứng cháy, nổ; không sử dụng chất nổ, chất cháy, hóa chất làm đạo cụ, dụng cụ thực hiện các chương trình văn nghệ, sự kiện, phim ảnh)",
+        "code": "9020"
+    },
+    {
+        "name": "Hoạt động dịch vụ phục vụ cá nhân khác",
+        "code": "9690"
+    },
+    {
+        "name": "Cưa, xẻ, bào gỗ và bảo quản gỗ",
+        "code": "1610"
+    },
+    {
+        "name": "Sản xuất gỗ dán, gỗ lạng, ván ép và ván mỏng khác",
+        "code": "1621"
+    },
+    {
+        "name": "Sản xuất đồ gỗ xây dựng",
+        "code": "1622"
+    },
+    {
+        "name": "Sản xuất sản phẩm khác từ gỗ; sản xuất sản phẩm từ tre, nứa, rơm, rạ và vật liệu tết bện",
+        "code": "1629"
+    },
+    {
+        "name": "Sản xuất sản phẩm chịu lửa",
+        "code": "2391"
+    },
+    {
+        "name": "Sản xuất vật liệu xây dựng từ đất sét",
+        "code": "2392"
+    },
+    {
+        "name": "Sản xuất sản phẩm gốm sứ khác",
+        "code": "2393"
+    },
+    {
+        "name": "Sản xuất xi măng, vôi và thạch cao",
+        "code": "2394"
+    },
+    {
+        "name": "Sản xuất bê tông và các sản phẩm từ bê tông, xi măng và thạch cao",
+        "code": "2395"
+    },
+    {
+        "name": "Sản xuất sắt, thép, gang",
+        "code": "2410"
+    },
+    {
+        "name": "Đúc sắt, thép",
+        "code": "2431"
+    },
+    {
+        "name": "Đúc kim loại màu",
+        "code": "2432"
+    },
+    {
+        "name": "Sản xuất các cấu kiện kim loại",
+        "code": "2511"
+    },
+    {
+        "name": "Sản xuất thùng, bể chứa và dụng cụ chứa đựng bằng kim loại",
+        "code": "2512"
+    },
+    {
+        "name": "Rèn, dập, ép và cán kim loại; luyện bột kim loại",
+        "code": "2591"
+    },
+    {
+        "name": "Gia công cơ khí; xử lý và tráng phủ kim loại",
+        "code": "2592"
+    },
+    {
+        "name": "Sản xuất dao kéo, dụng cụ cầm tay và đồ kim loại thông dụng",
+        "code": "2593"
+    },
+    {
+        "name": "Sản xuất sản phẩm khác bằng kim loại chưa được phân vào đâu",
+        "code": "2599"
+    },
+    {
+        "name": "Sản xuất đồ điện dân dụng",
+        "code": "2750"
+    },
+    {
+        "name": "Sản xuất giường, tủ, bàn, ghế bằng gỗ",
+        "code": "3101"
+    },
+    {
+        "name": "Sản xuất giường, tủ, bàn, ghế bằng kim loại",
+        "code": "3102"
+    },
+    {
+        "name": "Sản xuất giường, tủ, bàn, ghế bằng vật liệu khác",
+        "code": "3109"
+    },
+    {
+        "name": "Sản xuất khác chưa được phân vào đâu",
+        "code": "3290"
+    },
+    {
+        "name": "Sửa chữa, bảo dưỡng thiết bị điện",
+        "code": "3314"
+    },
+    {
+        "name": "Xây dựng nhà để ở",
+        "code": "4101"
+    },
+    {
+        "name": "Xây dựng nhà không để ở",
+        "code": "4102"
+    },
+    {
+        "name": "Xây dựng công trình đường sắt",
+        "code": "4211"
+    },
+    {
+        "name": "Xây dựng công trình đường bộ",
+        "code": "4212"
+    },
+    {
+        "name": "Xây dựng công trình điện",
+        "code": "4221"
+    },
+    {
+        "name": "Xây dựng công trình cấp, thoát nước",
+        "code": "4222"
+    },
+    {
+        "name": "Xây dựng công trình viễn thông, thông tin liên lạc",
+        "code": "4223"
+    },
+    {
+        "name": "Xây dựng công trình công ích khác",
+        "code": "4229"
+    },
+    {
+        "name": "Xây dựng công trình thủy",
+        "code": "4291"
+    },
+    {
+        "name": "Xây dựng công trình khai khoáng",
+        "code": "4292"
+    },
+    {
+        "name": "Xây dựng công trình chế biến, chế tạo",
+        "code": "4293"
+    },
+    {
+        "name": "Xây dựng công trình kỹ thuật dân dụng khác",
+        "code": "4299"
+    },
+    {
+        "name": "Phá dỡ \n(Không bao gồm dịch vụ nổ mìn; hoạt động rà phá bom, mìn)",
+        "code": "4311"
+    },
+    {
+        "name": "Chuẩn bị mặt bằng \n(Không bao gồm dịch vụ nổ mìn; hoạt động rà phá bom, mìn)",
+        "code": "4312"
+    },
+    {
+        "name": "Lắp đặt hệ thống điện",
+        "code": "4321"
+    },
+    {
+        "name": "Lắp đặt hệ thống cấp, thoát nước, hệ thống sưởi và điều hoà không khí",
+        "code": "4322"
+    },
+    {
+        "name": "Lắp đặt hệ thống xây dựng khác",
+        "code": "4329"
+    },
+    {
+        "name": "Hoàn thiện công trình xây dựng",
+        "code": "4330"
+    },
+    {
+        "name": "Hoạt động xây dựng chuyên dụng khác",
+        "code": "4390"
+    },
+    {
+        "name": "Đại lý, môi giới, đấu giá hàng hóa \n(Trừ hoạt động đấu giá hàng hóa)",
+        "code": "4610"
+    },
+    {
+        "name": "Bán buôn nông, lâm sản nguyên liệu (trừ gỗ, tre, nứa) và động vật sống \n(Trừ các mặt hàng nhà nước cấm)",
+        "code": "4620"
+    },
+    {
+        "name": "Bán buôn thực phẩm",
+        "code": "4632"
+    },
+    {
+        "name": "Bán buôn đồ uống",
+        "code": "4633"
+    },
+    {
+        "name": "Bán buôn sản phẩm thuốc lá, thuốc lào",
+        "code": "4634"
+    },
+    {
+        "name": "Bán buôn giường, tủ, bàn ghế và đồ nội thất tương tự như: giường, văn phòng, cửa hàng; thảm, đèn và thiết bị chiếu sáng",
+        "code": "4642"
+    },
+    {
+        "name": "Bán buôn đồ dùng khác cho gia đình",
+        "code": "4649"
+    },
+    {
+        "name": "Bán buôn máy móc, thiết bị và phụ tùng máy nông nghiệp",
+        "code": "4653"
+    },
+    {
+        "name": "Bán buôn máy móc, thiết bị và phụ tùng máy khác",
+        "code": "4659"
+    },
+    {
+        "name": "Bán buôn vật liệu, thiết bị lắp đặt khác trong xây dựng",
+        "code": "4673"
+    },
+    {
+        "name": "Bán buôn chuyên doanh khác chưa được phân vào đâu",
+        "code": "4679"
+    },
+    {
+        "name": "Bán buôn tổng hợp \n(Trừ loại nhà nước cấm)",
+        "code": "4690"
+    },
+    {
+        "name": "Bán lẻ đồ ngũ kim, sơn, kính, vật liệu và thiết bị lắp đặt khác trong xây dựng",
+        "code": "4752"
+    },
+    {
+        "name": "Bán lẻ đồ điện gia dụng, giường, tủ, bàn, ghế và đồ nội thất tương tự, đèn và bộ đèn điện, đồ dùng gia đình khác chưa được phân vào đâu",
+        "code": "4759"
+    },
+    {
+        "name": "Vận tải hàng hóa bằng đường bộ \n(Điều 61 Luật Đường bộ 2024)",
+        "code": "4933"
+    },
+    {
+        "name": "Kho bãi và lưu giữ hàng hóa \n(Trừ hoạt động kinh doanh bất động sản)",
+        "code": "5210"
+    },
+    {
+        "name": "Hoạt động kiến trúc và tư vấn kỹ thuật có liên quan. \nChi tiết: \n- Khảo sát xây dựng \n- Lập thiết kế quy hoạch xây dựng \n- Thiết kế, thẩm tra thiết kế xây dựng \n- Tư vấn quản lý dự án đầu tư xây dựng \n- Thi công xây dựng công trình \n- Tư vấn giám sát thi công xây dựng công trình \n- Kiểm định xây dựng \n- Quản lý chi phí đầu tư xây dựng",
+        "code": "7110"
+    },
+    {
+        "name": "Hoạt động chuyên môn, khoa học và công nghệ khác chưa được phân vào đâu",
+        "code": "7499"
+    },
+    {
+        "name": "Tổ chức giới thiệu và xúc tiến thương mại \n(Trừ hoạt động họp báo)",
+        "code": "8230"
+    },
+    {
+        "name": "Hoạt động dịch vụ hỗ trợ kinh doanh khác còn lại chưa được phân vào đâu. \nChi tiết: Xuất nhập khẩu các mặt hàng Công ty kinh doanh \n(Điều 28 - Luật Thương mại 2005). \n(Trừ hoạt động đấu giá)",
+        "code": "8299"
+    },
+    {
+        "name": "Sửa chữa, bảo dưỡng thiết bị, đồ dùng gia đình",
+        "code": "9522"
+    },
+    {
+        "name": "Sửa chữa, bảo dưỡng giường, tủ, bàn, ghế và đồ nội thất tương tự",
+        "code": "9524"
+    }
+]
