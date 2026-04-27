@@ -1,0 +1,102 @@
+[
+  {
+    "name": "Sản xuất vải dệt kim, vải đan móc và vải không dệt khác",
+    "code": "1391"
+  },
+  {
+    "name": "Sản xuất hàng dệt sẵn (trừ trang phục)",
+    "code": "1392"
+  },
+  {
+    "name": "Sản xuất thảm, chăn, đệm",
+    "code": "1393"
+  },
+  {
+    "name": "Sản xuất trang phục (trừ trang phục từ da lông thú)",
+    "code": "1410"
+  },
+  {
+    "name": "Sản xuất sản phẩm từ da lông thú",
+    "code": "1420"
+  },
+  {
+    "name": "Sản xuất trang phục dệt kim, đan móc",
+    "code": "1430"
+  },
+  {
+    "name": "Lắp đặt hệ thống điện",
+    "code": "4321"
+  },
+  {
+    "name": "Lắp đặt hệ thống cấp, thoát nước, hệ thống tưới và điều hòa không khí",
+    "code": "4322"
+  },
+  {
+    "name": "Lắp đặt hệ thống xây dựng khác",
+    "code": "4329"
+  },
+  {
+    "name": "Hoàn thiện công trình xây dựng",
+    "code": "4330"
+  },
+  {
+    "name": "Hoạt động dịch vụ trung gian cho xây dựng chuyên dụng",
+    "code": "4340"
+  },
+  {
+    "name": "Hoạt động xây dựng chuyên dụng khác",
+    "code": "4390"
+  },
+  {
+    "name": "Đại lý, môi giới, đấu giá hàng hóa\nChi tiết: \n- Đại lý bán hàng hóa\n- Môi giới mua bán hàng hóa",
+    "code": "4610"
+  },
+  {
+    "name": "Bán buôn vải, hàng may mặc, giày dép",
+    "code": "4641"
+  },
+  {
+    "name": "Bán buôn đồ dùng khác cho gia đình",
+    "code": "4649"
+  },
+  {
+    "name": "Bán buôn máy móc, thiết bị và phụ tùng máy khác\nChi tiết: \n- Bán buôn máy móc cho công nghiệp dệt, may, máy may, máy dệt kim;\n- Bán buôn máy móc và thiết bị khai thác mỏ, xây dựng và kỹ thuật dân dụng, ví dụ như máy xúc,...;\n- Bán buôn rào chắn giao thông, cọc chắn xe, đèn đường, đèn giao thông, biển báo giao thông, trạm dừng xe buýt, xe điện,...\n- Bán buôn người máy thuộc dây chuyền sản xuất tự động;\n- Bán buôn dây điện, công tắc và thiết bị lắp đặt khác cho mục đích công nghiệp;\n- Bán buôn máy công cụ điều khiển bằng máy tính;",
+    "code": "4659"
+  },
+  {
+    "name": "Bán buôn chuyên doanh khác chưa được phân vào đâu",
+    "code": "4679"
+  },
+  {
+    "name": "Bán buôn tổng hợp \n(Trừ loại nhà nước cấm)",
+    "code": "4690"
+  },
+  {
+    "name": "Bán lẻ tổng hợp \n(Trừ loại nhà nước cấm)",
+    "code": "4719"
+  },
+  {
+    "name": "Bán lẻ vải, len, sợi, chỉ khâu và hàng dệt khác",
+    "code": "4751"
+  },
+  {
+    "name": "Bán lẻ thảm, đệm, chăn, màn, rèm, vật liệu phủ tường và sàn",
+    "code": "4753"
+  },
+  {
+    "name": "Bán lẻ sản phẩm văn hóa, giải trí khác chưa phân vào đâu",
+    "code": "4769"
+  },
+  {
+    "name": "Bán lẻ hàng may mặc, giày, dép, hàng da và giả da",
+    "code": "4771"
+  },
+  {
+    "name": "Kho bãi và lưu giữ hàng hóa",
+    "code": "5210"
+  },
+  {
+    "name": "Bốc xếp hàng hóa",
+    "code": "5224"
+  }
+]

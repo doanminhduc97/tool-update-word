@@ -1,0 +1,118 @@
+[
+  {
+    "name": "Hoạt động thiết kế chuyên dụng\nHoạt động thiết kế đồ họa;\nHoạt động trang trí nội thất.",
+    "code": "7410"
+  },
+  {
+    "name": "Sửa chữa, bảo dưỡng thiết bị điện",
+    "code": "3314"
+  },
+  {
+    "name": "Xây dựng nhà để ở",
+    "code": "4101"
+  },
+  {
+    "name": "Xây dựng nhà không để ở",
+    "code": "4102"
+  },
+  {
+    "name": "Xây dựng công trình đường sắt",
+    "code": "4211"
+  },
+  {
+    "name": "Xây dựng công trình đường bộ",
+    "code": "4212"
+  },
+  {
+    "name": "Xây dựng công trình điện",
+    "code": "4221"
+  },
+  {
+    "name": "Xây dựng công trình cấp, thoát nước",
+    "code": "4222"
+  },
+  {
+    "name": "Xây dựng công trình viễn thông, thông tin liên lạc",
+    "code": "4223"
+  },
+  {
+    "name": "Xây dựng công trình công ích khác",
+    "code": "4229"
+  },
+  {
+    "name": "Xây dựng công trình thủy",
+    "code": "4291"
+  },
+  {
+    "name": "Xây dựng công trình khai khoáng",
+    "code": "4292"
+  },
+  {
+    "name": "Xây dựng công trình chế biến, chế tạo",
+    "code": "4293"
+  },
+  {
+    "name": "Xây dựng công trình kỹ thuật dân dụng khác",
+    "code": "4299"
+  },
+  {
+    "name": "Phá dỡ\n(Không bao gồm dịch vụ nổ mìn, hoạt động rà phá bom, mìn)",
+    "code": "4311"
+  },
+  {
+    "name": "Chuẩn bị mặt bằng\n(Không bao gồm dịch vụ nổ mìn, hoạt động rà phá bom, mìn)",
+    "code": "4312"
+  },
+  {
+    "name": "Lắp đặt hệ thống điện",
+    "code": "4321"
+  },
+  {
+    "name": "Lắp đặt hệ thống cấp, thoát nước, hệ thống sưởi và điều hoà không khí",
+    "code": "4322"
+  },
+  {
+    "name": "Lắp đặt hệ thống xây dựng khác",
+    "code": "4329"
+  },
+  {
+    "name": "Hoàn thiện công trình xây dựng",
+    "code": "4330"
+  },
+  {
+    "name": "Hoạt động xây dựng chuyên dụng khác",
+    "code": "4390"
+  },
+  {
+    "name": "Đại lý, môi giới, đấu giá hàng hóa\n(Trừ hoạt động đấu giá hàng hóa)",
+    "code": "4610"
+  },
+  {
+    "name": "Bán buôn nông, lâm sản nguyên liệu (trừ gỗ, tre, nứa) và động vật sống\n(Trừ các mặt hàng nhà nước cấm)",
+    "code": "4620"
+  },
+  {
+    "name": "Bán buôn vật liệu, thiết bị lắp đặt khác trong xây dựng",
+    "code": "4673"
+  },
+  {
+    "name": "Bán buôn tổng hợp\n(Trừ loại nhà nước cấm)",
+    "code": "4690"
+  },
+  {
+    "name": "Bán lẻ đồ ngũ kim, sơn, kính, vật liệu và thiết bị lắp đặt khác trong xây dựng",
+    "code": "4752"
+  },
+  {
+    "name": "Bán lẻ đồ điện gia dụng, giường, tủ, bàn, ghế và đồ nội thất tương tự, đèn và bộ đèn điện, đồ dùng gia đình khác chưa được phân vào đâu",
+    "code": "4759"
+  },
+  {
+    "name": "Hoạt động kiến trúc và tư vấn kỹ thuật có liên quan\nChi tiết: \nKhảo sát xây dựng; (Điểm 94, Điểm 102 Nghị định 175/2024/NĐ-CP)\nLập thiết kế quy hoạch xây dựng; (Điểm 94, Điểm 103 Nghị định 175/2024/NĐ-CP)\nThiết kế, thẩm tra thiết kế xây dựng; (Điểm 94, Điểm 104 Nghị định 175/2024/NĐ-CP)\nTư vấn quản lý dự án đầu tư xây dựng; (Điểm 94, Điểm 105 Nghị định 175/2024/NĐ-CP)\nThi công xây dựng công trình; (Điểm 94, Điểm 106 Nghị định 175/2024/NĐ-CP)\nTư vấn giám sát thi công xây dựng công trình; (Điểm 94, Điểm 107 Nghị định 175/2024/NĐ-CP)\nKiểm định xây dựng; (Điểm 94, Điểm 108 Nghị định 175/2024/NĐ-CP)\nQuản lý chi phí đầu tư xây dựng. (Điểm 94, Điểm 109 Nghị định 175/2024/NĐ-CP)",
+    "code": "7110"
+  },
+  {
+    "name": "Hoạt động chuyên môn, khoa học và công nghệ khác còn lại chưa được phân vào đâu",
+    "code": "7499"
+  }
+]
