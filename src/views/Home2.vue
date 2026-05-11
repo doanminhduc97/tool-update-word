@@ -17,26 +17,13 @@
         </section> -->
         <!-- FORM chỉnh sửa -->
         <section v-if="placeholdersCommon.length" class="edit-form" style="width: 400px;">
-          <div style="display: flex;">
-            <div style="margin-right: 12px;">
-              <h3 class="title-form">Thông Tin Công ty</h3>
-              <form>
-                <div v-for="ph in placeholdersCommon.slice(0, 10)" :key="ph" class="form-group">
-                  <label :for="ph">{{ ph.includes('ct_ct') ? ph.slice(5) : ph.slice(4) }}</label>
-                  <input type="text" :id="ph" v-model="formValuesCommon[ph]" required>
-                </div>
-              </form>
+          <h3 class="title-form">Thông Tin Chung Của Các File</h3>
+          <form>
+            <div v-for="ph in placeholdersCommon" :key="ph" class="form-group">
+              <label :for="ph">{{ ph.includes('ct_ct') ? ph.slice(5) : ph.slice(4) }}</label>
+              <input type="text" :id="ph" v-model="formValuesCommon[ph]" required>
             </div>
-            <div>
-              <h3 class="title-form">Thông Tin Chủ sở hữu</h3>
-              <form>
-                <div v-for="ph in placeholdersCommon.slice(10)" :key="ph" class="form-group">
-                  <label :for="ph">{{ ph.includes('ct_ct') ? ph.slice(5) : ph.slice(4) }}</label>
-                  <input type="text" :id="ph" v-model="formValuesCommon[ph]" required>
-                </div>
-              </form>
-            </div>
-          </div>
+          </form>
         </section>
         <section v-if="placeholders.length" class="edit-form">
           <h3 class="title-form">Thông Tin File(Điều lệ.docx)</h3>
@@ -252,23 +239,6 @@ export default {
         this.placeholdersCommon = result;
         console.log("123", this.placeholdersCommon);
         this.placeholdersCommon = this.sortCustom(this.placeholdersCommon).reverse();
-        const fromIndex = this.placeholdersCommon.indexOf("ct_ct Tỉnh");
-        const phuongIndex = this.placeholdersCommon.indexOf("ct_ct Phường");
-
-        if (fromIndex !== -1 && phuongIndex !== -1) {
-            // Xóa item trước
-            const [item] = this.placeholdersCommon.splice(fromIndex, 1);
-
-            // Nếu item nằm sau vị trí cần chèn thì index bị giảm 1
-            const newIndex = fromIndex > phuongIndex
-                ? phuongIndex + 1
-                : phuongIndex;
-
-            // Chèn lại đúng vị trí
-            this.placeholdersCommon.splice(newIndex, 0, item);
-        }
-        console.log("placeholdersCommon", this.placeholdersCommon)
-
       } catch (error) {
         alert("Lỗi khi tải hoặc phân tích file: " + error.message);
       } finally {
@@ -537,7 +507,7 @@ export default {
         margin-top: 2rem;
         .form-group {
           margin-bottom: 0.8rem;
-          width: 200px;
+  
           label {
             display: block;
             font-weight: 500;
@@ -612,7 +582,6 @@ export default {
   border: 1px solid #1991d1;
   font-size: 16px;
   padding: 6px;
-  cursor: pointer;
 }
 .btn-group {
   display: flex;
@@ -626,6 +595,5 @@ export default {
   background-color: #fff;
   margin-right: 16px;
   width: 103px;
-  cursor: pointer;
 }
 </style>
