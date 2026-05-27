@@ -572,7 +572,7 @@ export default {
   .wrapper {
     display: flex;
     justify-content: space-between;
-    // width: 1024px;
+    width: 1024px;
   }
   .title-form {
     font-size: 18px;

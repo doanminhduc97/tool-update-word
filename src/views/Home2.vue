@@ -1,7 +1,7 @@
 <template>
   <div class="editor">
-      <!-- <p v-if="loading" class="status">Đang tải và phân tích file...</p> -->
-    <!-- <button v-if="!tokenClient" @click="login">Login</button> -->
+      <!-- <p v-show="loading" class="status">Đang tải và phân tích file...</p> -->
+    <!-- <button v-show="!tokenClient" @click="login">Login</button> -->
     <div class="field">
       <!-- <input type="url" disabled id="link" v-model="docLink" placeholder="https://drive.google.com/..." @keyup.enter="getFile"> -->
       <!-- <button @click="getFile" :disabled="loading">Tải File</button>/ -->
@@ -11,12 +11,12 @@
       <!-- STATUS -->
       <div class="wrapper">
         <!-- PREVIEW (mammoth)-->
-        <!-- <section v-if="previewHtml" class="preview">
+        <!-- <section v-show="previewHtml" class="preview">
           <h3 class="title-form">Preview hiện tại</h3>
           <div v-html="previewHtml" class="docx-preview"></div>
         </section> -->
         <!-- FORM chỉnh sửa -->
-        <section v-if="placeholdersCommon.length" class="edit-form" style="width: 400px;">
+        <section v-show="placeholdersCommon.length" class="edit-form" style="width: 400px;">
           <h3 class="title-form">Thông Tin Chung Của Các File</h3>
           <form>
             <div v-for="ph in placeholdersCommon" :key="ph" class="form-group">
@@ -25,7 +25,7 @@
             </div>
           </form>
         </section>
-        <section v-if="placeholders.length" class="edit-form">
+        <section v-show="placeholders.length" class="edit-form">
           <h3 class="title-form">Thông Tin File(Điều lệ.docx)</h3>
           <form>
             <div v-for="ph in placeholders" :key="ph" class="form-group">
@@ -34,7 +34,7 @@
             </div>
           </form>
         </section>
-        <section v-if="placeholders2.length" class="edit-form">
+        <section v-show="placeholders2.length" class="edit-form">
           <h3 class="title-form">Thông Tin File(GĐN đăng ký doanh nghiệp.docx)</h3>
           <form>
             <div v-for="ph in placeholders2" :key="ph" class="form-group">
@@ -43,7 +43,7 @@
             </div>
           </form>
         </section>
-        <section v-if="placeholders3.length" class="edit-form">
+        <section v-show="placeholders3.length" class="edit-form">
           <h3 class="title-form">Thông Tin File(Giấy ủy quyền.docx)</h3>
           <form>
             <div v-for="ph in placeholders3" :key="ph" class="form-group">
@@ -52,7 +52,7 @@
             </div>
           </form>
         </section>
-        <section v-if="placeholders4.length" class="edit-form">
+        <section v-show="placeholders4.length" class="edit-form">
           <h3 class="title-form">Thông Tin File(DANH SÁCH CHỦ SỞ HỮU HƯỞNG LỢI CỦA DOANH NGHIỆP.docx)</h3>
           <form>
             <div v-for="ph in placeholders4" :key="ph" class="form-group">
@@ -61,7 +61,7 @@
             </div>
           </form>
         </section>
-        <section class="edit-form">
+        <section v-show="this.placeholdersCommon.length" class="edit-form">
           <h3 class="title-form">Thông Tin File(Danh sách thành viên.docx)</h3>
           <!-- <form>
             <div v-for="ph in placeholders5" :key="ph" class="form-group">
@@ -121,7 +121,7 @@
             </div>
           </template>
         </section>
-        <section class="edit-form" v-if="placeholdersCommon.length">
+        <section class="edit-form" v-show="placeholdersCommon.length">
           <h3 class="title-form">Ngành Nghề</h3>
           <div class="form-group1">
             <input type="checkbox" id="nnbbth" class="checkbox" v-model="nnbbth">
@@ -154,12 +154,12 @@
         </section>
       </div>
       <!-- Download link -->
-      <!-- <section v-if="downloadUrl" class="download">
+      <!-- <section v-show="downloadUrl" class="download">
         <h3>File mới đã sẵn sàng</h3>
         <a id="btn-download" class="btn-download">Tải file</a>
       </section> -->
     </section>
-    <section v-if="placeholdersCommon.length" class="btn-group">
+    <section v-show="placeholdersCommon.length" class="btn-group">
       <button @click="resetAll()" class="btn-refesh">Làm Mới</button>
       <button :disabled="updating" @click="applyChanges()" class="btn-primary">{{ updating ? 'Đang Tạo File...' : 'Tạo File Mới' }}</button>
     </section>
@@ -182,7 +182,6 @@ import mayMac from '@/data/mayMac.json'
 import nganhNgheTongHop from '@/data/nganhNgheTongHop.json'
 import xayDung from '@/data/xayDung'
 export default {
-  // Đăng kí kinh doanh 1 thành viên
   data() {
     return {
       fileId: "",
@@ -709,7 +708,7 @@ export default {
   .wrapper {
     display: flex;
     justify-content: space-between;
-    // width: 1024px;
+    width: 1024px;
   }
   .title-form {
     font-size: 18px;
