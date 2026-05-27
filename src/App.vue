@@ -4,8 +4,8 @@
     <div>
       <header>
         <nav>
-          <a href="#">Đăng kí kinh doanh 1 thành viên</a>
-          <a href="#">Đăng kí kinh doanh nhiều thành viên</a>
+          <a href="/">Đăng kí kinh doanh 1 thành viên</a>
+          <a href="/dkkdntv">Đăng kí kinh doanh nhiều thành viên</a>
           <a href="#">Dịch vụ</a>
           <a href="#">Blog</a>
           <a href="#">Liên hệ</a>

@@ -20,7 +20,7 @@
           <h3 class="title-form">Thông Tin Chung Của Các File</h3>
           <form>
             <div v-for="ph in placeholdersCommon" :key="ph" class="form-group">
-              <label :for="ph">{{ ph.includes('ct_ct') ? ph.slice(5) : ph.slice(4) }}</label>
+              <label :for="ph">{{ ph.includes('ct_') ? ph.slice(3) : ph }}</label>
               <input type="text" :id="ph" v-model="formValuesCommon[ph]" required>
             </div>
           </form>
@@ -29,7 +29,7 @@
           <h3 class="title-form">Thông Tin File(Điều lệ.docx)</h3>
           <form>
             <div v-for="ph in placeholders" :key="ph" class="form-group">
-              <label :for="ph">{{ ph.includes('ct_ct') ? ph.slice(5) : ph.slice(4) }}</label>
+              <label :for="ph">{{ ph.includes('ct_') ? ph.slice(4) : ph }}</label>
               <input type="text" :id="ph" v-model="formValues[ph]" required>
             </div>
           </form>
@@ -38,7 +38,7 @@
           <h3 class="title-form">Thông Tin File(GĐN đăng ký doanh nghiệp.docx)</h3>
           <form>
             <div v-for="ph in placeholders2" :key="ph" class="form-group">
-              <label :for="ph">{{ ph.includes('ct_ct') ? ph.slice(5) : ph.slice(4) }}</label>
+              <label :for="ph">{{ ph.includes('ct_') ? ph.slice(4) : ph }}</label>
               <input type="text" :id="ph" v-model="formValues2[ph]" required>
             </div>
           </form>
@@ -60,6 +60,66 @@
               <input type="text" :id="ph" v-model="formValues4[ph]" required>
             </div>
           </form>
+        </section>
+        <section class="edit-form">
+          <h3 class="title-form">Thông Tin File(Danh sách thành viên.docx)</h3>
+          <!-- <form>
+            <div v-for="ph in placeholders5" :key="ph" class="form-group">
+              <label :for="ph">{{ ph }}</label>
+              <input type="text" :id="ph" v-model="formValues5[ph]">
+            </div>
+          </form> -->
+          <button @click="addUser">Thêm thành viên</button>
+          <template v-if="userInfoForm.length > 0">
+            <div v-for="(item,index) in userInfoForm" :key="index" class="userInfo">
+              <hr style="margin-top: 12px">
+              <button v-on:click="removeUser(index)">Xóa</button>
+              <div class="form-group">
+                <label>Họ và tên</label>
+                <input type="text" v-model="item.name">
+              </div>
+              <div class="form-group">
+                <label>Giới tính</label>
+                <input type="text" v-model="item.gender">
+              </div>
+              <div class="form-group">
+                <label>Ngày sinh</label>
+                <input type="text" v-model="item.birthday">
+              </div>
+              <div class="form-group">
+                <label>Số định danh cá nhân</label>
+                <input type="text" v-model="item.idNumber">
+              </div>
+              <div class="form-group">
+                <label>Số nhà</label>
+                <input type="text" v-model="item.homeNumber">
+              </div>
+              <div class="form-group">
+                <label>Phường</label>
+                <input type="text" v-model="item.ward">
+              </div>
+              <div class="form-group">
+                <label>Tỉnh</label>
+                <input type="text" v-model="item.city">
+              </div>
+              <div class="form-group">
+                <label>Vốn bằng số</label>
+                <input type="text" v-model="item.vbs">
+              </div>
+              <div class="form-group">
+                <label>Vốn bằng chữ</label>
+                <input type="text" v-model="item.vbc">
+              </div>
+              <div class="form-group">
+                <label>Tỉ lệ %</label>
+                <input type="text" v-model="item.tl">
+              </div>
+              <div class="form-group">
+                <label>Chức danh</label>
+                <input type="text" v-model="item.position">
+              </div>
+            </div>
+          </template>
         </section>
         <section class="edit-form" v-if="placeholdersCommon.length">
           <h3 class="title-form">Ngành Nghề</h3>
@@ -127,10 +187,11 @@ export default {
     return {
       fileId: "",
       fileContent: "",
-      docLink: 'https://docs.google.com/document/d/1dwA-IX7KrQ9bYa8rasDngsvVQseYEsZq/edit?usp=drive_link&ouid=107831693588829116850&rtpof=true&sd=true',
-      link1: 'https://docs.google.com/document/d/1ZeslPYMNwXKrThmUovvDFg4LfjNAlLhL/edit?usp=drive_link&ouid=107831693588829116850&rtpof=true&sd=true',
-      link2: 'https://docs.google.com/document/d/1YzqneGER0Ka24MNSZPUw1-ZXCc_NHdSS/edit?usp=drive_link&ouid=107831693588829116850&rtpof=true&sd=true',
-      link3: 'https://docs.google.com/document/d/1l8UnC6ANaxXUDi2hq0swL6Ce3eRxJz1k/edit?usp=sharing&ouid=107831693588829116850&rtpof=true&sd=true',
+      docLink: 'https://docs.google.com/document/d/1lMJeBwEhvIKEP-m2sSoXAkKc46FfGnFo/edit?usp=drive_link&ouid=107831693588829116850&rtpof=true&sd=true',
+      link1: 'https://docs.google.com/document/d/19pavHMojA-QjNqLUEXI0KCUXhGTGMj8F/edit?usp=drive_link&ouid=107831693588829116850&rtpof=true&sd=true',
+      link2: 'https://docs.google.com/document/d/1QYSLSKw263s8A5pk8Lkc-RxcQ542Srn-/edit?usp=drive_link&ouid=107831693588829116850&rtpof=true&sd=true',
+      link3: 'https://docs.google.com/document/d/1fH_2eBuQlFBzR96zmN7dcdCIFg5iEOuo/edit?usp=drive_link&ouid=107831693588829116850&rtpof=true&sd=true',
+      link4: 'https://docs.google.com/document/d/1P79aPAzAIl6Ag_BRAqiWpSfYRrwal1Jf/edit?usp=sharing&ouid=107831693588829116850&rtpof=true&sd=true',
       loading: false,
       updating: false,
       previewHtml: '',
@@ -139,16 +200,19 @@ export default {
       placeholders2: [],
       placeholders3: [],
       placeholders4: [],
+      placeholders5: [],
       placeholdersCommon: [],
       formValues: {},
       formValues2: {},
       formValues3: {},
       formValues4: {},
+      formValues5: {},
       formValuesCommon: {},
       uniq: [],
       uniq2: [],
       uniq3: [],
       uniq4: [],
+      uniq5: [],
       nngd: false,
       nncxcq: false,
       nnth: false,
@@ -156,6 +220,7 @@ export default {
       nnxd: false,
       nnmm: false,
       nnbbth: false,
+      userInfoForm: [],
 
 
       // tokenClient: null,
@@ -171,6 +236,24 @@ export default {
     await this.getFile();
   },
   methods: {
+    removeUser(index) {
+      this.userInfoForm.splice(index, 1);
+    },
+    addUser() {
+      this.userInfoForm.push({
+        name: '',
+        gender: '',
+        birthday: '',
+        idNumber: '',
+        homeNumber: '',
+        ward: '',
+        city: '',
+        vbs: '',
+        tl: '',
+        position: '',
+        vbc: ''
+      })
+    },
     async initGapi() {
       await new Promise((resolve) => {
         gapi.load("client", resolve);
@@ -207,37 +290,49 @@ export default {
       }
       this.loading = true;
 
-        const [uniq, uniq2, uniq3, uniq4] = await Promise.all([
+        const [uniq, uniq2, uniq3, uniq4, uniq5] = await Promise.all([
           this.getPlaceholdersFromDoc(this.docLink),
           this.getPlaceholdersFromDoc(this.link1),
           this.getPlaceholdersFromDoc(this.link2),
           this.getPlaceholdersFromDoc(this.link3),
+          this.getPlaceholdersFromDoc(this.link4),
         ]);
         
-        const {commonAtLeast2, uniqueByArray} = this.analyzeArrays([uniq, uniq2, uniq3, uniq4]);
+        const {commonAtLeast2, uniqueByArray} = this.analyzeArrays([uniq, uniq2, uniq3, uniq4, uniq5]);
         this.uniq = uniq;
         this.uniq2 = uniq2;
         this.uniq3 = uniq3;
         this.uniq4 = uniq4;
+        this.uniq5 = uniq5;
         
         commonAtLeast2.forEach(key => (this.formValuesCommon[key] = ''));
         uniqueByArray[0].forEach(key => (this.formValues[key] = ''));
         uniqueByArray[1].forEach(key => (this.formValues2[key] = ''));
         uniqueByArray[2].forEach(key => (this.formValues3[key] = ''));
         uniqueByArray[3].forEach(key => (this.formValues4[key] = ''));
+        uniqueByArray[4].forEach(key => (this.formValues5[key] = ''));
         this.placeholders = uniqueByArray[0];
         
         
         this.placeholders2 = uniqueByArray[1];
         this.placeholders3 = uniqueByArray[2];
         this.placeholders4 = uniqueByArray[3];
+        this.placeholders5 = uniqueByArray[4];
         this.placeholdersCommon = commonAtLeast2;
         
         // object table word
-        const removeList = ["#d", "id", "name", "code", "/d"]
+        const filterByPrefix = (arr, keyword) => arr.filter(item => item.includes(keyword));
+        const tv1Items = filterByPrefix(this.placeholdersCommon, 'tv1');
+        const removeList = ['#nganhList', '/nganhList', '#listUser', '/listUser', 'code', 'name', 'id', ...tv1Items];
+        const removeList2 = ['tv2_Họ tên','#listUser2', '/listUser2'];
+
         const result = this.placeholdersCommon.filter(item => !removeList.includes(item))
+        const result2 = this.placeholders.filter(item => !removeList2.includes(item))
         this.placeholdersCommon = result;
-        console.log("123", this.placeholdersCommon);
+        this.placeholders = result2;
+        // tv1 vốn bằng chữ
+        this.placeholders5 = this.placeholders5.filter(item => !item.includes('tv1'));
+
         this.placeholdersCommon = this.sortCustom(this.placeholdersCommon).reverse();
       } catch (error) {
         alert("Lỗi khi tải hoặc phân tích file: " + error.message);
@@ -330,6 +425,9 @@ export default {
         if (this.uniq4.indexOf(key) !== -1) {
           this.formValues4[key] = this.formValuesCommon[key];
         }
+        if (this.uniq5.indexOf(key) !== -1) {
+          this.formValues5[key] = this.formValuesCommon[key];
+        }
       }
       // if (!this.placeholders.length) return;
       this.updating = true;
@@ -341,10 +439,11 @@ export default {
           this.extractDocId(this.link1),
           this.extractDocId(this.link2),
           this.extractDocId(this.link3),
+          this.extractDocId(this.link4),
         ];
 
         // fetch song song
-        const [buffer, buffer2, buffer3, buffer4] = await Promise.all(
+        const [buffer, buffer2, buffer3, buffer4, buffer5] = await Promise.all(
           ids.map(id => this.fetchDocBuffer(id))
         );
         // tạo doc
@@ -353,6 +452,7 @@ export default {
           this.createDoc(buffer2),
           this.createDoc(buffer3),
           this.createDoc(buffer4),
+          this.createDoc(buffer5),
         ];
         // filter ngành nghề
         const mapping = [
@@ -364,37 +464,104 @@ export default {
           { condition: this.nncxcq, data: cayXanhCanhQuan },
           { condition: this.nngd, data: giaoDuc },
         ];
-        this.formValues.d = mapping
+        this.formValues.nganhList = mapping
           .filter(item => item.condition)
           .flatMap(item => item.data);
-        this.formValues.d.forEach((item, index) => {
+        this.formValues.nganhList.forEach((item, index) => {
           item.id = index + 1;
         })
-        // GDN
-        this.formValues2.d = this.formValues.d;
-        const [doc, doc2, doc3, doc4] = docs;
+        this.formValues2.nganhList = this.formValues.nganhList;
+        this.formValues5.listUser = this.userInfoForm.map(item => {
+          return {
+            'tv1_Giới tính': item.gender,
+            'tv1_Họ tên': item.name,
+            'tv1_Số định danh cá nhân': item.idNumber,
+            'tv1_chức danh': item.position,
+            'tv1_ngày sinh': item.birthday,
+            'tv1_phường': item.ward,
+            'tv1_số nhà': item.homeNumber,
+            'tv1_tỉ lệ %': item.tl,
+            'tv1_tỉnh': item.city,
+            'tv1_vốn bằng chữ': item.vbc,
+            'tv1_vốn bằng số': item.vbs
+          }
+        })
+
+        //3. Danh sách thành viên
+        this.formValues5 = {
+          listUser: this.formValues5.listUser,
+          'ct_tỉnh': this.formValues5['ct_tỉnh'],
+          'tv1_chức danh': this.formValues5.listUser[0]['tv1_chức danh'],
+          'tv1_Họ tên': this.formValues5.listUser[0]['tv1_Họ tên'],
+        }
+        //5. DANH SÁCH CHỦ SỞ HỮU HƯỞNG LỢI CỦA DOANH NGHIỆP
+        this.formValues4.listUser = this.formValues5.listUser;
+        this.formValues4['ct_tỉnh'] = this.formValues5['ct_tỉnh'];
+        this.formValues4['tv1_chức danh'] = this.formValues5['tv1_chức danh'];
+        this.formValues4['tv1_Họ tên'] = this.formValues5['tv1_Họ tên'];
+
+        //4. Giấy ủy quyền
+        this.formValues3['tv1_Họ tên'] = this.formValues5.listUser[0]['tv1_Họ tên'];
+        this.formValues3['tv1_Giới tính'] = this.formValues5.listUser[0]['tv1_Giới tính'];
+        this.formValues3['tv1_ngày sinh'] = this.formValues5.listUser[0]['tv1_ngày sinh'];
+        this.formValues3['tv1_Số định danh cá nhân'] = this.formValues5.listUser[0]['tv1_Số định danh cá nhân'];
+        this.formValues3['tv1_số nhà'] = this.formValues5.listUser[0]['tv1_số nhà'];
+        this.formValues3['tv1_phường'] = this.formValues5.listUser[0]['tv1_phường'];
+        this.formValues3['tv1_tỉnh'] = this.formValues5.listUser[0]['tv1_tỉnh'];
+
+        // 1. GĐN Đăng ký doanh nghiệp
+        this.formValues2['tv1_Họ tên'] = this.formValues5.listUser[0]['tv1_Họ tên'];
+        this.formValues2['tv1_Giới tính'] = this.formValues5.listUser[0]['tv1_Giới tính'];
+        this.formValues2['tv1_ngày sinh'] = this.formValues5.listUser[0]['tv1_ngày sinh'];
+        this.formValues2['tv1_Số định danh cá nhân'] = this.formValues5.listUser[0]['tv1_Số định danh cá nhân'];
+        this.formValues2['tv1_số nhà'] = this.formValues5.listUser[0]['tv1_số nhà'];
+        this.formValues2['tv1_phường'] = this.formValues5.listUser[0]['tv1_phường'];
+        this.formValues2['tv1_tỉnh'] = this.formValues5.listUser[0]['tv1_tỉnh'];
+
+        // 2. Điều lệ công ty
+        this.formValues.listUser = this.formValues5.listUser;
+        this.formValues['tv1_Họ tên'] = this.formValues5.listUser[0]['tv1_Họ tên'];
+
+
+        const convertToArray2 = (arr) => {
+            const result = [];
+            for (let i = 0; i < arr.length; i += 2) {
+                result.push({
+                    'tv1_Họ tên': arr[i]?.['tv1_Họ tên'] ?? "",
+                    'tv2_Họ tên': arr[i + 1]?.['tv1_Họ tên'] ?? ""
+                });
+            }
+            return result;
+        };
+
+        this.formValues.listUser2 = convertToArray2(this.formValues5.listUser);
+        const [doc, doc2, doc3, doc4, doc5] = docs;
         const outBlob = this.renderToBlob(doc, this.formValues);
         const outBlob2 = this.renderToBlob(doc2, this.formValues2);
         const outBlob3 = this.renderToBlob(doc3, this.formValues3);
         const outBlob4 = this.renderToBlob(doc4, this.formValues4);
-
+        const outBlob5 = this.renderToBlob(doc5, this.formValues5);
         let fileArr = [
           {
-            name: 'Điều lệ',
+            name: '2. Điều lệ công ty',
             data: outBlob,
           },
           {
-            name: 'GĐN đăng ký doanh nghiệp',
+            name: '1. GĐN Đăng ký doanh nghiệp',
             data: outBlob2,
           },
           {
-            name: 'Giấy ủy quyền',
+            name: '4. Giấy ủy quyền',
             data: outBlob3,
           },
           {
-            name: 'DANH SÁCH CHỦ SỞ HỮU HƯỞNG LỢI CỦA DOANH NGHIỆP',
+            name: '5. DANH SÁCH CHỦ SỞ HỮU HƯỞNG LỢI CỦA DOANH NGHIỆP',
             data: outBlob4,
           },
+          {
+            name: '3. Danh sách thành viên',
+            data: outBlob5,
+          },  
         ]
         fileArr.forEach(item => {
           // Tạo url để người dùng tải về
@@ -542,7 +709,7 @@ export default {
   .wrapper {
     display: flex;
     justify-content: space-between;
-    width: 1024px;
+    // width: 1024px;
   }
   .title-form {
     font-size: 18px;
