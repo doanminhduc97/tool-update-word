@@ -247,7 +247,7 @@ export default {
         this.placeholdersCommon = commonAtLeast2;
         
         // object table word
-        const removeList = ["#d", "id", "name", "code", "/d"]
+        const removeList = ["#d", "id", "name", "code", "/d"];
         const result = this.placeholdersCommon.filter(item => !removeList.includes(item))
         this.placeholdersCommon = result;
         console.log("123", this.placeholdersCommon);
@@ -572,7 +572,7 @@ export default {
   .wrapper {
     display: flex;
     justify-content: space-between;
-    width: 1024px;
+    // width: 1024px;
   }
   .title-form {
     font-size: 18px;
