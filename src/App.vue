@@ -3,12 +3,12 @@
 
     <div>
       <header>
-        <nav>
-          <a href="/">Đăng kí kinh doanh 1 thành viên</a>
-          <a href="/dkkdntv">Đăng kí kinh doanh nhiều thành viên</a>
-          <a href="#">Dịch vụ</a>
+        <nav style="position: fixed; top: 20px;">
+          <a  @click="changeRoute('/')">Đăng kí kinh doanh 1 thành viên</a>
+          <a @click="changeRoute('/dkkdntv')">Đăng kí kinh doanh nhiều thành viên</a>
+          <!-- <a href="#">Dịch vụ</a>
           <a href="#">Blog</a>
-          <a href="#">Liên hệ</a>
+          <a href="#">Liên hệ</a> -->
           <!-- <a href="#" class="btn">Đăng nhập</a> -->
         </nav>
       </header>
@@ -27,6 +27,11 @@ export default {
 
   //   })
   // },
+  methods: {
+    changeRoute(path) {
+      this.$router.push(path);
+    }
+  }
 }
 </script>
 <style lang="scss">
