@@ -247,7 +247,6 @@ export default {
         const removeList = ["#d", "id", "name", "code", "/d"];
         const result = this.placeholdersCommon.filter(item => !removeList.includes(item))
         this.placeholdersCommon = result;
-        console.log("123", this.placeholdersCommon);
         this.placeholdersCommon = this.sortCustom(this.placeholdersCommon).reverse();
         const fromIndex = this.placeholdersCommon.indexOf("ct_ct Tỉnh");
         const phuongIndex = this.placeholdersCommon.indexOf("ct_ct Phường");
@@ -264,7 +263,6 @@ export default {
             // Chèn lại đúng vị trí
             this.placeholdersCommon.splice(newIndex, 0, item);
         }
-        console.log("placeholdersCommon", this.placeholdersCommon)
 
       } catch (error) {
         alert("Lỗi khi tải hoặc phân tích file: " + error.message);
