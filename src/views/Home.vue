@@ -16,10 +16,10 @@
           <div v-html="previewHtml" class="docx-preview"></div>
         </section> -->
         <!-- FORM chỉnh sửa -->
-        <section v-if="placeholdersCommon.length" class="edit-form" style="width: 400px;">
+        <section v-if="placeholdersCommon.length" class="edit-form" style="width: 564px;">
           <div style="display: flex;">
             <div style="margin-right: 12px;">
-              <h3 class="title-form">Thông Tin Công ty</h3>
+              <h3 class="title-form" style="height: 58px;">Thông Tin Công ty</h3>
               <form>
                 <div v-for="ph in placeholdersCommon.slice(0, 10)" :key="ph" class="form-group">
                   <label :for="ph">{{ ph.includes('ct_ct') ? ph.slice(5) : ph.slice(4) }}</label>
@@ -28,7 +28,7 @@
               </form>
             </div>
             <div>
-              <h3 class="title-form">Thông Tin Chủ sở hữu</h3>
+              <h3 class="title-form" style="height: 58px;">Thông Tin Chủ sở hữu</h3>
               <form>
                 <div v-for="ph in placeholdersCommon.slice(10)" :key="ph" class="form-group">
                   <label :for="ph">{{ ph.includes('ct_ct') ? ph.slice(5) : ph.slice(4) }}</label>
@@ -144,7 +144,6 @@ export default {
       link1: 'https://docs.google.com/document/d/1ZeslPYMNwXKrThmUovvDFg4LfjNAlLhL/edit?usp=drive_link&ouid=107831693588829116850&rtpof=true&sd=true',
       link2: 'https://docs.google.com/document/d/1YzqneGER0Ka24MNSZPUw1-ZXCc_NHdSS/edit?usp=drive_link&ouid=107831693588829116850&rtpof=true&sd=true',
       link3: 'https://docs.google.com/document/d/1l8UnC6ANaxXUDi2hq0swL6Ce3eRxJz1k/edit?usp=sharing&ouid=107831693588829116850&rtpof=true&sd=true',
-      loading: false,
       updating: false,
       previewHtml: '',
       downloadUrl: '',
@@ -175,10 +174,7 @@ export default {
     };
   },
 
-  mounted() {
-    
-  },
-  async created() {
+  async mounted() {
     await this.initGapi();
     await this.initAuth();
     await this.getFile();
@@ -213,12 +209,13 @@ export default {
     //   this.tokenClient.requestAccessToken();
     // },
     async getFile() {
+      const loading = document.getElementById("loading-overlay");
+      loading.style.display = "flex";
       try {
       if (!this.docLink) return alert('Vui Lòng Nhập Link!');
       if (this.docLink) {
         this.fileId = this.extractDocId(this.docLink);
       }
-      this.loading = true;
 
         const [uniq, uniq2, uniq3, uniq4] = await Promise.all([
           this.getPlaceholdersFromDoc(this.docLink),
@@ -272,7 +269,7 @@ export default {
       } catch (error) {
         alert("Lỗi khi tải hoặc phân tích file: " + error.message);
       } finally {
-        this.loading = false;
+        loading.style.display = "none";
       }
     },
     async getPlaceholdersFromDoc(link) {
@@ -347,6 +344,8 @@ export default {
     },
     // APPLY CHANGES
     async applyChanges() {
+      const loading = document.getElementById("loading-overlay");
+      loading.style.display = "flex";
       for (const key in this.formValuesCommon) {
         if (this.uniq.indexOf(key) !== -1) {
           this.formValues[key] = this.formValuesCommon[key];
@@ -452,6 +451,7 @@ export default {
         console.log(error.properties.errors);
       } finally {
         this.updating = false;
+        loading.style.display = "none";
       }
     },
     async fetchDocBuffer(fileId) {

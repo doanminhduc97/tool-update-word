@@ -2,10 +2,14 @@
     <!-- <img alt="Vue logo" class="logo" src="./assets/logo.svg" width="125" height="125" /> -->
 
     <div>
+      <div id="loading-overlay">
+        <div class="spinner"></div>
+      </div>
       <header>
-        <nav style="position: fixed; top: 20px;">
-          <a  @click="changeRoute('/')">Đăng kí kinh doanh 1 thành viên</a>
-          <a @click="changeRoute('/dkkdntv')">Đăng kí kinh doanh nhiều thành viên</a>
+        <nav>
+          <a class="btn-menu" :class="{ 'active': isActiveMenu('/') }" @click="changeRoute('/', 1)">Đăng kí kinh doanh 1 thành viên</a>
+          <a class="btn-menu" :class="{ 'active': isActiveMenu('/dkkdntv') }" @click="changeRoute('/dkkdntv', 2)">Đăng kí kinh doanh nhiều thành viên</a>
+          <a class="btn-menu" :class="{ 'active': isActiveMenu('/tlctcp') }" @click="changeRoute('/tlctcp', 3)">Thành lập công ty cổ phần</a>
           <!-- <a href="#">Dịch vụ</a>
           <a href="#">Blog</a>
           <a href="#">Liên hệ</a> -->
@@ -27,9 +31,19 @@ export default {
 
   //   })
   // },
+  data() {
+    return {
+      // message: 'Hello Vue!'
+      id: 1,
+    }
+  },
   methods: {
-    changeRoute(path) {
+    changeRoute(path, id) {
+      this.id = id;
       this.$router.push(path);
+    },
+    isActiveMenu(path) {
+      return this.$route.path === path ? true : false;
     }
   }
 }
@@ -73,6 +87,11 @@ export default {
       display:flex;
       gap:30px;
       align-items:center;
+      top: 0px;
+      background: white;
+      z-index: 99;
+      padding: 20px;
+      position: fixed;
     }
 
     nav a{
@@ -109,5 +128,37 @@ export default {
     .btn:hover{
       background:#0ea5e9;
     }
+    .active {
+      background: #38bdf8;
+    }
+    .btn-menu {
+      cursor: pointer;
+    }
+  #loading-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(255, 255, 255, 0.7); /* nền mờ */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 9999;
+  }
 
+  .spinner {
+    width: 60px;
+    height: 60px;
+    border: 6px solid #e5e7eb;
+    border-top: 6px solid #3b82f6;
+    border-radius: 50%;
+    animation: spin 0.8s linear infinite;
+  }
+
+  @keyframes spin {
+    to {
+      transform: rotate(360deg);
+    }
+  }
 </style>

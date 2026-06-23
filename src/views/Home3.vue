@@ -103,12 +103,16 @@
                 <input type="text" v-model="item.city">
               </div>
               <div class="form-group">
-                <label>Vốn bằng số</label>
-                <input type="text" v-model="item.vbs">
-              </div>
-              <div class="form-group">
                 <label>Vốn bằng chữ</label>
                 <input type="text" v-model="item.vbc">
+              </div>
+              <div class="form-group">
+                <label>Tổng số cổ phần(Số lượng)</label>
+                <input type="text" v-model="item.sl">
+              </div>
+              <div class="form-group">
+                <label>Tổng số cổ phần(Giá trị)</label>
+                <input type="text" v-model="item.giaTri">
               </div>
               <div class="form-group">
                 <label>Tỉ lệ %</label>
@@ -186,11 +190,16 @@ export default {
     return {
       fileId: "",
       fileContent: "",
-      docLink: 'https://docs.google.com/document/d/1lMJeBwEhvIKEP-m2sSoXAkKc46FfGnFo/edit?usp=drive_link&ouid=107831693588829116850&rtpof=true&sd=true',
-      link1: 'https://docs.google.com/document/d/19pavHMojA-QjNqLUEXI0KCUXhGTGMj8F/edit?usp=drive_link&ouid=107831693588829116850&rtpof=true&sd=true',
-      link2: 'https://docs.google.com/document/d/1QYSLSKw263s8A5pk8Lkc-RxcQ542Srn-/edit?usp=drive_link&ouid=107831693588829116850&rtpof=true&sd=true',
-      link3: 'https://docs.google.com/document/d/1fH_2eBuQlFBzR96zmN7dcdCIFg5iEOuo/edit?usp=drive_link&ouid=107831693588829116850&rtpof=true&sd=true',
-      link4: 'https://docs.google.com/document/d/1P79aPAzAIl6Ag_BRAqiWpSfYRrwal1Jf/edit?usp=sharing&ouid=107831693588829116850&rtpof=true&sd=true',
+      // Điều lệ
+      docLink: 'https://docs.google.com/document/d/1z-TnY91ND0OXV-xy33XRObOMUjzxu4nj/edit?usp=drive_link&ouid=107831693588829116850&rtpof=true&sd=true',
+      // GĐN
+      link1: 'https://docs.google.com/document/d/106jnDEo7G_lYF7OBYuuy656uCU4mNgPP/edit?usp=drive_link&ouid=107831693588829116850&rtpof=true&sd=true',
+      // Giấy ủy quyền
+      link2: 'https://docs.google.com/document/d/1oSbGxFBP9mX7nM1KxszYxw_S1JlrPlAM/edit?usp=drive_link&ouid=107831693588829116850&rtpof=true&sd=true',
+      // 5. DANH SÁCH CHỦ SỞ HỮU HƯỞNG LỢI CỦA DOANH NGHIỆP
+      link3: 'https://docs.google.com/document/d/1sKC6oKp4Yfz8WgL6Gm7PlM8FWZk3iPmK/edit?usp=drive_link&ouid=107831693588829116850&rtpof=true&sd=true',
+      // 3. Danh sách cổ đông sáng lập
+      link4: 'https://docs.google.com/document/d/1OpBIjGF_m1A8KVJDju7rOnmIzzUp1mGB/edit?usp=drive_link&ouid=107831693588829116850&rtpof=true&sd=true',
       updating: false,
       previewHtml: '',
       downloadUrl: '',
@@ -225,7 +234,10 @@ export default {
     };
   },
 
-  async mounted() {
+  mounted() {
+    
+  },
+  async created() {
     await this.initGapi();
     await this.initAuth();
     await this.getFile();
@@ -243,10 +255,11 @@ export default {
         homeNumber: '',
         ward: '',
         city: '',
-        vbs: '',
+        sl: '',
         tl: '',
         position: '',
-        vbc: ''
+        giaTri: '',
+        vbc: '',
       })
     },
     async initGapi() {
@@ -317,16 +330,18 @@ export default {
         
         // object table word
         const filterByPrefix = (arr, keyword) => arr.filter(item => item.includes(keyword));
-        const tv1Items = filterByPrefix(this.placeholdersCommon, 'tv1');
-        const removeList = ['#nganhList', '/nganhList', '#listUser', '/listUser', 'code', 'name', 'id', ...tv1Items];
-        const removeList2 = ['tv2_Họ tên','#listUser2', '/listUser2'];
+        const cd1Items = filterByPrefix(this.placeholdersCommon, 'cđ1_');
+        const removeCommonList = [...cd1Items, '#listUser2', '/listUser2', '#nganhList', '/nganhList', '/listUser', '#listUser', 'code', 'id', 'name1', 'name2', 'name3', "name"];
+        const removeList2 = ['#listUser2', '/listUser2', 'name1', 'name2', 'name3'];
 
-        const result = this.placeholdersCommon.filter(item => !removeList.includes(item))
+        const result = this.placeholdersCommon.filter(item => !removeCommonList.includes(item))
         const result2 = this.placeholders.filter(item => !removeList2.includes(item))
+
         this.placeholdersCommon = result;
+        // Điều lệ công ty
         this.placeholders = result2;
-        // tv1 vốn bằng chữ
-        this.placeholders5 = this.placeholders5.filter(item => !item.includes('tv1'));
+        // cđ1 vốn bằng chữ
+        this.placeholders5 = this.placeholders5.filter(item => !item.includes('cđ1'));
 
         this.placeholdersCommon = this.sortCustom(this.placeholdersCommon).reverse();
       } catch (error) {
@@ -456,6 +471,7 @@ export default {
           this.createDoc(buffer4),
           this.createDoc(buffer5),
         ];
+
         // filter ngành nghề
         const mapping = [
           { condition: this.nnbbth, data: buonBanTongHop },
@@ -472,78 +488,82 @@ export default {
         this.formValues.nganhList.forEach((item, index) => {
           item.id = index + 1;
         })
+
         this.formValues2.nganhList = this.formValues.nganhList;
-        
         this.formValues5.listUser = this.userInfoForm.map(item => {
           return {
-            'tv1_Giới tính': item.gender,
-            'tv1_Họ tên': item.name,
-            'tv1_Số định danh cá nhân': item.idNumber,
-            'tv1_chức danh': item.position,
-            'tv1_ngày sinh': item.birthday,
-            'tv1_phường': item.ward,
-            'tv1_số nhà': item.homeNumber,
-            'tv1_tỉ lệ %': item.tl,
-            'tv1_tỉnh': item.city,
-            'tv1_vốn bằng chữ': item.vbc,
-            'tv1_vốn bằng số': item.vbs
+            'cđ1_Giới tính': item.gender,
+            'cđ1_Họ và tên': item.name,
+            'cđ1_Số định danh': item.idNumber,
+            'cđ1_Chức danh': item.position,
+            'cđ1_Ngày sinh': item.birthday,
+            'cđ1_Phường': item.ward,
+            'cđ1_Số nhà': item.homeNumber,
+            'cđ1_tỷ lệ %': item.tl,
+            'cđ1_Tỉnh': item.city,
+            'cđ1_Vốn': item.giaTri,
+            'cđ1_Số cổ phần': item.sl,
+            'cđ1_Vốn bằng chữ': item.vbc,
           }
         })
 
         //3. Danh sách thành viên
         this.formValues5 = {
           listUser: this.formValues5.listUser,
-          'ct_tỉnh': this.formValues5['ct_tỉnh'],
-          'tv1_chức danh': this.formValues5.listUser[0]['tv1_chức danh'],
-          'tv1_Họ tên': this.formValues5.listUser[0]['tv1_Họ tên'],
+          'ct_Tỉnh': this.formValues5['ct_Tỉnh'],
+          'cđ1_Chức danh': this.formValues5.listUser[0]['cđ1_Chức danh'],
+          'cđ1_Họ và tên': this.formValues5.listUser[0]['cđ1_Họ và tên'],
         }
-        //5. DANH SÁCH CHỦ SỞ HỮU HƯỞNG LỢI CỦA DOANH NGHIỆP
+        //5. DANH SÁCH CHỦ SỞ HỮU HƯỞNG LỢI CỦA DOANH NGHIỆP
         this.formValues4.listUser = this.formValues5.listUser;
-        this.formValues4['ct_tỉnh'] = this.formValues5['ct_tỉnh'];
-        this.formValues4['tv1_chức danh'] = this.formValues5['tv1_chức danh'];
-        this.formValues4['tv1_Họ tên'] = this.formValues5['tv1_Họ tên'];
+        this.formValues4['ct_Tỉnh'] = this.formValues5['ct_Tỉnh'];
+        this.formValues4['cđ1_Chức danh'] = this.formValues5['cđ1_Chức danh'];
+        this.formValues4['cđ1_Họ và tên'] = this.formValues5['cđ1_Họ và tên'];
 
         //4. Giấy ủy quyền
-        this.formValues3['tv1_Họ tên'] = this.formValues5.listUser[0]['tv1_Họ tên'];
-        this.formValues3['tv1_Giới tính'] = this.formValues5.listUser[0]['tv1_Giới tính'];
-        this.formValues3['tv1_ngày sinh'] = this.formValues5.listUser[0]['tv1_ngày sinh'];
-        this.formValues3['tv1_Số định danh cá nhân'] = this.formValues5.listUser[0]['tv1_Số định danh cá nhân'];
-        this.formValues3['tv1_số nhà'] = this.formValues5.listUser[0]['tv1_số nhà'];
-        this.formValues3['tv1_phường'] = this.formValues5.listUser[0]['tv1_phường'];
-        this.formValues3['tv1_tỉnh'] = this.formValues5.listUser[0]['tv1_tỉnh'];
+        this.formValues3['cđ1_Họ và tên'] = this.formValues5.listUser[0]['cđ1_Họ và tên'];
+        this.formValues3['cđ1_Giới tính'] = this.formValues5.listUser[0]['cđ1_Giới tính'];
+        this.formValues3['cđ1_Ngày sinh'] = this.formValues5.listUser[0]['cđ1_Ngày sinh'];
+        this.formValues3['cđ1_Số định danh'] = this.formValues5.listUser[0]['cđ1_Số định danh'];
+        this.formValues3['cđ1_Số nhà'] = this.formValues5.listUser[0]['cđ1_Số nhà'];
+        this.formValues3['cđ1_Phường'] = this.formValues5.listUser[0]['cđ1_Phường'];
+        this.formValues3['cđ1_Tỉnh'] = this.formValues5.listUser[0]['cđ1_Tỉnh'];
 
         // 1. GĐN Đăng ký doanh nghiệp
-        this.formValues2['tv1_Họ tên'] = this.formValues5.listUser[0]['tv1_Họ tên'];
-        this.formValues2['tv1_Giới tính'] = this.formValues5.listUser[0]['tv1_Giới tính'];
-        this.formValues2['tv1_ngày sinh'] = this.formValues5.listUser[0]['tv1_ngày sinh'];
-        this.formValues2['tv1_Số định danh cá nhân'] = this.formValues5.listUser[0]['tv1_Số định danh cá nhân'];
-        this.formValues2['tv1_số nhà'] = this.formValues5.listUser[0]['tv1_số nhà'];
-        this.formValues2['tv1_phường'] = this.formValues5.listUser[0]['tv1_phường'];
-        this.formValues2['tv1_tỉnh'] = this.formValues5.listUser[0]['tv1_tỉnh'];
+        this.formValues2['cđ1_Họ và tên'] = this.formValues5.listUser[0]['cđ1_Họ và tên'];
+        this.formValues2['cđ1_Giới tính'] = this.formValues5.listUser[0]['cđ1_Giới tính'];
+        this.formValues2['cđ1_Ngày sinh'] = this.formValues5.listUser[0]['cđ1_Ngày sinh'];
+        this.formValues2['cđ1_Số định danh'] = this.formValues5.listUser[0]['cđ1_Số định danh'];
+        this.formValues2['cđ1_Số nhà'] = this.formValues5.listUser[0]['cđ1_Số nhà'];
+        this.formValues2['cđ1_Phường'] = this.formValues5.listUser[0]['cđ1_Phường'];
+        this.formValues2['cđ1_Tỉnh'] = this.formValues5.listUser[0]['cđ1_Tỉnh'];
+        this.formValues2['cđ1_Chức danh'] = this.formValues5['cđ1_Chức danh'];
 
         // 2. Điều lệ công ty
         this.formValues.listUser = this.formValues5.listUser;
-        this.formValues['tv1_Họ tên'] = this.formValues5.listUser[0]['tv1_Họ tên'];
+        this.formValues['cđ1_Họ và tên'] = this.formValues5.listUser[0]['cđ1_Họ và tên'];
 
 
-        const convertToArray2 = (arr) => {
+        const convertToArray3 = (arr) => {
             const result = [];
-            for (let i = 0; i < arr.length; i += 2) {
+            for (let i = 0; i < arr.length; i += 3) {
                 result.push({
-                    'tv1_Họ tên': arr[i]?.['tv1_Họ tên'] ?? "",
-                    'tv2_Họ tên': arr[i + 1]?.['tv1_Họ tên'] ?? ""
+                    'name1': arr[i]?.['cđ1_Họ và tên'] ?? "",
+                    'name2': arr[i + 1]?.['cđ1_Họ và tên'] ?? "",
+                    'name3': arr[i + 2]?.['cđ1_Họ và tên'] ?? "",
                 });
             }
             return result;
         };
+        this.formValues.listUser2 = convertToArray3(this.formValues5.listUser);
 
-        this.formValues.listUser2 = convertToArray2(this.formValues5.listUser);
         const [doc, doc2, doc3, doc4, doc5] = docs;
         const outBlob = this.renderToBlob(doc, this.formValues);
         const outBlob2 = this.renderToBlob(doc2, this.formValues2);
         const outBlob3 = this.renderToBlob(doc3, this.formValues3);
         const outBlob4 = this.renderToBlob(doc4, this.formValues4);
         const outBlob5 = this.renderToBlob(doc5, this.formValues5);
+
         let fileArr = [
           {
             name: '2. Điều lệ công ty',
@@ -641,7 +661,7 @@ export default {
 </script>
 <style lang="scss">
   .editor {
-    max-width: 800px;
+    min-width: 800px;
     margin: 2rem auto;
     font-family: system-ui sans-serif;
     padding: 1rem;
@@ -674,6 +694,7 @@ export default {
     }
     .wrapper {
       .edit-form {
+        min-width: 200px;
         margin-left: 30px;
         margin-top: 2rem;
         .form-group {
@@ -766,5 +787,8 @@ export default {
   background-color: #fff;
   margin-right: 16px;
   width: 103px;
+}
+button {
+  cursor: pointer;
 }
 </style>
