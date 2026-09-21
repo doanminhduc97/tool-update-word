@@ -1,172 +1,149 @@
 <template>
-  <div class="editor">
-      <!-- <p v-show="loading" class="status">Đang tải và phân tích file...</p> -->
-    <!-- <button v-show="!tokenClient" @click="login">Login</button> -->
-    <div class="field">
-      <!-- <input type="url" disabled id="link" v-model="docLink" placeholder="https://drive.google.com/..." @keyup.enter="getFile"> -->
-      <!-- <button @click="getFile" :disabled="loading">Tải File</button>/ -->
-    </div>
-    <section style="display: flex; padding: 12px;">
-      <!-- Input link -->
-      <!-- STATUS -->
-      <div class="wrapper">
-        <!-- PREVIEW (mammoth)-->
-        <!-- <section v-show="previewHtml" class="preview">
-          <h3 class="title-form">Preview hiện tại</h3>
-          <div v-html="previewHtml" class="docx-preview"></div>
-        </section> -->
-        <!-- FORM chỉnh sửa -->
-        <section v-show="placeholdersCommon.length" class="edit-form" style="width: 400px;">
-          <h3 class="title-form">Thông Tin Chung Của Các File</h3>
-          <form>
-            <div v-for="ph in placeholdersCommon" :key="ph" class="form-group">
-              <label :for="ph">{{ ph.includes('ct_') ? ph.slice(3) : ph }}</label>
-              <input type="text" :id="ph" v-model="formValuesCommon[ph]" required>
-            </div>
-          </form>
-        </section>
-        <section v-show="placeholders.length" class="edit-form">
-          <h3 class="title-form">Thông Tin File(Điều lệ.docx)</h3>
-          <form>
-            <div v-for="ph in placeholders" :key="ph" class="form-group">
-              <label :for="ph">{{ ph.includes('ct_') ? ph.slice(4) : ph }}</label>
-              <input type="text" :id="ph" v-model="formValues[ph]" required>
-            </div>
-          </form>
-        </section>
-        <section v-show="placeholders2.length" class="edit-form">
-          <h3 class="title-form">Thông Tin File(GĐN đăng ký doanh nghiệp.docx)</h3>
-          <form>
-            <div v-for="ph in placeholders2" :key="ph" class="form-group">
-              <label :for="ph">{{ ph.includes('ct_') ? ph.slice(4) : ph }}</label>
-              <input type="text" :id="ph" v-model="formValues2[ph]" required>
-            </div>
-          </form>
-        </section>
-        <section v-show="placeholders3.length" class="edit-form">
-          <h3 class="title-form">Thông Tin File(Giấy ủy quyền.docx)</h3>
-          <form>
-            <div v-for="ph in placeholders3" :key="ph" class="form-group">
-              <label :for="ph">{{ ph }}</label>
-              <input type="text" :id="ph" v-model="formValues3[ph]" required>
-            </div>
-          </form>
-        </section>
-        <section v-show="placeholders4.length" class="edit-form">
-          <h3 class="title-form">Thông Tin File(DANH SÁCH CHỦ SỞ HỮU HƯỞNG LỢI CỦA DOANH NGHIỆP.docx)</h3>
-          <form>
-            <div v-for="ph in placeholders4" :key="ph" class="form-group">
-              <label :for="ph">{{ ph }}</label>
-              <input type="text" :id="ph" v-model="formValues4[ph]" required>
-            </div>
-          </form>
-        </section>
-        <section v-show="this.placeholdersCommon.length" class="edit-form">
-          <h3 class="title-form">Thông Tin File(Danh sách thành viên.docx)</h3>
-          <!-- <form>
-            <div v-for="ph in placeholders5" :key="ph" class="form-group">
-              <label :for="ph">{{ ph }}</label>
-              <input type="text" :id="ph" v-model="formValues5[ph]">
-            </div>
-          </form> -->
-          <button @click="addUser">Thêm thành viên</button>
-          <template v-if="userInfoForm.length > 0">
-            <div v-for="(item,index) in userInfoForm" :key="index" class="userInfo">
-              <hr style="margin-top: 12px">
-              <button v-on:click="removeUser(index)">Xóa</button>
-              <div class="form-group">
-                <label>Họ và tên</label>
-                <input type="text" v-model="item.name">
-              </div>
-              <div class="form-group">
-                <label>Giới tính</label>
-                <input type="text" v-model="item.gender">
-              </div>
-              <div class="form-group">
-                <label>Ngày sinh</label>
-                <input type="text" v-model="item.birthday">
-              </div>
-              <div class="form-group">
-                <label>Số định danh cá nhân</label>
-                <input type="text" v-model="item.idNumber">
-              </div>
-              <div class="form-group">
-                <label>Số nhà</label>
-                <input type="text" v-model="item.homeNumber">
-              </div>
-              <div class="form-group">
-                <label>Phường</label>
-                <input type="text" v-model="item.ward">
-              </div>
-              <div class="form-group">
-                <label>Tỉnh</label>
-                <input type="text" v-model="item.city">
-              </div>
-              <div class="form-group">
-                <label>Vốn bằng số</label>
-                <input type="text" v-model="item.vbs">
-              </div>
-              <div class="form-group">
-                <label>Vốn bằng chữ</label>
-                <input type="text" v-model="item.vbc">
-              </div>
-              <div class="form-group">
-                <label>Tỉ lệ %</label>
-                <input type="text" v-model="item.tl">
-              </div>
-              <div class="form-group">
-                <label>Chức danh</label>
-                <input type="text" v-model="item.position">
-              </div>
-            </div>
-          </template>
-        </section>
-        <section class="edit-form" v-show="placeholdersCommon.length">
-          <h3 class="title-form">Ngành Nghề</h3>
-          <div class="form-group1">
-            <input type="checkbox" id="nnbbth" class="checkbox" v-model="nnbbth">
-            <label class="checkbox-item" for="nnbbth">Ngành Nghề Buôn Bán Tổng Hợp</label>
-          </div>
-          <div class="form-group1">
-            <input type="checkbox" class="checkbox" id="nnmm" v-model="nnmm">
-            <label class="checkbox-item" for="nnmm">Ngành Nghề May Mặc</label>
-          </div>
-          <div class="form-group1">
-            <input type="checkbox" class="checkbox" id="nnxd" v-model="nnxd">
-            <label class="checkbox-item" for="nnxd">Ngành Nghề Xây Dựng</label>
-          </div>
-          <div class="form-group1">
-            <input type="checkbox" class="checkbox" id="bbqa" v-model="bbqa">
-            <label class="checkbox-item" for="bbqa">Buôn Bán Quần Áo</label>
-          </div>
-          <div class="form-group1">
-            <input type="checkbox" class="checkbox" id="nnth" v-model="nnth">
-            <label class="checkbox-item" for="nnth">Ngành Nghề Tổng Hợp</label>
-          </div>
-          <div class="form-group1">
-            <input type="checkbox" class="checkbox" id="nncxcq" v-model="nncxcq">
-            <label class="checkbox-item" for="nncxcq">Ngành Nghề Cây Xanh, Cảnh Quan</label>
-          </div>
-          <div class="form-group1">
-            <input type="checkbox" class="checkbox" id="nngd" v-model="nngd">
-            <label class="checkbox-item" for="nngd">Ngành Nghề Giáo Dục</label>
-          </div>
-        </section>
+<div class="editor">
+  <section v-show="placeholdersCommon.length" class="card common-card">
+    <h3 class="title-form">Thông Tin Chung Của Các File</h3>
+    <form>
+      <div v-for="ph in placeholdersCommon" :key="'c-' + ph" class="form-group">
+        <label :for="'c-' + ph">{{ ph.includes('ct_') ? ph.slice(3) : ph }}</label>
+        <input type="text" :id="'c-' + ph" v-model="formValuesCommon[ph]" required>
       </div>
-      <!-- Download link -->
-      <!-- <section v-show="downloadUrl" class="download">
-        <h3>File mới đã sẵn sàng</h3>
-        <a id="btn-download" class="btn-download">Tải file</a>
-      </section> -->
-    </section>
-    <section v-show="placeholdersCommon.length" class="btn-group">
-      <button @click="resetAll()" class="btn-refesh">Làm Mới</button>
-      <button :disabled="updating" @click="applyChanges()" class="btn-primary">{{ updating ? 'Đang Tạo File...' : 'Tạo File Mới' }}</button>
-    </section>
-    <!-- <button @click="getFile">Get File</button> -->
-
-    <!-- <textarea v-model="fileContent" rows="10" cols="50"></textarea> -->
-  </div>
+    </form>
+  </section>
+  <section v-show="placeholders.length" class="card file-card">
+    <h3 class="title-form">Thông Tin File (Điều lệ.docx)</h3>
+    <form>
+      <div v-for="ph in placeholders" :key="'f0-' + ph" class="form-group">
+        <label :for="'f0-' + ph">{{ ph.includes('ct_') ? ph.slice(4) : ph }}</label>
+        <input type="text" :id="'f0-' + ph" v-model="formValues[ph]" required>
+      </div>
+    </form>
+  </section>
+  <section v-show="placeholders2.length" class="card file-card">
+    <h3 class="title-form">Thông Tin File (GĐN đăng ký doanh nghiệp.docx)</h3>
+    <form>
+      <div v-for="ph in placeholders2" :key="'f1-' + ph" class="form-group">
+        <label :for="'f1-' + ph">{{ ph.includes('ct_') ? ph.slice(4) : ph }}</label>
+        <input type="text" :id="'f1-' + ph" v-model="formValues2[ph]" required>
+      </div>
+    </form>
+  </section>
+  <section v-show="placeholders3.length" class="card file-card">
+    <h3 class="title-form">Thông Tin File (Giấy ủy quyền.docx)</h3>
+    <form>
+      <div v-for="ph in placeholders3" :key="'f2-' + ph" class="form-group">
+        <label :for="'f2-' + ph">{{ ph }}</label>
+        <input type="text" :id="'f2-' + ph" v-model="formValues3[ph]" required>
+      </div>
+    </form>
+  </section>
+  <section v-show="placeholders4.length" class="card file-card">
+    <h3 class="title-form">Thông Tin File (DANH SÁCH CHỦ SỞ HỮU HƯỞNG LỢI CỦA DOANH NGHIỆP.docx)</h3>
+    <form>
+      <div v-for="ph in placeholders4" :key="'f3-' + ph" class="form-group">
+        <label :for="'f3-' + ph">{{ ph }}</label>
+        <input type="text" :id="'f3-' + ph" v-model="formValues4[ph]" required>
+      </div>
+    </form>
+  </section>
+  <section v-show="this.placeholdersCommon.length" class="card members-card">
+    <div class="card-head">
+      <h3 class="title-form">Danh Sách Thành Viên</h3>
+      <button type="button" @click="addUser" class="btn-add">Thêm thành viên</button>
+    </div>
+    <template v-if="userInfoForm.length > 0">
+      <div v-for="(item, index) in userInfoForm" :key="index" class="member-card">
+        <div class="member-head">
+          <h4 class="member-title">Thành viên {{ index + 1 }}</h4>
+          <button type="button" v-on:click="removeUser(index)" class="btn-remove">Xóa</button>
+        </div>
+        <div class="member-grid">
+          <div class="form-group">
+            <label>Họ và tên</label>
+            <input type="text" v-model="item.name">
+          </div>
+          <div class="form-group">
+            <label>Giới tính</label>
+            <input type="text" v-model="item.gender">
+          </div>
+          <div class="form-group">
+            <label>Ngày sinh</label>
+            <input type="text" v-model="item.birthday">
+          </div>
+          <div class="form-group">
+            <label>Số định danh cá nhân</label>
+            <input type="text" v-model="item.idNumber">
+          </div>
+          <div class="form-group">
+            <label>Số nhà</label>
+            <input type="text" v-model="item.homeNumber">
+          </div>
+          <div class="form-group">
+            <label>Phường</label>
+            <input type="text" v-model="item.ward">
+          </div>
+          <div class="form-group">
+            <label>Tỉnh</label>
+            <input type="text" v-model="item.city">
+          </div>
+          <div class="form-group">
+            <label>Vốn bằng số</label>
+            <input type="text" v-model="item.vbs">
+          </div>
+          <div class="form-group">
+            <label>Vốn bằng chữ</label>
+            <input type="text" v-model="item.vbc">
+          </div>
+          <div class="form-group">
+            <label>Tỉ lệ %</label>
+            <input type="text" v-model="item.tl">
+          </div>
+          <div class="form-group">
+            <label>Chức danh</label>
+            <input type="text" v-model="item.position">
+          </div>
+        </div>
+      </div>
+    </template>
+    <p v-else class="empty-hint">Chưa có thành viên nào. Nhấn "Thêm thành viên" để bắt đầu.</p>
+  </section>
+  <section v-show="placeholdersCommon.length" class="card">
+    <h3 class="title-form">Ngành Nghề Kinh Doanh</h3>
+    <div class="checkbox-grid">
+      <div class="form-group1">
+        <input type="checkbox" id="nnbbth" class="checkbox" v-model="nnbbth">
+        <label class="checkbox-item" for="nnbbth">Ngành Nghề Buôn Bán Tổng Hợp</label>
+      </div>
+      <div class="form-group1">
+        <input type="checkbox" class="checkbox" id="nnmm" v-model="nnmm">
+        <label class="checkbox-item" for="nnmm">Ngành Nghề May Mặc</label>
+      </div>
+      <div class="form-group1">
+        <input type="checkbox" class="checkbox" id="nnxd" v-model="nnxd">
+        <label class="checkbox-item" for="nnxd">Ngành Nghề Xây Dựng</label>
+      </div>
+      <div class="form-group1">
+        <input type="checkbox" class="checkbox" id="bbqa" v-model="bbqa">
+        <label class="checkbox-item" for="bbqa">Buôn Bán Quần Áo</label>
+      </div>
+      <div class="form-group1">
+        <input type="checkbox" class="checkbox" id="nnth" v-model="nnth">
+        <label class="checkbox-item" for="nnth">Ngành Nghề Tổng Hợp</label>
+      </div>
+      <div class="form-group1">
+        <input type="checkbox" class="checkbox" id="nncxcq" v-model="nncxcq">
+        <label class="checkbox-item" for="nncxcq">Ngành Nghề Cây Xanh, Cảnh Quan</label>
+      </div>
+      <div class="form-group1">
+        <input type="checkbox" class="checkbox" id="nngd" v-model="nngd">
+        <label class="checkbox-item" for="nngd">Ngành Nghề Giáo Dục</label>
+      </div>
+    </div>
+  </section>
+  <section v-show="placeholdersCommon.length" class="btn-group">
+    <button @click="resetAll()" class="btn-refesh">Làm Mới</button>
+    <button :disabled="updating" @click="applyChanges()" class="btn-primary">{{ updating ? 'Đang Tạo File...' : 'Tạo File Mới' }}</button>
+  </section>
+</div>
 </template>
 <script>
 const CLIENT_ID = "735739572072-i6e10mu5530gmqa21e1bt3iffperiit8.apps.googleusercontent.com";
@@ -639,132 +616,3 @@ export default {
   }
 }
 </script>
-<style lang="scss">
-  .editor {
-    max-width: 800px;
-    margin: 2rem auto;
-    font-family: system-ui sans-serif;
-    padding: 1rem;
-
-    .field {
-      display: flex;
-      gap: 0.5rem;
-      margin-bottom: 1rem;
-      input {
-        flex: 1;
-        padding: 0.4rem;
-      }
-      button {
-        padding: 0.4rem 1rem;
-      }
-    }
-    .status {
-      font-style: italic;
-      color: #555;
-    }
-    .preview {
-      margin-top: 1.5rem;
-      border: 1px solid #e0e0e0;
-      background: #fafafa;
-      padding: 1rem;
-
-      .docx-preview img {
-        max-width: 100%;
-      }
-    }
-    .wrapper {
-      .edit-form {
-        margin-left: 30px;
-        margin-top: 2rem;
-        .form-group {
-          margin-bottom: 0.8rem;
-  
-          label {
-            display: block;
-            font-weight: 500;
-            margin-bottom: 0.2rem;
-          }
-          input {
-            width: 100%;
-            padding: 0.3rem;
-          }
-        }
-        button {
-          margin-top: 0.5rem;
-          padding: 0.4rem 1rem;
-        }
-      }
-      .download {
-        margin-top: 2rem;
-  
-        .btn-download {
-          background: #1976d2;
-          color: #fff;
-          padding: 0.6rem 1.2rem;
-          text-decoration: none;
-          border-radius: 4px;
-          &:hover {
-            background: #1565c0;
-          }
-        }
-      }
-    }
-  }
-  .wrapper {
-    display: flex;
-    justify-content: space-between;
-    width: 1024px;
-  }
-  .title-form {
-    font-size: 18px;
-    font-weight: 700;
-  }
-  .form-group1 {
-  margin-bottom: 16px;
-  display: flex;
-  align-items: center;
-  line-height: 36px;
-}
-
-.checkbox-group {
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
-}
-.checkbox {
-  height: 18px;
-  width: 18px;
-  cursor: pointer;
-}
-.checkbox-item {
-  gap: 8px;
-  cursor: pointer;
-  min-width: 300px;
-  margin-left: 12px;
-  font-size: 18px;
-
-}
-.btn-primary {
-  height: 46px;
-  align-items: center;
-  background-color: #1991d1;
-  color: #fff;
-  outline: #1991d1;
-  border: 1px solid #1991d1;
-  font-size: 16px;
-  padding: 6px;
-}
-.btn-group {
-  display: flex;
-  justify-content: end;
-}
-.btn-refesh {
-  height: 46px;
-  color: #727070;
-  border: 1px solid #ccc;
-  font-size: 16px;
-  background-color: #fff;
-  margin-right: 16px;
-  width: 103px;
-}
-</style>
