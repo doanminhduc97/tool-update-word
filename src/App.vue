@@ -11,6 +11,7 @@
           <a class="btn-menu" :class="{ 'active': isActiveMenu('/dkkdntv') }" @click="changeRoute('/dkkdntv', 2)">Đăng kí kinh doanh nhiều thành viên</a>
           <a class="btn-menu" :class="{ 'active': isActiveMenu('/tlctcp') }" @click="changeRoute('/tlctcp', 3)">Thành lập công ty cổ phần</a>
           <a class="btn-menu" :class="{ 'active': isActiveMenu('/gt') }" @click="changeRoute('/gt', 4)">Giải Thể</a>
+          <a class="btn-menu" :class="{ 'active': isActiveMenu('/csh-huong-loi') }" @click="changeRoute('/csh-huong-loi', 5)">Cập nhật CSH hưởng lợi</a>
           <!-- <a href="#">Dịch vụ</a>
           <a href="#">Blog</a>
           <a href="#">Liên hệ</a> -->

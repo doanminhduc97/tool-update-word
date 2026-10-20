@@ -6,6 +6,7 @@ import About from '@/views/About.vue'
 import Home2 from '@/views/Home2.vue'
 import Home3 from '@/views/Home3.vue'
 import Home4 from '@/views/Home4.vue'
+import Home5 from '@/views/Home5.vue'
 
 const routes = [
   // Đăng kí kinh doanh 1 thành viên
@@ -14,6 +15,7 @@ const routes = [
   { path: '/dkkdntv', component: Home2 },
   { path: '/tlctcp', component: Home3 },
   { path: '/gt', component: Home4 },
+  { path: '/csh-huong-loi', component: Home5 },
 
   { path: '/:pathMatch(.*)*', redirect: '/' } // redirect tất cả route không tồn tại về Home
 ]
