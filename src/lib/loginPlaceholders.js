@@ -24,6 +24,7 @@ export function formatPlaceholderLabel(key) {
   return label
 }
 
+export function getLoginUserValue(user, key) {
   if (!user || !key) return ''
   const trimmed = key.trim()
 
