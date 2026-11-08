@@ -26,7 +26,28 @@
             </div>
           </div>
 
-          <a class="btn-menu" :class="{ 'active': isActiveMenu('/gt') }" @click="changeRoute('/gt', 4)">Giải Thể</a>
+          <!-- Dropdown Giải Thể -->
+          <div class="dropdown-menu-container" :class="{ 'open': isGiaiTheOpen }" ref="giaiTheRef">
+            <a class="btn-menu dropdown-toggle" :class="{ 'active': isGiaiTheActive }" @click="toggleGiaiThe">
+              Giải Thể
+              <span class="caret"></span>
+            </a>
+            <div v-show="isGiaiTheOpen" class="dropdown-list">
+              <a class="dropdown-item" :class="{ 'active': isActiveMenu('/gt') || isActiveMenu('/giai-the-1tv') }" @click="selectGiaiThe('/gt', 4)">
+                1. Giải thể 1 thành viên
+              </a>
+              <a class="dropdown-item disabled-item" title="Chức năng đang phát triển" @click.stop="notifyComingSoon('Giải thể 2 thành viên')">
+                2. Giải thể 2 thành viên <span class="badge-soon">Sắp có</span>
+              </a>
+              <a class="dropdown-item disabled-item" title="Chức năng đang phát triển" @click.stop="notifyComingSoon('Giải thể cổ phần')">
+                3. Giải thể cổ phần <span class="badge-soon">Sắp có</span>
+              </a>
+              <a class="dropdown-item disabled-item" title="Chức năng đang phát triển" @click.stop="notifyComingSoon('Giải thể thuế')">
+                4. Giải thể thuế <span class="badge-soon">Sắp có</span>
+              </a>
+            </div>
+          </div>
+
           <a class="btn-menu" :class="{ 'active': isActiveMenu('/csh-huong-loi') }" @click="changeRoute('/csh-huong-loi', 5)">Cập nhật CSH hưởng lợi</a>
           <a class="btn-menu" :class="{ 'active': isActiveMenu('/hdcn-bbtl') }" @click="changeRoute('/hdcn-bbtl', 6)">HĐCN và BBTL</a>
 
@@ -84,6 +105,7 @@ export default {
       id: 1,
       isDropdownOpen: false,
       isThanhLapMoiOpen: false,
+      isGiaiTheOpen: false,
       auth: useAuth(),
       touchTimer: null,
     }
@@ -94,6 +116,9 @@ export default {
     },
     isThanhLapMoiActive() {
       return ['/', '/dkkdntv', '/tlctcp'].includes(this.$route.path);
+    },
+    isGiaiTheActive() {
+      return ['/gt', '/giai-the-1tv'].includes(this.$route.path);
     },
     isTamNgungActive() {
       return ['/tam-ngung-1tv', '/tam-ngung-2tv', '/tam-ngung-cp'].includes(this.$route.path);
@@ -125,11 +150,13 @@ export default {
       this.id = id;
       this.isDropdownOpen = false;
       this.isThanhLapMoiOpen = false;
+      this.isGiaiTheOpen = false;
       this.$router.push(path);
     },
     toggleThanhLapMoi(e) {
       e.stopPropagation();
       this.isDropdownOpen = false;
+      this.isGiaiTheOpen = false;
       this.isThanhLapMoiOpen = !this.isThanhLapMoiOpen;
     },
     selectThanhLapMoi(path, id) {
@@ -137,9 +164,24 @@ export default {
       this.isThanhLapMoiOpen = false;
       this.$router.push(path);
     },
+    toggleGiaiThe(e) {
+      e.stopPropagation();
+      this.isDropdownOpen = false;
+      this.isThanhLapMoiOpen = false;
+      this.isGiaiTheOpen = !this.isGiaiTheOpen;
+    },
+    selectGiaiThe(path, id) {
+      this.id = id;
+      this.isGiaiTheOpen = false;
+      this.$router.push(path);
+    },
+    notifyComingSoon(featureName) {
+      alert(`Chức năng "${featureName}" đang được chuẩn bị và sẽ sớm ra mắt!`);
+    },
     toggleDropdown(e) {
       e.stopPropagation();
       this.isThanhLapMoiOpen = false;
+      this.isGiaiTheOpen = false;
       this.isDropdownOpen = !this.isDropdownOpen;
     },
     selectTamNgung(path, id) {
@@ -153,6 +195,9 @@ export default {
       }
       if (this.$refs.thanhLapMoiRef && !this.$refs.thanhLapMoiRef.contains(e.target)) {
         this.isThanhLapMoiOpen = false;
+      }
+      if (this.$refs.giaiTheRef && !this.$refs.giaiTheRef.contains(e.target)) {
+        this.isGiaiTheOpen = false;
       }
     },
     isActiveMenu(path) {

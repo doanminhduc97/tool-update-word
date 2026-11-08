@@ -23,7 +23,9 @@ const routes = [
   // Đăng kí kinh doanh nhiều thành viên
   { path: '/dkkdntv', component: Home2, meta: { requiresAuth: true } },
   { path: '/tlctcp', component: Home3, meta: { requiresAuth: true } },
+  // Giải thể
   { path: '/gt', component: Home4, meta: { requiresAuth: true } },
+  { path: '/giai-the-1tv', component: Home4, meta: { requiresAuth: true } },
   { path: '/csh-huong-loi', component: Home5, meta: { requiresAuth: true } },
   { path: '/hdcn-bbtl', component: Home6, meta: { requiresAuth: true } },
   // Tạm ngừng công ty
