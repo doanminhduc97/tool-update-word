@@ -31,6 +31,8 @@ const SCOPES = "https://www.googleapis.com/auth/drive.readonly";
 import PizZip from 'pizzip';
 import Docxtemplater from  'docxtemplater';
 import { deductExportFee } from '@/services/wallet';
+import { useAuth } from '@/stores/auth';
+import { autofillLoginPlaceholders } from '@/lib/loginPlaceholders';
 export default {
   // Giải Thể 1 thành viên
   data() {
@@ -128,6 +130,13 @@ export default {
         this.placeholdersCommon.forEach(key => {
           this.formValuesCommon[key] = '';
         });
+
+        // Tự động điền các placeholder có tiền tố "Login_" từ user hiện tại
+        const currentUser = useAuth().state.user;
+        if (currentUser) {
+          autofillLoginPlaceholders(this.formValuesCommon, currentUser);
+          this.files.forEach(f => autofillLoginPlaceholders(f.formValues, currentUser));
+        }
       } catch (error) {
         alert("Lỗi khi tải hoặc phân tích file: " + error.message);
       } finally {

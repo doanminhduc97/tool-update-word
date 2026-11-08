@@ -166,6 +166,8 @@ import nganhNgheTongHop from '@/data/nganhNgheTongHop.json'
 import xayDung from '@/data/xayDung'
 import { parseCccdFront } from '@/services/cccd-ocr';
 import { deductExportFee } from '@/services/wallet';
+import { useAuth } from '@/stores/auth';
+import { autofillLoginPlaceholders } from '@/lib/loginPlaceholders';
 export default {
   data() {
     return {
@@ -391,6 +393,17 @@ export default {
         const result2 = this.placeholders.filter(item => !removeList2.includes(item))
         this.placeholdersCommon = result;
         this.placeholders = result2;
+
+        // Tự động điền các placeholder có tiền tố "Login_" từ user hiện tại
+        const currentUser = useAuth().state.user;
+        if (currentUser) {
+          autofillLoginPlaceholders(this.formValuesCommon, currentUser);
+          autofillLoginPlaceholders(this.formValues, currentUser);
+          autofillLoginPlaceholders(this.formValues2, currentUser);
+          autofillLoginPlaceholders(this.formValues3, currentUser);
+          autofillLoginPlaceholders(this.formValues4, currentUser);
+          autofillLoginPlaceholders(this.formValues5, currentUser);
+        }
         // tv1 vốn bằng chữ
         this.placeholders5 = this.placeholders5.filter(item => !item.includes('tv1'));
 

@@ -88,6 +88,8 @@ const SCOPES = "https://www.googleapis.com/auth/drive.readonly";
 import PizZip from 'pizzip';
 import Docxtemplater from 'docxtemplater';
 import { deductExportFee } from '@/services/wallet';
+import { useAuth } from '@/stores/auth';
+import { autofillLoginPlaceholders } from '@/lib/loginPlaceholders';
 
 export default {
   name: 'Home5',
@@ -220,6 +222,13 @@ export default {
         this.placeholdersCommon.forEach(key => {
           this.formValuesCommon[key] = '';
         });
+
+        // Tự động điền các placeholder có tiền tố "Login_" từ user hiện tại
+        const currentUser = useAuth().state.user;
+        if (currentUser) {
+          autofillLoginPlaceholders(this.formValuesCommon, currentUser);
+          this.files.forEach(f => autofillLoginPlaceholders(f.formValues, currentUser));
+        }
 
         // Tự động khởi tạo ít nhất 1 thành viên nếu chưa có
         if (this.userInfoForm.length === 0) {

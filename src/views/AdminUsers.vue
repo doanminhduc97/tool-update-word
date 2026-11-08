@@ -160,8 +160,28 @@
             <span class="sub-text">@{{ editModal.target?.username }} · ID: {{ editModal.target?.id }}</span>
           </div>
           <div class="form-group">
-            <label>Họ và tên</label>
+            <label>Họ và tên Người được ủy quyền</label>
             <input v-model="editModal.form.fullName" type="text" />
+          </div>
+          <div class="form-group">
+            <label>Giới tính Người được ủy quyền</label>
+            <select v-model="editModal.form.gender">
+              <option value="">-- Chọn giới tính --</option>
+              <option value="Nam">Nam</option>
+              <option value="Nữ">Nữ</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Ngày sinh Người được ủy quyền</label>
+            <input v-model="editModal.form.birthday" type="text" placeholder="01/01/1990" />
+          </div>
+          <div class="form-group">
+            <label>Số định danh / CCCD Người được ủy quyền</label>
+            <input v-model="editModal.form.idNumber" type="text" />
+          </div>
+          <div class="form-group">
+            <label>Địa chỉ Người được ủy quyền</label>
+            <input v-model="editModal.form.address" type="text" />
           </div>
           <div class="form-group">
             <label>Email</label>
@@ -278,6 +298,10 @@ export default {
         error: '',
         form: {
           fullName: '',
+          gender: '',
+          birthday: '',
+          idNumber: '',
+          address: '',
           email: '',
           phone: '',
           provinceCity: '',
@@ -383,6 +407,10 @@ export default {
       this.editModal.target = user
       this.editModal.form = {
         fullName: user.fullName || '',
+        gender: user.gender || '',
+        birthday: user.birthday || '',
+        idNumber: user.idNumber || '',
+        address: user.address || '',
         email: user.email || '',
         phone: user.phone || '',
         provinceCity: user.provinceCity || '',

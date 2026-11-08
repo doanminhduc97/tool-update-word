@@ -163,6 +163,8 @@ import mayMac from '@/data/mayMac.json'
 import nganhNgheTongHop from '@/data/nganhNgheTongHop.json'
 import xayDung from '@/data/xayDung'
 import { deductExportFee } from '@/services/wallet'
+import { useAuth } from '@/stores/auth'
+import { autofillLoginPlaceholders } from '@/lib/loginPlaceholders'
 export default {
   data() {
     return {
@@ -322,6 +324,17 @@ export default {
         this.placeholders5 = this.placeholders5.filter(item => !item.includes('cđ1'));
 
         this.placeholdersCommon = this.sortCustom(this.placeholdersCommon).reverse();
+
+        // Tự động điền các placeholder có tiền tố "Login_" từ user hiện tại
+        const currentUser = useAuth().state.user;
+        if (currentUser) {
+          autofillLoginPlaceholders(this.formValuesCommon, currentUser);
+          autofillLoginPlaceholders(this.formValues, currentUser);
+          autofillLoginPlaceholders(this.formValues2, currentUser);
+          autofillLoginPlaceholders(this.formValues3, currentUser);
+          autofillLoginPlaceholders(this.formValues4, currentUser);
+          autofillLoginPlaceholders(this.formValues5, currentUser);
+        }
       } catch (error) {
         alert("Lỗi khi tải hoặc phân tích file: " + error.message);
       } finally {

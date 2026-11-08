@@ -112,6 +112,8 @@ import mayMac from '@/data/mayMac.json'
 import nganhNgheTongHop from '@/data/nganhNgheTongHop.json'
 import xayDung from '@/data/xayDung'
 import { deductExportFee } from '@/services/wallet'
+import { useAuth } from '@/stores/auth'
+import { autofillLoginPlaceholders } from '@/lib/loginPlaceholders'
 export default {
   // Đăng kí kinh doanh 1 thành viên
   data() {
@@ -240,6 +242,16 @@ export default {
 
             // Chèn lại đúng vị trí
             this.placeholdersCommon.splice(newIndex, 0, item);
+        }
+
+        // Tự động điền các placeholder có tiền tố "Login_" từ user hiện tại
+        const currentUser = useAuth().state.user;
+        if (currentUser) {
+          autofillLoginPlaceholders(this.formValuesCommon, currentUser);
+          autofillLoginPlaceholders(this.formValues, currentUser);
+          autofillLoginPlaceholders(this.formValues2, currentUser);
+          autofillLoginPlaceholders(this.formValues3, currentUser);
+          autofillLoginPlaceholders(this.formValues4, currentUser);
         }
 
       } catch (error) {
