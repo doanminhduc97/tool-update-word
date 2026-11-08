@@ -32,7 +32,7 @@ import PizZip from 'pizzip';
 import Docxtemplater from  'docxtemplater';
 import { deductExportFee } from '@/services/wallet';
 export default {
-  // Giải Thể
+  // Giải Thể 1 thành viên
   data() {
     const files = [
       {
@@ -48,36 +48,12 @@ export default {
         link: 'https://docs.google.com/document/d/16vXRN5p-uG2LhboGAGNl-uS8DoEsyU0z/edit?usp=drive_link&ouid=107831693588829116850&rtpof=true&sd=true',
       },
       {
-        name: '2. Đề nghị chấm dứt hiệu lực MST',
-        link: 'https://docs.google.com/document/d/1gHnR5Y2xCtWaBMoohPu1QKsW9XCCxfoO/edit?usp=sharing&ouid=107831693588829116850&rtpof=true&sd=true',
-      },
-      {
         name: '03. Danh sách nợ',
         link: 'https://docs.google.com/document/d/1Sidznh7UH2kq8HPaPRIz3Cd_zJ8H4A3T/edit?usp=drive_link&ouid=107831693588829116850&rtpof=true&sd=true',
       },
       {
-        name: '3. Giấy giới thiệu',
-        link: 'https://docs.google.com/document/d/1Ka5qtPGmeAdu_AStSVbZjcuQIGC25tDS/edit?usp=drive_link&ouid=107831693588829116850&rtpof=true&sd=true',
-      },
-      {
-        name: '4. Công văn xác nhận không nợ thuế xuất nhập khẩu',
-        link: 'https://docs.google.com/document/d/1qqzLKR8BWUnZAsfhE4M0P49PmcAQ6lOn/edit?usp=drive_link&ouid=107831693588829116850&rtpof=true&sd=true',
-      },
-      {
         name: '04. GUQ',
         link: 'https://docs.google.com/document/d/1kkrYO8DuUB6TboFy3MhCHn4suTcCtb2w/edit?usp=drive_link&ouid=107831693588829116850&rtpof=true&sd=true',
-      },
-      {
-        name: '6. CÔNG VĂN XIN CẤP LẠI MẬT KHẨU',
-        link: 'https://docs.google.com/document/d/1iO54iI43a-AJnT50EOOkysuB0j6Qcpxa/edit?usp=sharing&ouid=107831693588829116850&rtpof=true&sd=true',
-      },
-      {
-        name: '7. Công văn khôi phục tk Hóa đơn điện tử',
-        link: 'https://docs.google.com/document/d/1c2nH8Z6wg8eIIxJkXKQyFkKsYXO1cPyT/edit?usp=sharing&ouid=107831693588829116850&rtpof=true&sd=true',
-      },
-      {
-        name: 'Hướng dẫn ký hồ sơ',
-        link: 'https://docs.google.com/document/d/1Qxx2biFk9W_t5r0GvDnuVe-mjourh5Fw/edit?usp=sharing&ouid=107831693588829116850&rtpof=true&sd=true',
       },
     ].map(f => ({
       ...f,
@@ -213,7 +189,7 @@ export default {
       loading.style.display = "flex";
       this.updating = true;
       try {
-        await deductExportFee('Giải thể doanh nghiệp');
+        await deductExportFee('Giải thể 1 thành viên');
         const buffers = await Promise.all(
           this.files.map(f => this.fetchDocBuffer(this.extractDocId(f.link)))
         );

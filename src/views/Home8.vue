@@ -33,28 +33,12 @@ import Docxtemplater from  'docxtemplater';
 import { deductExportFee } from '@/services/wallet';
 export default {
   name: 'Home8',
-  // Giải Thể Thuế (clone từ Giải thể 1 thành viên)
+  // Giải Thể Thuế
   data() {
     const files = [
       {
-        name: '1. Quyết định của Chủ sở hữu',
-        link: 'https://docs.google.com/document/d/1xqWzNJCFUshlgyMuM-E6CkBJX1HEwfey/edit?usp=drive_link&ouid=107831693588829116850&rtpof=true&sd=true',
-      },
-      {
-        name: '01. TB giải thể',
-        link: 'https://docs.google.com/document/d/1rA_LzQUh8qbA_p0TJE66D67evWVOOqGd/edit?usp=drive_link&ouid=107831693588829116850&rtpof=true&sd=true',
-      },
-      {
-        name: '02. Biên bản thanh lý tài sản',
-        link: 'https://docs.google.com/document/d/16vXRN5p-uG2LhboGAGNl-uS8DoEsyU0z/edit?usp=drive_link&ouid=107831693588829116850&rtpof=true&sd=true',
-      },
-      {
         name: '2. Đề nghị chấm dứt hiệu lực MST',
         link: 'https://docs.google.com/document/d/1gHnR5Y2xCtWaBMoohPu1QKsW9XCCxfoO/edit?usp=sharing&ouid=107831693588829116850&rtpof=true&sd=true',
-      },
-      {
-        name: '03. Danh sách nợ',
-        link: 'https://docs.google.com/document/d/1Sidznh7UH2kq8HPaPRIz3Cd_zJ8H4A3T/edit?usp=drive_link&ouid=107831693588829116850&rtpof=true&sd=true',
       },
       {
         name: '3. Giấy giới thiệu',
@@ -65,20 +49,12 @@ export default {
         link: 'https://docs.google.com/document/d/1qqzLKR8BWUnZAsfhE4M0P49PmcAQ6lOn/edit?usp=drive_link&ouid=107831693588829116850&rtpof=true&sd=true',
       },
       {
-        name: '04. GUQ',
-        link: 'https://docs.google.com/document/d/1kkrYO8DuUB6TboFy3MhCHn4suTcCtb2w/edit?usp=drive_link&ouid=107831693588829116850&rtpof=true&sd=true',
-      },
-      {
         name: '6. CÔNG VĂN XIN CẤP LẠI MẬT KHẨU',
         link: 'https://docs.google.com/document/d/1iO54iI43a-AJnT50EOOkysuB0j6Qcpxa/edit?usp=sharing&ouid=107831693588829116850&rtpof=true&sd=true',
       },
       {
         name: '7. Công văn khôi phục tk Hóa đơn điện tử',
         link: 'https://docs.google.com/document/d/1c2nH8Z6wg8eIIxJkXKQyFkKsYXO1cPyT/edit?usp=sharing&ouid=107831693588829116850&rtpof=true&sd=true',
-      },
-      {
-        name: 'Hướng dẫn ký hồ sơ',
-        link: 'https://docs.google.com/document/d/1Qxx2biFk9W_t5r0GvDnuVe-mjourh5Fw/edit?usp=sharing&ouid=107831693588829116850&rtpof=true&sd=true',
       },
     ].map(f => ({
       ...f,
