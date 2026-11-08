@@ -105,6 +105,7 @@
 
 <script>
 import { useAuth } from '@/stores/auth'
+import { hashPasswordClient } from '@/lib/crypto'
 
 export default {
   data() {
@@ -149,13 +150,14 @@ export default {
 
       this.loading = true
       try {
+        const hashedPassword = await hashPasswordClient(this.password)
         await useAuth().register({
           username: this.username.trim(),
           fullName: this.fullName.trim(),
           phone: this.phone.trim(),
           provinceCity: this.provinceCity.trim(),
           email: this.email.trim(),
-          password: this.password,
+          password: hashedPassword,
         })
         this.$router.replace('/')
       } catch (err) {

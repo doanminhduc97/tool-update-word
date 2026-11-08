@@ -46,6 +46,7 @@
 
 <script>
 import { useAuth } from '@/stores/auth'
+import { hashPasswordClient } from '@/lib/crypto'
 
 export default {
   data() {
@@ -65,7 +66,8 @@ export default {
       }
       this.loading = true
       try {
-        await useAuth().login(this.account, this.password)
+        const hashedPassword = await hashPasswordClient(this.password)
+        await useAuth().login(this.account, hashedPassword)
         const redirect = this.$route.query.redirect
         const target = typeof redirect === 'string' && redirect.startsWith('/') ? redirect : '/'
         this.$router.replace(target)

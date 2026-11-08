@@ -249,6 +249,7 @@
 
 <script>
 import http from '@/lib/http'
+import { hashPasswordClient } from '@/lib/crypto'
 
 export default {
   name: 'AdminUsers',
@@ -403,7 +404,11 @@ export default {
       this.editModal.error = ''
       try {
         const payload = { ...this.editModal.form }
-        if (!payload.newPassword) delete payload.newPassword
+        if (!payload.newPassword) {
+          delete payload.newPassword
+        } else {
+          payload.newPassword = await hashPasswordClient(payload.newPassword)
+        }
         await http.patch(`/admin/users/${this.editModal.target.id}`, payload)
         this.closeEdit()
         await this.fetchUsers()
