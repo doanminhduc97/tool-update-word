@@ -1,5 +1,5 @@
 import { reactive, computed } from 'vue'
-import http, { setAccessToken, setOnRefreshed, refreshSession } from '@/lib/http'
+import http, { setAccessToken, getAccessToken, touchSession, setOnRefreshed, refreshSession } from '@/lib/http'
 
 const state = reactive({
   user: null,
@@ -38,6 +38,22 @@ async function init(force = false) {
 
   initPromise = (async () => {
     try {
+      // 1. Kiểm tra xem có token còn hạn lưu trong cookie không
+      const currentToken = getAccessToken()
+      if (currentToken) {
+        try {
+          const { data } = await http.get('/auth/me')
+          state.user = data.user
+          setAccessToken(currentToken)
+          state.ready = true
+          notify()
+          return state.user
+        } catch (meErr) {
+          // Token cũ hết hạn hoặc bị lỗi, thử refresh
+        }
+      }
+
+      // 2. Nếu không có token cookie hoặc token cookie hết hạn, gọi refresh
       await refreshSession()
     } catch {
       state.user = null

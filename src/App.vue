@@ -67,6 +67,7 @@
 // import axios from 'axios'
 import UserMenu from '@/components/UserMenu.vue'
 import { useAuth } from '@/stores/auth'
+import { touchSession } from '@/lib/http'
 
 export default {
   components: { UserMenu },
@@ -84,6 +85,7 @@ export default {
       isDropdownOpen: false,
       isThanhLapMoiOpen: false,
       auth: useAuth(),
+      touchTimer: null,
     }
   },
   computed: {
@@ -99,11 +101,26 @@ export default {
   },
   mounted() {
     document.addEventListener('click', this.handleOutsideClick);
+    ['mousemove', 'mousedown', 'keydown', 'touchstart', 'scroll'].forEach((ev) => {
+      window.addEventListener(ev, this.onUserActivity, { passive: true });
+    });
   },
   beforeUnmount() {
     document.removeEventListener('click', this.handleOutsideClick);
+    ['mousemove', 'mousedown', 'keydown', 'touchstart', 'scroll'].forEach((ev) => {
+      window.removeEventListener(ev, this.onUserActivity);
+    });
   },
   methods: {
+    onUserActivity() {
+      // Throttle: chỉ cập nhật gia hạn cookie 1 lần mỗi 30 giây khi có thao tác người dùng
+      if (!this.touchTimer) {
+        touchSession();
+        this.touchTimer = setTimeout(() => {
+          this.touchTimer = null;
+        }, 30000);
+      }
+    },
     changeRoute(path, id) {
       this.id = id;
       this.isDropdownOpen = false;

@@ -8,12 +8,49 @@ const baseURL = apiBase ? `${apiBase}/api` : '/api'
 const http = axios.create({ baseURL, withCredentials: true, timeout: 20000 })
 const raw = axios.create({ baseURL, withCredentials: true, timeout: 20000 })
 
-let accessToken = null
+// Cookie Helpers cho Client
+function getCookie(name) {
+  const matches = document.cookie.match(new RegExp('(?:^|; )' + name.replace(/([\.$?*|{}\(\)\[\]\\\/\+^])/g, '\\$1') + '=([^;]*)'))
+  return matches ? decodeURIComponent(matches[1]) : null
+}
+
+function setCookie(name, value, minutes) {
+  let expires = ''
+  if (minutes) {
+    const d = new Date()
+    d.setTime(d.getTime() + minutes * 60 * 1000)
+    expires = '; expires=' + d.toUTCString()
+  }
+  const isSecure = location.protocol === 'https:' ? '; Secure; SameSite=Lax' : '; SameSite=Lax'
+  document.cookie = name + '=' + encodeURIComponent(value || '') + expires + '; path=/' + isSecure
+}
+
+function deleteCookie(name) {
+  document.cookie = name + '=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;'
+}
+
+// Timeout phiên treo máy là 30 phút
+const SESSION_COOKIE_NAME = 'tuw_at'
+const SESSION_TIMEOUT_MINUTES = 30
+
+let accessToken = getCookie(SESSION_COOKIE_NAME) || null
 let onRefreshed = null
 let refreshPromise = null
 
 export function setAccessToken(token) {
   accessToken = token || null
+  if (token) {
+    setCookie(SESSION_COOKIE_NAME, token, SESSION_TIMEOUT_MINUTES)
+  } else {
+    deleteCookie(SESSION_COOKIE_NAME)
+  }
+}
+
+// Tự động gia hạn thêm 30p mỗi khi người dùng thao tác
+export function touchSession() {
+  if (accessToken) {
+    setCookie(SESSION_COOKIE_NAME, accessToken, SESSION_TIMEOUT_MINUTES)
+  }
 }
 
 export function getAccessToken() {
@@ -25,7 +62,12 @@ export function setOnRefreshed(fn) {
 }
 
 http.interceptors.request.use((cfg) => {
+  // Lấy lại token từ cookie (nếu còn hạn 30p)
+  if (!accessToken) {
+    accessToken = getCookie(SESSION_COOKIE_NAME) || null
+  }
   if (accessToken) {
+    touchSession() // Gia hạn thêm 30p mỗi khi gọi request
     cfg.headers = cfg.headers || {}
     cfg.headers.Authorization = `Bearer ${accessToken}`
   }
