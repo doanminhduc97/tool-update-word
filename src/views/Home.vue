@@ -7,7 +7,7 @@
         <h4 class="sub-title">Thông Tin Công ty</h4>
         <form>
           <div v-for="ph in placeholdersCommon.slice(0, 10)" :key="'c1-' + ph" class="form-group">
-            <label :for="'c1-' + ph">{{ ph.includes('ct_ct') ? ph.slice(5) : ph.slice(4) }}</label>
+            <label :for="'c1-' + ph">{{ formatLabel(ph, 'c1') }}</label>
             <input type="text" :id="'c1-' + ph" v-model="formValuesCommon[ph]" required>
           </div>
         </form>
@@ -16,7 +16,7 @@
         <h4 class="sub-title">Thông Tin Chủ sở hữu</h4>
         <form>
           <div v-for="ph in placeholdersCommon.slice(10)" :key="'c2-' + ph" class="form-group">
-            <label :for="'c2-' + ph">{{ ph.includes('ct_ct') ? ph.slice(5) : ph.slice(4) }}</label>
+            <label :for="'c2-' + ph">{{ formatLabel(ph, 'c2') }}</label>
             <input type="text" :id="'c2-' + ph" v-model="formValuesCommon[ph]" required>
           </div>
         </form>
@@ -27,7 +27,7 @@
     <h3 class="title-form">Thông Tin File (Điều lệ.docx)</h3>
     <form>
       <div v-for="ph in placeholders" :key="'f0-' + ph" class="form-group">
-        <label :for="'f0-' + ph">{{ ph.includes('ct_ct') ? ph.slice(5) : ph.slice(4) }}</label>
+        <label :for="'f0-' + ph">{{ formatLabel(ph, 'f0') }}</label>
         <input type="text" :id="'f0-' + ph" v-model="formValues[ph]" required>
       </div>
     </form>
@@ -36,7 +36,7 @@
     <h3 class="title-form">Thông Tin File (GĐN đăng ký doanh nghiệp.docx)</h3>
     <form>
       <div v-for="ph in placeholders2" :key="'f1-' + ph" class="form-group">
-        <label :for="'f1-' + ph">{{ ph.includes('ct_ct') ? ph.slice(5) : ph.slice(4) }}</label>
+        <label :for="'f1-' + ph">{{ formatLabel(ph, 'f1') }}</label>
         <input type="text" :id="'f1-' + ph" v-model="formValues2[ph]" required>
       </div>
     </form>
@@ -45,7 +45,7 @@
     <h3 class="title-form">Thông Tin File (Giấy ủy quyền.docx)</h3>
     <form>
       <div v-for="ph in placeholders3" :key="'f2-' + ph" class="form-group">
-        <label :for="'f2-' + ph">{{ ph }}</label>
+        <label :for="'f2-' + ph">{{ formatLabel(ph, 'f2') }}</label>
         <input type="text" :id="'f2-' + ph" v-model="formValues3[ph]" required>
       </div>
     </form>
@@ -54,7 +54,7 @@
     <h3 class="title-form">Thông Tin File (DANH SÁCH CHỦ SỞ HỮU HƯỞNG LỢI CỦA DOANH NGHIỆP.docx)</h3>
     <form>
       <div v-for="ph in placeholders4" :key="'f3-' + ph" class="form-group">
-        <label :for="'f3-' + ph">{{ ph }}</label>
+        <label :for="'f3-' + ph">{{ formatLabel(ph, 'f3') }}</label>
         <input type="text" :id="'f3-' + ph" v-model="formValues4[ph]" required>
       </div>
     </form>
@@ -183,6 +183,18 @@ export default {
           });
         },
       });
+    },
+
+    formatLabel(ph, type) {
+      if (!ph) return ''
+      let s = String(ph)
+      if (s.startsWith('Login_')) {
+        return s.slice(6)
+      }
+      if (type === 'c1' || type === 'c2' || type === 'f0' || type === 'f1') {
+        return s.includes('ct_ct') ? s.slice(5) : s.slice(4)
+      }
+      return s
     },
 
     // login() {

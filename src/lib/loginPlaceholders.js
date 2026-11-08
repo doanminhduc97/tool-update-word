@@ -11,7 +11,19 @@
  * - "Login_địa chỉ Người được ủy quyền" -> user.address
  */
 
-export function getLoginUserValue(user, key) {
+/**
+ * Chuyển đổi tên placeholder hiển thị trên label (bỏ tiền tố Login_)
+ * Ví dụ: "Login_Họ tên Người được ủy quyền" -> "Họ tên Người được ủy quyền"
+ */
+export function formatPlaceholderLabel(key) {
+  if (!key) return ''
+  let label = String(key)
+  if (label.startsWith('Login_')) {
+    label = label.slice(6)
+  }
+  return label
+}
+
   if (!user || !key) return ''
   const trimmed = key.trim()
 

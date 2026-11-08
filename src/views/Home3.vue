@@ -4,7 +4,7 @@
     <h3 class="title-form">Thông Tin Chung Của Các File</h3>
     <form>
       <div v-for="ph in placeholdersCommon" :key="'c-' + ph" class="form-group">
-        <label :for="'c-' + ph">{{ ph.includes('ct_') ? ph.slice(3) : ph }}</label>
+        <label :for="'c-' + ph">{{ formatLabel(ph, 'c') }}</label>
         <input type="text" :id="'c-' + ph" v-model="formValuesCommon[ph]" required>
       </div>
     </form>
@@ -13,7 +13,7 @@
     <h3 class="title-form">Thông Tin File (Điều lệ.docx)</h3>
     <form>
       <div v-for="ph in placeholders" :key="'f0-' + ph" class="form-group">
-        <label :for="'f0-' + ph">{{ ph.includes('ct_') ? ph.slice(4) : ph }}</label>
+        <label :for="'f0-' + ph">{{ formatLabel(ph, 'f0') }}</label>
         <input type="text" :id="'f0-' + ph" v-model="formValues[ph]" required>
       </div>
     </form>
@@ -22,7 +22,7 @@
     <h3 class="title-form">Thông Tin File (GĐN đăng ký doanh nghiệp.docx)</h3>
     <form>
       <div v-for="ph in placeholders2" :key="'f1-' + ph" class="form-group">
-        <label :for="'f1-' + ph">{{ ph.includes('ct_') ? ph.slice(4) : ph }}</label>
+        <label :for="'f1-' + ph">{{ formatLabel(ph, 'f1') }}</label>
         <input type="text" :id="'f1-' + ph" v-model="formValues2[ph]" required>
       </div>
     </form>
@@ -31,7 +31,7 @@
     <h3 class="title-form">Thông Tin File (Giấy ủy quyền.docx)</h3>
     <form>
       <div v-for="ph in placeholders3" :key="'f2-' + ph" class="form-group">
-        <label :for="'f2-' + ph">{{ ph }}</label>
+        <label :for="'f2-' + ph">{{ formatLabel(ph, 'f2') }}</label>
         <input type="text" :id="'f2-' + ph" v-model="formValues3[ph]" required>
       </div>
     </form>
@@ -40,7 +40,7 @@
     <h3 class="title-form">Thông Tin File (DANH SÁCH CHỦ SỞ HỮU HƯỞNG LỢI CỦA DOANH NGHIỆP.docx)</h3>
     <form>
       <div v-for="ph in placeholders4" :key="'f3-' + ph" class="form-group">
-        <label :for="'f3-' + ph">{{ ph }}</label>
+        <label :for="'f3-' + ph">{{ formatLabel(ph, 'f3') }}</label>
         <input type="text" :id="'f3-' + ph" v-model="formValues4[ph]" required>
       </div>
     </form>
@@ -223,6 +223,20 @@ export default {
     await this.getFile();
   },
   methods: {
+    formatLabel(ph, type) {
+      if (!ph) return ''
+      let s = String(ph)
+      if (s.startsWith('Login_')) {
+        return s.slice(6)
+      }
+      if (type === 'c') {
+        return s.includes('ct_') ? s.slice(3) : s
+      }
+      if (type === 'f0' || type === 'f1') {
+        return s.includes('ct_') ? s.slice(4) : s
+      }
+      return s
+    },
     removeUser(index) {
       this.userInfoForm.splice(index, 1);
     },

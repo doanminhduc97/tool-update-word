@@ -5,7 +5,7 @@
       <h3 class="title-form">Thông Tin Chung Của Các File</h3>
       <form>
         <div v-for="ph in placeholdersCommon" :key="'c-' + ph" class="form-group">
-          <label :for="'c-' + ph">{{ ph }}</label>
+          <label :for="'c-' + ph">{{ formatLabel(ph) }}</label>
           <input type="text" :id="'c-' + ph" v-model="formValuesCommon[ph]" required>
         </div>
       </form>
@@ -65,7 +65,7 @@
       <h3 class="title-form">Thông Tin File ({{ file.name }}.docx)</h3>
       <form>
         <div v-for="ph in file.placeholders" :key="'f' + i + '-' + ph" class="form-group">
-          <label :for="'f' + i + '-' + ph">{{ ph }}</label>
+          <label :for="'f' + i + '-' + ph">{{ formatLabel(ph) }}</label>
           <input type="text" :id="'f' + i + '-' + ph" v-model="file.formValues[ph]" required>
         </div>
       </form>
@@ -140,6 +140,11 @@ export default {
   },
 
   methods: {
+    formatLabel(ph) {
+      if (!ph) return '';
+      const s = String(ph);
+      return s.startsWith('Login_') ? s.slice(6) : s;
+    },
     addUser() {
       this.userInfoForm.push({
         name: '',
