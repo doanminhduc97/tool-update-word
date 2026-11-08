@@ -8,6 +8,7 @@ import Home4 from '@/views/Home4.vue'
 import Home5 from '@/views/Home5.vue'
 import Home6 from '@/views/Home6.vue'
 import Home7 from '@/views/Home7.vue'
+import Home8 from '@/views/Home8.vue'
 import { useAuth } from '@/stores/auth'
 
 const routes = [
@@ -26,6 +27,7 @@ const routes = [
   // Giải thể
   { path: '/gt', component: Home4, meta: { requiresAuth: true } },
   { path: '/giai-the-1tv', component: Home4, meta: { requiresAuth: true } },
+  { path: '/giai-the-thue', component: Home8, meta: { requiresAuth: true } },
   { path: '/csh-huong-loi', component: Home5, meta: { requiresAuth: true } },
   { path: '/hdcn-bbtl', component: Home6, meta: { requiresAuth: true } },
   // Tạm ngừng công ty

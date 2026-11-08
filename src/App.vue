@@ -42,8 +42,8 @@
               <a class="dropdown-item disabled-item" title="Chức năng đang phát triển" @click.stop="notifyComingSoon('Giải thể cổ phần')">
                 3. Giải thể cổ phần <span class="badge-soon">Sắp có</span>
               </a>
-              <a class="dropdown-item disabled-item" title="Chức năng đang phát triển" @click.stop="notifyComingSoon('Giải thể thuế')">
-                4. Giải thể thuế <span class="badge-soon">Sắp có</span>
+              <a class="dropdown-item" :class="{ 'active': isActiveMenu('/giai-the-thue') }" @click="selectGiaiThe('/giai-the-thue', 44)">
+                4. Giải thể thuế
               </a>
             </div>
           </div>
@@ -118,7 +118,7 @@ export default {
       return ['/', '/dkkdntv', '/tlctcp'].includes(this.$route.path);
     },
     isGiaiTheActive() {
-      return ['/gt', '/giai-the-1tv'].includes(this.$route.path);
+      return ['/gt', '/giai-the-1tv', '/giai-the-thue'].includes(this.$route.path);
     },
     isTamNgungActive() {
       return ['/tam-ngung-1tv', '/tam-ngung-2tv', '/tam-ngung-cp'].includes(this.$route.path);
