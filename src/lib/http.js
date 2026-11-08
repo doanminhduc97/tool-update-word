@@ -29,9 +29,9 @@ function deleteCookie(name) {
   document.cookie = name + '=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;'
 }
 
-// Timeout phiên treo máy là 30 phút
+// Timeout phiên treo máy là 60 phút (1 giờ)
 const SESSION_COOKIE_NAME = 'tuw_at'
-const SESSION_TIMEOUT_MINUTES = 30
+const SESSION_TIMEOUT_MINUTES = 60
 
 let accessToken = getCookie(SESSION_COOKIE_NAME) || null
 let onRefreshed = null
@@ -46,7 +46,7 @@ export function setAccessToken(token) {
   }
 }
 
-// Tự động gia hạn thêm 30p mỗi khi người dùng thao tác
+// Tự động gia hạn thêm 60 phút (1 giờ) mỗi khi người dùng thao tác
 export function touchSession() {
   if (accessToken) {
     setCookie(SESSION_COOKIE_NAME, accessToken, SESSION_TIMEOUT_MINUTES)
@@ -62,12 +62,12 @@ export function setOnRefreshed(fn) {
 }
 
 http.interceptors.request.use((cfg) => {
-  // Lấy lại token từ cookie (nếu còn hạn 30p)
+  // Lấy lại token từ cookie (nếu còn hạn 1 giờ)
   if (!accessToken) {
     accessToken = getCookie(SESSION_COOKIE_NAME) || null
   }
   if (accessToken) {
-    touchSession() // Gia hạn thêm 30p mỗi khi gọi request
+    touchSession() // Gia hạn thêm 1 giờ mỗi khi gọi request
     cfg.headers = cfg.headers || {}
     cfg.headers.Authorization = `Bearer ${accessToken}`
   }
@@ -95,7 +95,14 @@ export function refreshSession() {
 }
 
 http.interceptors.response.use(
-  (res) => res,
+  (res) => {
+    // Tự động cập nhật accessToken mới từ response header do Backend cấp (refresh sliding 1h)
+    const newToken = res.headers?.['x-new-access-token']
+    if (newToken && newToken !== accessToken) {
+      setAccessToken(newToken)
+    }
+    return res
+  },
   async (error) => {
     const { config, response } = error
     const url = config?.url || ''

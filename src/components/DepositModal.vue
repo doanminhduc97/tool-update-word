@@ -229,10 +229,9 @@ export default {
 <style scoped>
 .deposit-modal-backdrop {
   position: fixed;
-  top: 0;
-  left: 0;
-  width: 100vw;
-  height: 100vh;
+  inset: 0;
+  width: 100%;
+  height: 100%;
   background: rgba(15, 23, 42, 0.65);
   backdrop-filter: blur(4px);
   display: flex;
@@ -240,6 +239,7 @@ export default {
   align-items: center;
   z-index: 100000;
   padding: 16px;
+  overflow: hidden;
 }
 
 .deposit-modal-card {
@@ -422,6 +422,7 @@ export default {
   display: flex;
   flex-direction: column;
   gap: 12px;
+  min-width: 0; /* cho phép co lại khi nội dung dài, tránh vỡ grid sinh scroll ngang */
 }
 
 .info-group {
@@ -450,6 +451,7 @@ export default {
   padding: 8px 12px;
   border-radius: 8px;
   border: 1px solid #e2e8f0;
+  min-width: 0;
 }
 
 .highlight-group .info-val-row {
@@ -460,6 +462,9 @@ export default {
 .val-mono {
   font-family: monospace;
   font-size: 15px;
+  min-width: 0;
+  overflow-wrap: anywhere;
+  word-break: break-word;
 }
 
 .val-content {
@@ -554,7 +559,17 @@ export default {
   background: #0369a1;
 }
 
+@media (max-width: 760px) {
+  .deposit-layout {
+    grid-template-columns: 1fr;
+  }
+}
+
 @media (max-width: 600px) {
+  .deposit-modal-card {
+    max-width: 100%;
+  }
+
   .deposit-layout {
     grid-template-columns: 1fr;
   }

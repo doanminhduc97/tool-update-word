@@ -1,11 +1,15 @@
 <template>
 <div class="editor">
+  <div class="card common-card" style="margin-bottom: 24px; text-align: center;">
+    <h2 style="font-size: 1.25rem; font-weight: 700; color: #0284c7;">Hồ sơ thành lập công ty cổ phần</h2>
+  </div>
   <section v-show="placeholdersCommon.length" class="card common-card">
     <h3 class="title-form">Thông Tin Chung Của Các File</h3>
     <form>
       <div v-for="ph in placeholdersCommon" :key="'c-' + ph" class="form-group">
         <label :for="'c-' + ph">{{ formatLabel(ph, 'c') }}</label>
-        <input type="text" :id="'c-' + ph" v-model="formValuesCommon[ph]" required>
+        <PhongDkkdInput v-if="ph === 'Phòng ĐKKD Tỉnh/TP'" :input-id="'c-' + ph" v-model="formValuesCommon[ph]" />
+        <input v-else type="text" :id="'c-' + ph" v-model="formValuesCommon[ph]" required>
       </div>
     </form>
   </section>
@@ -654,13 +658,17 @@ export default {
       return match ? match[1] : null;
     },
     sortCustom(arr) {
-      return arr.sort((a, b) => {
+      const nonLogin = arr.filter(k => !String(k).startsWith('Login_'));
+      const loginFields = arr.filter(k => String(k).startsWith('Login_'));
+
+      nonLogin.sort((a, b) => {
         const prefixA = a.substring(0, 4);
         const prefixB = b.substring(0, 4);
-
         if (prefixA === prefixB) return a.localeCompare(b);
         return prefixA.localeCompare(prefixB);
       });
+
+      return [...nonLogin, ...loginFields];
     }
   }
 }

@@ -1,5 +1,8 @@
 <template>
 <div class="editor">
+  <div class="card common-card" style="margin-bottom: 24px; text-align: center;">
+    <h2 style="font-size: 1.25rem; font-weight: 700; color: #0284c7;">Hồ sơ đăng ký kinh doanh 1 thành viên</h2>
+  </div>
   <section v-if="placeholdersCommon.length" class="card common-card">
     <h3 class="title-form">Thông Tin Chung</h3>
     <div class="common-cols">
@@ -8,7 +11,8 @@
         <form>
           <div v-for="ph in placeholdersCommon.slice(0, 10)" :key="'c1-' + ph" class="form-group">
             <label :for="'c1-' + ph">{{ formatLabel(ph, 'c1') }}</label>
-            <input type="text" :id="'c1-' + ph" v-model="formValuesCommon[ph]" required>
+            <PhongDkkdInput v-if="ph === 'Phòng ĐKKD Tỉnh/TP'" :input-id="'c1-' + ph" v-model="formValuesCommon[ph]" />
+            <input v-else type="text" :id="'c1-' + ph" v-model="formValuesCommon[ph]" required>
           </div>
         </form>
       </div>
@@ -17,7 +21,8 @@
         <form>
           <div v-for="ph in placeholdersCommon.slice(10)" :key="'c2-' + ph" class="form-group">
             <label :for="'c2-' + ph">{{ formatLabel(ph, 'c2') }}</label>
-            <input type="text" :id="'c2-' + ph" v-model="formValuesCommon[ph]" required>
+            <PhongDkkdInput v-if="ph === 'Phòng ĐKKD Tỉnh/TP'" :input-id="'c2-' + ph" v-model="formValuesCommon[ph]" />
+            <input v-else type="text" :id="'c2-' + ph" v-model="formValuesCommon[ph]" required>
           </div>
         </form>
       </div>
@@ -488,13 +493,17 @@ export default {
       return match ? match[1] : null;
     },
     sortCustom(arr) {
-      return arr.sort((a, b) => {
+      const nonLogin = arr.filter(k => !String(k).startsWith('Login_'));
+      const loginFields = arr.filter(k => String(k).startsWith('Login_'));
+
+      nonLogin.sort((a, b) => {
         const prefixA = a.substring(0, 4);
         const prefixB = b.substring(0, 4);
-
         if (prefixA === prefixB) return a.localeCompare(b);
         return prefixA.localeCompare(prefixB);
       });
+
+      return [...nonLogin, ...loginFields];
     }
   }
 }

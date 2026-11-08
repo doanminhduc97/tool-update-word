@@ -36,11 +36,11 @@
               <a class="dropdown-item" :class="{ 'active': isActiveMenu('/gt') || isActiveMenu('/giai-the-1tv') }" @click="selectGiaiThe('/gt', 4)">
                 1. Giải thể 1 thành viên
               </a>
-              <a class="dropdown-item disabled-item" title="Chức năng đang phát triển" @click.stop="notifyComingSoon('Giải thể 2 thành viên')">
-                2. Giải thể 2 thành viên <span class="badge-soon">Sắp có</span>
+              <a class="dropdown-item" :class="{ 'active': isActiveMenu('/giai-the-2tv') }" @click="selectGiaiThe('/giai-the-2tv', 42)">
+                2. Giải thể 2 thành viên
               </a>
-              <a class="dropdown-item disabled-item" title="Chức năng đang phát triển" @click.stop="notifyComingSoon('Giải thể cổ phần')">
-                3. Giải thể cổ phần <span class="badge-soon">Sắp có</span>
+              <a class="dropdown-item" :class="{ 'active': isActiveMenu('/giai-the-co-phan') }" @click="selectGiaiThe('/giai-the-co-phan', 43)">
+                3. Giải thể cổ phần
               </a>
               <a class="dropdown-item" :class="{ 'active': isActiveMenu('/giai-the-thue') }" @click="selectGiaiThe('/giai-the-thue', 44)">
                 4. Giải thể thuế
@@ -66,6 +66,34 @@
               </a>
               <a class="dropdown-item" :class="{ 'active': isActiveMenu('/tam-ngung-cp') }" @click="selectTamNgung('/tam-ngung-cp', 9)">
                 3. Tạm ngừng cty CỔ PHẦN
+              </a>
+            </div>
+          </div>
+
+          <!-- Dropdown Thay Đổi Vốn Điều Lệ -->
+          <div class="dropdown-menu-container" :class="{ 'open': isThayDoiVonOpen }" ref="thayDoiVonRef">
+            <a class="btn-menu dropdown-toggle" :class="{ 'active': isThayDoiVonActive }" @click="toggleThayDoiVon">
+              Thay Đổi Vốn Điều Lệ
+              <span class="caret"></span>
+            </a>
+            <div v-show="isThayDoiVonOpen" class="dropdown-list">
+              <a class="dropdown-item" :class="{ 'active': isActiveMenu('/tang-von-1tv') }" @click="selectThayDoiVon('/tang-von-1tv')">
+                1. Tăng Vốn Cty 1 Thành Viên
+              </a>
+              <a class="dropdown-item" :class="{ 'active': isActiveMenu('/tang-von-2tv') }" @click="selectThayDoiVon('/tang-von-2tv')">
+                2. Tăng Vốn Cty 2 Thành Viên
+              </a>
+              <a class="dropdown-item" :class="{ 'active': isActiveMenu('/tang-von-cp') }" @click="selectThayDoiVon('/tang-von-cp')">
+                3. Tăng Vốn Cty Cổ Phần
+              </a>
+              <a class="dropdown-item disabled-item" title="Chức năng đang phát triển" @click.stop="notifyComingSoon('Giảm Vốn Cty 1 Thành Viên')">
+                4. Giảm Vốn Cty 1 Thành Viên <span class="badge-soon">Sắp có</span>
+              </a>
+              <a class="dropdown-item disabled-item" title="Chức năng đang phát triển" @click.stop="notifyComingSoon('Giảm Vốn Cty 2 Thành Viên')">
+                5. Giảm Vốn Cty 2 Thành Viên <span class="badge-soon">Sắp có</span>
+              </a>
+              <a class="dropdown-item disabled-item" title="Chức năng đang phát triển" @click.stop="notifyComingSoon('Giảm Vốn Cty Cổ Phần')">
+                6. Giảm Vốn Cty Cổ Phần <span class="badge-soon">Sắp có</span>
               </a>
             </div>
           </div>
@@ -106,6 +134,7 @@ export default {
       isDropdownOpen: false,
       isThanhLapMoiOpen: false,
       isGiaiTheOpen: false,
+      isThayDoiVonOpen: false,
       auth: useAuth(),
       touchTimer: null,
     }
@@ -118,10 +147,13 @@ export default {
       return ['/', '/dkkdntv', '/tlctcp'].includes(this.$route.path);
     },
     isGiaiTheActive() {
-      return ['/gt', '/giai-the-1tv', '/giai-the-thue'].includes(this.$route.path);
+      return ['/gt', '/giai-the-1tv', '/giai-the-2tv', '/giai-the-co-phan', '/giai-the-thue'].includes(this.$route.path);
     },
     isTamNgungActive() {
       return ['/tam-ngung-1tv', '/tam-ngung-2tv', '/tam-ngung-cp'].includes(this.$route.path);
+    },
+    isThayDoiVonActive() {
+      return this.$route.path.startsWith('/tang-von') || this.$route.path.startsWith('/giam-von');
     }
   },
   mounted() {
@@ -151,12 +183,14 @@ export default {
       this.isDropdownOpen = false;
       this.isThanhLapMoiOpen = false;
       this.isGiaiTheOpen = false;
+      this.isThayDoiVonOpen = false;
       this.$router.push(path);
     },
     toggleThanhLapMoi(e) {
       e.stopPropagation();
       this.isDropdownOpen = false;
       this.isGiaiTheOpen = false;
+      this.isThayDoiVonOpen = false;
       this.isThanhLapMoiOpen = !this.isThanhLapMoiOpen;
     },
     selectThanhLapMoi(path, id) {
@@ -168,11 +202,24 @@ export default {
       e.stopPropagation();
       this.isDropdownOpen = false;
       this.isThanhLapMoiOpen = false;
+      this.isThayDoiVonOpen = false;
       this.isGiaiTheOpen = !this.isGiaiTheOpen;
     },
     selectGiaiThe(path, id) {
       this.id = id;
       this.isGiaiTheOpen = false;
+      this.isThayDoiVonOpen = false;
+      this.$router.push(path);
+    },
+    toggleThayDoiVon(e) {
+      e.stopPropagation();
+      this.isDropdownOpen = false;
+      this.isThanhLapMoiOpen = false;
+      this.isGiaiTheOpen = false;
+      this.isThayDoiVonOpen = !this.isThayDoiVonOpen;
+    },
+    selectThayDoiVon(path) {
+      this.isThayDoiVonOpen = false;
       this.$router.push(path);
     },
     notifyComingSoon(featureName) {
@@ -182,11 +229,13 @@ export default {
       e.stopPropagation();
       this.isThanhLapMoiOpen = false;
       this.isGiaiTheOpen = false;
+      this.isThayDoiVonOpen = false;
       this.isDropdownOpen = !this.isDropdownOpen;
     },
     selectTamNgung(path, id) {
       this.id = id;
       this.isDropdownOpen = false;
+      this.isThayDoiVonOpen = false;
       this.$router.push(path);
     },
     handleOutsideClick(e) {
@@ -198,6 +247,9 @@ export default {
       }
       if (this.$refs.giaiTheRef && !this.$refs.giaiTheRef.contains(e.target)) {
         this.isGiaiTheOpen = false;
+      }
+      if (this.$refs.thayDoiVonRef && !this.$refs.thayDoiVonRef.contains(e.target)) {
+        this.isThayDoiVonOpen = false;
       }
     },
     isActiveMenu(path) {

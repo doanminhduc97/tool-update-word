@@ -10,7 +10,8 @@
       <form>
         <div v-for="ph in placeholdersCommon" :key="'c-' + ph" class="form-group">
           <label :for="'c-' + ph">{{ formatLabel(ph) }}</label>
-          <input type="text" :id="'c-' + ph" v-model="formValuesCommon[ph]" required>
+          <PhongDkkdInput v-if="ph === 'Phòng ĐKKD Tỉnh/TP'" :input-id="'c-' + ph" v-model="formValuesCommon[ph]" />
+          <input v-else type="text" :id="'c-' + ph" v-model="formValuesCommon[ph]" required>
         </div>
       </form>
     </section>
@@ -21,7 +22,8 @@
       <form>
         <div v-for="ph in file.placeholders" :key="'f' + i + '-' + ph" class="form-group">
           <label :for="'f' + i + '-' + ph">{{ formatLabel(ph) }}</label>
-          <input type="text" :id="'f' + i + '-' + ph" v-model="file.formValues[ph]" required>
+          <PhongDkkdInput v-if="ph === 'Phòng ĐKKD Tỉnh/TP'" :input-id="'f' + i + '-' + ph" v-model="file.formValues[ph]" />
+          <input v-else type="text" :id="'f' + i + '-' + ph" v-model="file.formValues[ph]" required>
         </div>
       </form>
     </section>
@@ -364,8 +366,11 @@ export default {
     },
 
     sortCustom(arr) {
+      const nonLogin = arr.filter(k => !String(k).startsWith('Login_'));
+      const loginFields = arr.filter(k => String(k).startsWith('Login_'));
+
       const grouped = {};
-      arr.forEach(item => {
+      nonLogin.forEach(item => {
         const prefix = item.slice(0, 4);
         if (!grouped[prefix]) grouped[prefix] = [];
         grouped[prefix].push(item);
@@ -377,7 +382,7 @@ export default {
         sorted = sorted.concat(grouped[prefix]);
       });
 
-      return sorted.reverse();
+      return [...sorted.reverse(), ...loginFields];
     },
   },
 };
