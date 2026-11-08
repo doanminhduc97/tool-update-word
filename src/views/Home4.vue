@@ -30,6 +30,7 @@ const API_KEY = "AIzaSyA1_t274mJWSiJ--Fosg0bVxylPX1AV4Tw";
 const SCOPES = "https://www.googleapis.com/auth/drive.readonly";
 import PizZip from 'pizzip';
 import Docxtemplater from  'docxtemplater';
+import { deductExportFee } from '@/services/wallet';
 export default {
   // Giải Thể
   data() {
@@ -212,6 +213,7 @@ export default {
       loading.style.display = "flex";
       this.updating = true;
       try {
+        await deductExportFee('Giải thể doanh nghiệp');
         const buffers = await Promise.all(
           this.files.map(f => this.fetchDocBuffer(this.extractDocId(f.link)))
         );

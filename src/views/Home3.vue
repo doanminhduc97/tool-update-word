@@ -162,6 +162,7 @@ import giaoDuc from '@/data/giaoDuc.json'
 import mayMac from '@/data/mayMac.json'
 import nganhNgheTongHop from '@/data/nganhNgheTongHop.json'
 import xayDung from '@/data/xayDung'
+import { deductExportFee } from '@/services/wallet'
 export default {
   data() {
     return {
@@ -426,6 +427,7 @@ export default {
       // if (!this.placeholders.length) return;
       this.updating = true;
       try {
+        await deductExportFee('Thành lập công ty cổ phần');
         // Lấy lại file gốc (đảm bảo không dùng file đã bị thay đổi)
         // extract fileId
         const ids = [

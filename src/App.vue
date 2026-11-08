@@ -5,7 +5,7 @@
       <div id="loading-overlay">
         <div class="spinner"></div>
       </div>
-      <header>
+      <header v-if="user">
         <nav>
           <a class="btn-menu" :class="{ 'active': isActiveMenu('/') }" @click="changeRoute('/', 1)">Đăng kí kinh doanh 1 thành viên</a>
           <a class="btn-menu" :class="{ 'active': isActiveMenu('/dkkdntv') }" @click="changeRoute('/dkkdntv', 2)">Đăng kí kinh doanh nhiều thành viên</a>
@@ -32,10 +32,15 @@
               </a>
             </div>
           </div>
+
+          <a v-if="user?.role === 'ADMIN_SYSTEM'" class="btn-menu btn-admin-tab" :class="{ 'active': isActiveMenu('/admin/users') }" @click="changeRoute('/admin/users', 10)">
+            👑 Quản lý người dùng
+          </a>
+
           <!-- <a href="#">Dịch vụ</a>
           <a href="#">Blog</a>
           <a href="#">Liên hệ</a> -->
-          <!-- <a href="#" class="btn">Đăng nhập</a> -->
+          <UserMenu />
         </nav>
       </header>
       <router-view /> <!-- Nơi render page -->
@@ -44,7 +49,11 @@
 </template>
 <script>
 // import axios from 'axios'
+import UserMenu from '@/components/UserMenu.vue'
+import { useAuth } from '@/stores/auth'
+
 export default {
+  components: { UserMenu },
   //  async created() {
   //   const url = '/api/macros/s/AKfycby4Z-N86_35u1CmHhQVA0Edz8TzQKHUFX1jJMCxTBCvB6Pcz4uFvLrXcHtBF8YOSC4E-A/exec';
   //   axios.get(url).then(res => {
@@ -57,9 +66,13 @@ export default {
     return {
       id: 1,
       isDropdownOpen: false,
+      auth: useAuth(),
     }
   },
   computed: {
+    user() {
+      return this.auth.state.user;
+    },
     isTamNgungActive() {
       return ['/tam-ngung-1tv', '/tam-ngung-2tv', '/tam-ngung-cp'].includes(this.$route.path);
     }

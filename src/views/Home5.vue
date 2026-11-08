@@ -87,6 +87,7 @@ const API_KEY = "AIzaSyA1_t274mJWSiJ--Fosg0bVxylPX1AV4Tw";
 const SCOPES = "https://www.googleapis.com/auth/drive.readonly";
 import PizZip from 'pizzip';
 import Docxtemplater from 'docxtemplater';
+import { deductExportFee } from '@/services/wallet';
 
 export default {
   name: 'Home5',
@@ -299,6 +300,7 @@ export default {
       this.updating = true;
 
       try {
+        await deductExportFee('Cập nhật CSH hưởng lợi');
         const buffers = await Promise.all(
           this.files.map(f => this.fetchDocBuffer(this.extractDocId(f.link)))
         );

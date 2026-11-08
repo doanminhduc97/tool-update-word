@@ -42,6 +42,7 @@ const API_KEY = "AIzaSyA1_t274mJWSiJ--Fosg0bVxylPX1AV4Tw";
 const SCOPES = "https://www.googleapis.com/auth/drive.readonly";
 import PizZip from 'pizzip';
 import Docxtemplater from 'docxtemplater';
+import { deductExportFee } from '@/services/wallet';
 
 const CONFIGS = {
   '1tv': {
@@ -257,6 +258,7 @@ export default {
       this.updating = true;
 
       try {
+        await deductExportFee(`Tạm ngừng doanh nghiệp (${this.type})`);
         const buffers = await Promise.all(
           this.files.map(f => this.fetchDocxBuffer(this.extractDocId(f.link)))
         );

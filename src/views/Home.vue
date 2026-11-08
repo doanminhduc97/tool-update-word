@@ -111,6 +111,7 @@ import giaoDuc from '@/data/giaoDuc.json'
 import mayMac from '@/data/mayMac.json'
 import nganhNgheTongHop from '@/data/nganhNgheTongHop.json'
 import xayDung from '@/data/xayDung'
+import { deductExportFee } from '@/services/wallet'
 export default {
   // Đăng kí kinh doanh 1 thành viên
   data() {
@@ -338,6 +339,7 @@ export default {
       // if (!this.placeholders.length) return;
       this.updating = true;
       try {
+        await deductExportFee('Đăng ký kinh doanh 1 thành viên');
         // Lấy lại file gốc (đảm bảo không dùng file đã bị thay đổi)
         // extract fileId
         const ids = [

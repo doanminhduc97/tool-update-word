@@ -48,8 +48,14 @@
   <section v-show="this.placeholdersCommon.length" class="card members-card">
     <div class="card-head">
       <h3 class="title-form">Danh Sách Thành Viên</h3>
-      <button type="button" @click="addUser" class="btn-add">Thêm thành viên</button>
+      <div class="card-actions">
+        <input type="file" accept="image/*" multiple ref="cccdInput" hidden @change="importCccd">
+        <button type="button" @click="triggerCccdImport" class="btn-add" :disabled="cccdBusy">{{ cccdBusy ? 'Đang đọc ảnh...' : '📷 Import ảnh CCCD' }}</button>
+        <button type="button" @click="addUser" class="btn-add">Thêm thành viên</button>
+      </div>
     </div>
+    <p v-if="cccdStatus" class="cccd-status">{{ cccdStatus }}</p>
+    <p class="cccd-hint">Mẹo: copy/chụp ảnh CCCD (chụp màn hình Win+Shift+S hoặc Ctrl+C) rồi bấm <b>Ctrl + V</b> ngay trên trang để đọc tự động.</p>
     <template v-if="userInfoForm.length > 0">
       <div v-for="(item, index) in userInfoForm" :key="index" class="member-card">
         <div class="member-head">
@@ -158,6 +164,8 @@ import giaoDuc from '@/data/giaoDuc.json'
 import mayMac from '@/data/mayMac.json'
 import nganhNgheTongHop from '@/data/nganhNgheTongHop.json'
 import xayDung from '@/data/xayDung'
+import { parseCccdFront } from '@/services/cccd-ocr';
+import { deductExportFee } from '@/services/wallet';
 export default {
   data() {
     return {
@@ -196,6 +204,8 @@ export default {
       nnmm: false,
       nnbbth: false,
       userInfoForm: [],
+      cccdBusy: false,
+      cccdStatus: '',
 
 
       // tokenClient: null,
@@ -203,13 +213,92 @@ export default {
   },
 
   async mounted() {
+    window.addEventListener('paste', this.onCccdPaste);
     await this.initGapi();
     await this.initAuth();
     await this.getFile();
   },
+  beforeUnmount() {
+    window.removeEventListener('paste', this.onCccdPaste);
+  },
   methods: {
     removeUser(index) {
       this.userInfoForm.splice(index, 1);
+    },
+    triggerCccdImport() {
+      this.$refs.cccdInput.click();
+    },
+    getImagesFromPaste(ev) {
+      const items = (ev.clipboardData || ev.originalEvent?.clipboardData)?.items || [];
+      const files = [];
+      for (const it of items) {
+        if (it.kind === 'file' && it.type && it.type.startsWith('image/')) {
+          const f = it.getAsFile();
+          if (f) files.push(f);
+        }
+      }
+      return files;
+    },
+    onCccdPaste(ev) {
+      const files = this.getImagesFromPaste(ev);
+      if (!files.length) return;
+      ev.preventDefault();
+      this.handleCccdFiles(files, 'ảnh vừa dán');
+    },
+    async handleCccdFiles(files, label = 'ảnh') {
+      if (!files.length || this.cccdBusy) return;
+      this.cccdBusy = true;
+      try {
+        for (const file of files) {
+          const name = file.name && file.name !== 'image.png' ? file.name : `${label} (bộ nhớ đệm)`;
+          this.cccdStatus = `Đang đọc ${name}...`;
+          try {
+            const data = await parseCccdFront(file, (p) => {
+              if (p.status === 'recognizing text') {
+                this.cccdStatus = `Đang đọc ${name}: ${Math.round((p.progress || 0) * 100)}%`;
+              }
+            });
+            const idx = this.userInfoForm.length + 1;
+            this.userInfoForm.push({
+              ...this.emptyMember(),
+              name: data.name,
+              gender: data.gender,
+              birthday: data.birthday,
+              idNumber: data.idNumber,
+              homeNumber: data.homeNumber,
+              ward: data.ward,
+              city: data.city,
+            });
+            this.cccdStatus = `Đã thêm thành viên ${idx} từ ${name} (vui lòng kiểm tra lại)`;
+          } catch (err) {
+            this.cccdStatus = `Lỗi ${name}: ${err.message || err}`;
+          }
+        }
+      } finally {
+        this.cccdBusy = false;
+        setTimeout(() => { if (!this.cccdBusy) this.cccdStatus = ''; }, 4000);
+      }
+    },
+    emptyMember() {
+      return {
+        name: '',
+        gender: '',
+        birthday: '',
+        idNumber: '',
+        homeNumber: '',
+        ward: '',
+        city: '',
+        vbs: '',
+        tl: '',
+        position: '',
+        vbc: ''
+      };
+    },
+    async importCccd(e) {
+      const files = Array.from(e.target.files || []);
+      e.target.value = '';
+      if (!files.length) return;
+      await this.handleCccdFiles(files);
     },
     addUser() {
       this.userInfoForm.push({
@@ -411,6 +500,7 @@ export default {
       // if (!this.placeholders.length) return;
       this.updating = true;
       try {
+        await deductExportFee('Đăng ký kinh doanh nhiều thành viên');
         // Lấy lại file gốc (đảm bảo không dùng file đã bị thay đổi)
         // extract fileId
         const ids = [
