@@ -7,9 +7,25 @@
       </div>
       <header v-if="user">
         <nav>
-          <a class="btn-menu" :class="{ 'active': isActiveMenu('/') }" @click="changeRoute('/', 1)">Đăng kí kinh doanh 1 thành viên</a>
-          <a class="btn-menu" :class="{ 'active': isActiveMenu('/dkkdntv') }" @click="changeRoute('/dkkdntv', 2)">Đăng kí kinh doanh nhiều thành viên</a>
-          <a class="btn-menu" :class="{ 'active': isActiveMenu('/tlctcp') }" @click="changeRoute('/tlctcp', 3)">Thành lập công ty cổ phần</a>
+          <!-- Dropdown Thành lập mới -->
+          <div class="dropdown-menu-container" :class="{ 'open': isThanhLapMoiOpen }" ref="thanhLapMoiRef">
+            <a class="btn-menu dropdown-toggle" :class="{ 'active': isThanhLapMoiActive }" @click="toggleThanhLapMoi">
+              Thành lập mới
+              <span class="caret"></span>
+            </a>
+            <div v-show="isThanhLapMoiOpen" class="dropdown-list">
+              <a class="dropdown-item" :class="{ 'active': isActiveMenu('/') }" @click="selectThanhLapMoi('/', 1)">
+                1. Đăng ký kinh doanh 1 thành viên
+              </a>
+              <a class="dropdown-item" :class="{ 'active': isActiveMenu('/dkkdntv') }" @click="selectThanhLapMoi('/dkkdntv', 2)">
+                2. Đăng ký kinh doanh nhiều thành viên
+              </a>
+              <a class="dropdown-item" :class="{ 'active': isActiveMenu('/tlctcp') }" @click="selectThanhLapMoi('/tlctcp', 3)">
+                3. Thành lập công ty cổ phần
+              </a>
+            </div>
+          </div>
+
           <a class="btn-menu" :class="{ 'active': isActiveMenu('/gt') }" @click="changeRoute('/gt', 4)">Giải Thể</a>
           <a class="btn-menu" :class="{ 'active': isActiveMenu('/csh-huong-loi') }" @click="changeRoute('/csh-huong-loi', 5)">Cập nhật CSH hưởng lợi</a>
           <a class="btn-menu" :class="{ 'active': isActiveMenu('/hdcn-bbtl') }" @click="changeRoute('/hdcn-bbtl', 6)">HĐCN và BBTL</a>
@@ -66,12 +82,16 @@ export default {
     return {
       id: 1,
       isDropdownOpen: false,
+      isThanhLapMoiOpen: false,
       auth: useAuth(),
     }
   },
   computed: {
     user() {
       return this.auth.state.user;
+    },
+    isThanhLapMoiActive() {
+      return ['/', '/dkkdntv', '/tlctcp'].includes(this.$route.path);
     },
     isTamNgungActive() {
       return ['/tam-ngung-1tv', '/tam-ngung-2tv', '/tam-ngung-cp'].includes(this.$route.path);
@@ -87,10 +107,22 @@ export default {
     changeRoute(path, id) {
       this.id = id;
       this.isDropdownOpen = false;
+      this.isThanhLapMoiOpen = false;
+      this.$router.push(path);
+    },
+    toggleThanhLapMoi(e) {
+      e.stopPropagation();
+      this.isDropdownOpen = false;
+      this.isThanhLapMoiOpen = !this.isThanhLapMoiOpen;
+    },
+    selectThanhLapMoi(path, id) {
+      this.id = id;
+      this.isThanhLapMoiOpen = false;
       this.$router.push(path);
     },
     toggleDropdown(e) {
       e.stopPropagation();
+      this.isThanhLapMoiOpen = false;
       this.isDropdownOpen = !this.isDropdownOpen;
     },
     selectTamNgung(path, id) {
@@ -101,6 +133,9 @@ export default {
     handleOutsideClick(e) {
       if (this.$refs.dropdownRef && !this.$refs.dropdownRef.contains(e.target)) {
         this.isDropdownOpen = false;
+      }
+      if (this.$refs.thanhLapMoiRef && !this.$refs.thanhLapMoiRef.contains(e.target)) {
+        this.isThanhLapMoiOpen = false;
       }
     },
     isActiveMenu(path) {
