@@ -317,11 +317,27 @@ nav a {
   }
 
   .form-group {
+    display: flex;
+    flex-direction: column;
+
     label {
       display: block;
       font-weight: 600;
       margin-bottom: 0.25rem;
       color: #374151;
+    }
+
+    /* Khi form-group chứa trường Giới tính (GenderRadio): label và radio box nằm cùng 1 hàng */
+    &:has(.gender-radio-group) {
+      flex-direction: row;
+      align-items: center;
+      gap: 1.25rem;
+      min-height: 38px;
+
+      label {
+        margin-bottom: 0;
+        white-space: nowrap;
+      }
     }
 
     input[type="text"] {
@@ -570,6 +586,17 @@ nav a {
 
   > span {
     font-weight: 600;
+  }
+
+  &:has(.gender-radio-group) {
+    flex-direction: row;
+    align-items: center;
+    gap: 1.25rem;
+    min-height: 42px;
+
+    > span {
+      white-space: nowrap;
+    }
   }
 }
 

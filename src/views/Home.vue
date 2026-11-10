@@ -12,6 +12,7 @@
           <div v-for="ph in placeholdersCommon.slice(0, 10)" :key="'c1-' + ph" class="form-group">
             <label :for="'c1-' + ph">{{ formatLabel(ph, 'c1') }}</label>
             <PhongDkkdInput v-if="ph === 'Phòng ĐKKD Tỉnh/TP'" :input-id="'c1-' + ph" v-model="formValuesCommon[ph]" />
+            <GenderRadio v-else-if="isGenderField(ph)" :name="'c1-' + ph" v-model="formValuesCommon[ph]" />
             <input v-else type="text" :id="'c1-' + ph" v-model="formValuesCommon[ph]" required>
           </div>
         </form>
@@ -22,6 +23,7 @@
           <div v-for="ph in placeholdersCommon.slice(10)" :key="'c2-' + ph" class="form-group">
             <label :for="'c2-' + ph">{{ formatLabel(ph, 'c2') }}</label>
             <PhongDkkdInput v-if="ph === 'Phòng ĐKKD Tỉnh/TP'" :input-id="'c2-' + ph" v-model="formValuesCommon[ph]" />
+            <GenderRadio v-else-if="isGenderField(ph)" :name="'c2-' + ph" v-model="formValuesCommon[ph]" />
             <input v-else type="text" :id="'c2-' + ph" v-model="formValuesCommon[ph]" required>
           </div>
         </form>
@@ -33,7 +35,8 @@
     <form>
       <div v-for="ph in placeholders" :key="'f0-' + ph" class="form-group">
         <label :for="'f0-' + ph">{{ formatLabel(ph, 'f0') }}</label>
-        <input type="text" :id="'f0-' + ph" v-model="formValues[ph]" required>
+        <GenderRadio v-if="isGenderField(ph)" :name="'f0-' + ph" v-model="formValues[ph]" />
+        <input v-else type="text" :id="'f0-' + ph" v-model="formValues[ph]" required>
       </div>
     </form>
   </section>
@@ -42,7 +45,8 @@
     <form>
       <div v-for="ph in placeholders2" :key="'f1-' + ph" class="form-group">
         <label :for="'f1-' + ph">{{ formatLabel(ph, 'f1') }}</label>
-        <input type="text" :id="'f1-' + ph" v-model="formValues2[ph]" required>
+        <GenderRadio v-if="isGenderField(ph)" :name="'f1-' + ph" v-model="formValues2[ph]" />
+        <input v-else type="text" :id="'f1-' + ph" v-model="formValues2[ph]" required>
       </div>
     </form>
   </section>
@@ -51,7 +55,8 @@
     <form>
       <div v-for="ph in placeholders3" :key="'f2-' + ph" class="form-group">
         <label :for="'f2-' + ph">{{ formatLabel(ph, 'f2') }}</label>
-        <input type="text" :id="'f2-' + ph" v-model="formValues3[ph]" required>
+        <GenderRadio v-if="isGenderField(ph)" :name="'f2-' + ph" v-model="formValues3[ph]" />
+        <input v-else type="text" :id="'f2-' + ph" v-model="formValues3[ph]" required>
       </div>
     </form>
   </section>
@@ -60,7 +65,8 @@
     <form>
       <div v-for="ph in placeholders4" :key="'f3-' + ph" class="form-group">
         <label :for="'f3-' + ph">{{ formatLabel(ph, 'f3') }}</label>
-        <input type="text" :id="'f3-' + ph" v-model="formValues4[ph]" required>
+        <GenderRadio v-if="isGenderField(ph)" :name="'f3-' + ph" v-model="formValues4[ph]" />
+        <input v-else type="text" :id="'f3-' + ph" v-model="formValues4[ph]" required>
       </div>
     </form>
   </section>
@@ -119,6 +125,8 @@ import xayDung from '@/data/xayDung'
 import { deductExportFee } from '@/services/wallet'
 import { useAuth } from '@/stores/auth'
 import { autofillLoginPlaceholders } from '@/lib/loginPlaceholders'
+import { enforceTimesNewRoman } from '@/lib/fontHelper'
+import { isGenderField } from '@/lib/genderHelper'
 export default {
   // Đăng kí kinh doanh 1 thành viên
   data() {
@@ -482,11 +490,15 @@ export default {
 
     renderToBlob(doc, data) {
       doc.render(data);
+      enforceTimesNewRoman(doc.getZip());
       return doc.getZip().generate({
         type: "blob",
         mimeType:
           "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
       });
+    },
+    isGenderField(ph) {
+      return isGenderField(ph);
     },
     extractDocId(url) {
       const match = url.match(/\/document\/d\/([a-zA-Z0-9-_]+)/);

@@ -6,6 +6,7 @@ import router from './router'  // import router
 import './style.css';
 
 import PhongDkkdInput from './components/PhongDkkdInput.vue'
+import GenderRadio from './components/GenderRadio.vue'
 
 // Tự động gán tooltip (thuộc tính title) cho mọi ô input khi hover vào để show giá trị bên trong
 if (typeof window !== 'undefined') {
@@ -28,6 +29,7 @@ if (typeof window !== 'undefined') {
 
 const app = createApp(App)
 app.component('PhongDkkdInput', PhongDkkdInput)
+app.component('GenderRadio', GenderRadio)
 
 app.use(router) // gắn router
 app.mount('#app')

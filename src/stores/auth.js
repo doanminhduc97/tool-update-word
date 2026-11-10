@@ -49,15 +49,27 @@ async function init(force = false) {
           notify()
           return state.user
         } catch (meErr) {
-          // Token cũ hết hạn hoặc bị lỗi, thử refresh
+          // Token cũ hết hạn hoặc bị lỗi, thử refresh bên dưới
         }
       }
 
-      // 2. Nếu không có token cookie hoặc token cookie hết hạn, gọi refresh
+      // 2. Không gọi refresh ngầm nếu đang ở trang login hoặc register và không có token
+      if (typeof window !== 'undefined') {
+        const path = window.location.pathname
+        if ((path === '/login' || path === '/register') && !currentToken) {
+          state.user = null
+          return null
+        }
+      }
+
+      // 3. Nếu không có token cookie hoặc token cookie hết hạn, gọi refresh
       await refreshSession()
     } catch {
-      state.user = null
-      setAccessToken(null)
+      // Chỉ reset null khi không có user nào vừa được login thiết lập song song
+      if (!state.user) {
+        state.user = null
+        setAccessToken(null)
+      }
     } finally {
       state.ready = true
       initPromise = null

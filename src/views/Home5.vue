@@ -10,6 +10,7 @@
         <div v-for="ph in placeholdersCommon" :key="'c-' + ph" class="form-group">
           <label :for="'c-' + ph">{{ formatLabel(ph) }}</label>
           <PhongDkkdInput v-if="ph === 'Phòng ĐKKD Tỉnh/TP'" :input-id="'c-' + ph" v-model="formValuesCommon[ph]" />
+          <GenderRadio v-else-if="isGenderField(ph)" :name="'c-' + ph" v-model="formValuesCommon[ph]" />
           <input v-else type="text" :id="'c-' + ph" v-model="formValuesCommon[ph]" required>
         </div>
       </form>
@@ -36,7 +37,7 @@
             </div>
             <div class="form-group">
               <label>Giới tính</label>
-              <input type="text" v-model="item.gender" placeholder="Nam / Nữ">
+              <GenderRadio :name="'csh-gender-' + index" v-model="item.gender" />
             </div>
             <div class="form-group">
               <label>Ngày sinh</label>
@@ -71,6 +72,7 @@
         <div v-for="ph in file.placeholders" :key="'f' + i + '-' + ph" class="form-group">
           <label :for="'f' + i + '-' + ph">{{ formatLabel(ph) }}</label>
           <PhongDkkdInput v-if="ph === 'Phòng ĐKKD Tỉnh/TP'" :input-id="'f' + i + '-' + ph" v-model="file.formValues[ph]" />
+          <GenderRadio v-else-if="isGenderField(ph)" :name="'f' + i + '-' + ph" v-model="file.formValues[ph]" />
           <input v-else type="text" :id="'f' + i + '-' + ph" v-model="file.formValues[ph]" required>
         </div>
       </form>
@@ -95,6 +97,8 @@ import Docxtemplater from 'docxtemplater';
 import { deductExportFee } from '@/services/wallet';
 import { useAuth } from '@/stores/auth';
 import { autofillLoginPlaceholders } from '@/lib/loginPlaceholders';
+import { enforceTimesNewRoman } from '@/lib/fontHelper';
+import { isGenderField } from '@/lib/genderHelper';
 
 export default {
   name: 'Home5',
@@ -153,7 +157,7 @@ export default {
     addUser() {
       this.userInfoForm.push({
         name: '',
-        gender: '',
+        gender: 'Nam',
         birthday: '',
         idNumber: '',
         address: '',
@@ -511,11 +515,16 @@ export default {
 
     renderToBlob(doc, data) {
       doc.render(data);
+      enforceTimesNewRoman(doc.getZip());
       return doc.getZip().generate({
         type: "blob",
         mimeType:
           "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
       });
+    },
+
+    isGenderField(ph) {
+      return isGenderField(ph);
     },
 
     extractDocId(url) {

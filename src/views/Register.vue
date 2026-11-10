@@ -39,14 +39,10 @@
             />
           </label>
 
-          <label class="auth-field">
+          <div class="auth-field">
             <span>Giới tính <span class="req-star">*</span></span>
-            <select v-model="gender" class="auth-input" :disabled="loading">
-              <option value="">-- Chọn giới tính --</option>
-              <option value="Nam">Nam</option>
-              <option value="Nữ">Nữ</option>
-            </select>
-          </label>
+            <GenderRadio name="register-gender" v-model="gender" />
+          </div>
 
           <label class="auth-field">
             <span>Ngày sinh <span class="req-star">*</span></span>
@@ -165,7 +161,7 @@ export default {
     return {
       username: '',
       fullName: '',
-      gender: '',
+      gender: 'Nam',
       birthday: '',
       idNumber: '',
       address: '',
