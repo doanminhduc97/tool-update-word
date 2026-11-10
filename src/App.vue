@@ -48,7 +48,27 @@
             </div>
           </div>
 
-          <a class="btn-menu" :class="{ 'active': isActiveMenu('/csh-huong-loi') }" @click="changeRoute('/csh-huong-loi', 5)">Cập nhật CSH hưởng lợi</a>
+          <!-- Dropdown Cập nhật / Thay đổi CSH -->
+          <div class="dropdown-menu-container" :class="{ 'open': isCshOpen }" ref="cshRef">
+            <a class="btn-menu dropdown-toggle" :class="{ 'active': isCshActive }" @click="toggleCsh">
+              Cập nhật/Thay đổi CSH
+              <span class="caret"></span>
+            </a>
+            <div v-show="isCshOpen" class="dropdown-list">
+              <a class="dropdown-item" :class="{ 'active': isActiveMenu('/csh-huong-loi') }" @click="selectCsh('/csh-huong-loi', 5)">
+                1. Cập nhật CSH hưởng lợi
+              </a>
+              <a class="dropdown-item" :class="{ 'active': isActiveMenu('/csh-dia-chi') }" @click="selectCsh('/csh-dia-chi')">
+                2. Cập nhật CSH hưởng lợi, địa chỉ cty, địa chỉ đại diện PL
+                <span v-if="!hasRoute('/csh-dia-chi')" class="badge-coming-soon">Sắp có</span>
+              </a>
+              <a class="dropdown-item" :class="{ 'active': isActiveMenu('/thay-doi-csh-1tv') }" @click="selectCsh('/thay-doi-csh-1tv')">
+                3. Thay đổi CSH, đại diện cty 1TV
+                <span v-if="!hasRoute('/thay-doi-csh-1tv')" class="badge-coming-soon">Sắp có</span>
+              </a>
+            </div>
+          </div>
+
           <a class="btn-menu" :class="{ 'active': isActiveMenu('/hdcn-bbtl') }" @click="changeRoute('/hdcn-bbtl', 6)">HĐCN và BBTL</a>
 
           <!-- Dropdown Tạm ngừng công ty -->
@@ -131,6 +151,7 @@ export default {
       isThanhLapMoiOpen: false,
       isGiaiTheOpen: false,
       isThayDoiVonOpen: false,
+      isCshOpen: false,
       auth: useAuth(),
       touchTimer: null,
     }
@@ -147,6 +168,9 @@ export default {
     },
     isTamNgungActive() {
       return ['/tam-ngung-1tv', '/tam-ngung-2tv', '/tam-ngung-cp'].includes(this.$route.path);
+    },
+    isCshActive() {
+      return ['/csh-huong-loi', '/csh-dia-chi', '/thay-doi-csh-1tv'].includes(this.$route.path);
     },
     isThayDoiVonActive() {
       return this.$route.path.startsWith('/tang-von') || this.$route.path.startsWith('/giam-von');
@@ -180,6 +204,7 @@ export default {
       this.isThanhLapMoiOpen = false;
       this.isGiaiTheOpen = false;
       this.isThayDoiVonOpen = false;
+      this.isCshOpen = false;
       this.$router.push(path);
     },
     toggleThanhLapMoi(e) {
@@ -187,6 +212,7 @@ export default {
       this.isDropdownOpen = false;
       this.isGiaiTheOpen = false;
       this.isThayDoiVonOpen = false;
+      this.isCshOpen = false;
       this.isThanhLapMoiOpen = !this.isThanhLapMoiOpen;
     },
     selectThanhLapMoi(path, id) {
@@ -199,6 +225,7 @@ export default {
       this.isDropdownOpen = false;
       this.isThanhLapMoiOpen = false;
       this.isThayDoiVonOpen = false;
+      this.isCshOpen = false;
       this.isGiaiTheOpen = !this.isGiaiTheOpen;
     },
     selectGiaiThe(path, id) {
@@ -212,11 +239,36 @@ export default {
       this.isDropdownOpen = false;
       this.isThanhLapMoiOpen = false;
       this.isGiaiTheOpen = false;
+      this.isCshOpen = false;
       this.isThayDoiVonOpen = !this.isThayDoiVonOpen;
     },
     selectThayDoiVon(path) {
       this.isThayDoiVonOpen = false;
       this.$router.push(path);
+    },
+    toggleCsh(e) {
+      e.stopPropagation();
+      this.isDropdownOpen = false;
+      this.isThanhLapMoiOpen = false;
+      this.isGiaiTheOpen = false;
+      this.isThayDoiVonOpen = false;
+      this.isCshOpen = !this.isCshOpen;
+    },
+    selectCsh(path, id) {
+      if (id) this.id = id;
+      this.isCshOpen = false;
+      if (this.hasRoute(path)) {
+        this.$router.push(path);
+      } else {
+        const featureNames = {
+          '/csh-dia-chi': 'Cập nhật CSH hưởng lợi, địa chỉ cty, địa chỉ đại diện PL',
+          '/thay-doi-csh-1tv': 'Thay đổi CSH, đại diện cty 1TV'
+        };
+        this.notifyComingSoon(featureNames[path] || path);
+      }
+    },
+    hasRoute(path) {
+      return this.$router.getRoutes().some(r => r.path === path);
     },
     notifyComingSoon(featureName) {
       alert(`Chức năng "${featureName}" đang được chuẩn bị và sẽ sớm ra mắt!`);
@@ -232,6 +284,7 @@ export default {
       this.id = id;
       this.isDropdownOpen = false;
       this.isThayDoiVonOpen = false;
+      this.isCshOpen = false;
       this.$router.push(path);
     },
     handleOutsideClick(e) {
@@ -246,6 +299,9 @@ export default {
       }
       if (this.$refs.thayDoiVonRef && !this.$refs.thayDoiVonRef.contains(e.target)) {
         this.isThayDoiVonOpen = false;
+      }
+      if (this.$refs.cshRef && !this.$refs.cshRef.contains(e.target)) {
+        this.isCshOpen = false;
       }
     },
     isActiveMenu(path) {

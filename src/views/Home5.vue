@@ -3,30 +3,43 @@
     <div class="card common-card" style="margin-bottom: 24px; text-align: center;">
       <h2 style="font-size: 1.25rem; font-weight: 700; color: #0284c7;">Cập nhật chủ sở hữu hưởng lợi</h2>
     </div>
-    <!-- Form thông tin chung -->
-    <section v-show="placeholdersCommon.length" class="card common-card">
-      <h3 class="title-form">Thông Tin Chung Của Các File</h3>
+
+    <!-- KHỐI 1: THÔNG TIN CÔNG TY (Gom tất cả các biến liên quan đến công ty) -->
+    <section v-show="companyPlaceholders.length" class="card common-card">
+      <h3 class="title-form">Thông Tin Công Ty</h3>
       <form>
-        <div v-for="ph in placeholdersCommon" :key="'c-' + ph" class="form-group">
-          <label :for="'c-' + ph">{{ formatLabel(ph) }}</label>
-          <PhongDkkdInput v-if="ph === 'Phòng ĐKKD Tỉnh/TP'" :input-id="'c-' + ph" v-model="formValuesCommon[ph]" />
-          <GenderRadio v-else-if="isGenderField(ph)" :name="'c-' + ph" v-model="formValuesCommon[ph]" />
-          <input v-else type="text" :id="'c-' + ph" v-model="formValuesCommon[ph]" required>
+        <div v-for="ph in companyPlaceholders" :key="'comp-' + ph" class="form-group">
+          <label :for="'comp-' + ph">{{ formatLabel(ph) }}</label>
+          <PhongDkkdInput v-if="ph === 'Phòng ĐKKD Tỉnh/TP'" :input-id="'comp-' + ph" v-model="companyValues[ph]" />
+          <GenderRadio v-else-if="isGenderField(ph)" :name="'comp-' + ph" v-model="companyValues[ph]" />
+          <input v-else type="text" :id="'comp-' + ph" v-model="companyValues[ph]" required>
         </div>
       </form>
     </section>
 
-    <!-- Dynamic Form Danh sách Chủ sở hữu hưởng lợi -->
-    <section v-show="placeholdersCommon.length" class="card members-card">
+    <!-- KHỐI 2: THÔNG TIN NGƯỜI ĐẠI DIỆN PHÁP LUẬT -->
+    <section v-show="repPlaceholders.length" class="card common-card">
+      <h3 class="title-form">Thông Tin Người Đại Diện Pháp Luật</h3>
+      <form>
+        <div v-for="ph in repPlaceholders" :key="'rep-' + ph" class="form-group">
+          <label :for="'rep-' + ph">{{ formatLabel(ph) }}</label>
+          <GenderRadio v-if="isGenderField(ph)" :name="'rep-' + ph" v-model="repValues[ph]" />
+          <input v-else type="text" :id="'rep-' + ph" v-model="repValues[ph]" required>
+        </div>
+      </form>
+    </section>
+
+    <!-- KHỐI 3: DANH SÁCH CHỦ SỞ HỮU HƯỞNG LỢI (TỪ 25%) -->
+    <section class="card members-card">
       <div class="card-head">
-        <h3 class="title-form">Danh Sách Chủ Sở Hữu Hưởng Lợi</h3>
+        <h3 class="title-form">Danh Sách Chủ Sở Hữu Hưởng Lợi (từ 25%)</h3>
         <button type="button" @click="addUser" class="btn-add">Thêm thành viên</button>
       </div>
       <template v-if="userInfoForm.length > 0">
         <div v-for="(item, index) in userInfoForm" :key="index" class="member-card">
           <div class="member-head">
             <h4 class="member-title">
-              Thành viên {{ index + 1 }} {{ index === 0 ? '(Mặc định là người đại diện)' : '' }}
+              Thành viên {{ index + 1 }}
             </h4>
             <button type="button" @click="removeUser(index)" class="btn-remove">Xóa</button>
           </div>
@@ -65,21 +78,32 @@
       <p v-else class="empty-hint">Chưa có thành viên nào. Nhấn "Thêm thành viên" để bắt đầu.</p>
     </section>
 
-    <!-- Các form riêng của từng file nếu có placeholder riêng -->
-    <section v-for="(file, i) in filesWithPlaceholders" :key="file.name" class="card file-card">
+    <!-- KHỐI 4: THÔNG TIN NGƯỜI ĐƯỢC ỦY QUYỀN (Autofill từ phiên đăng nhập) -->
+    <section v-show="authorizedPersonPlaceholders.length" class="card common-card">
+      <h3 class="title-form">Thông Tin Người Được Ủy Quyền</h3>
+      <form>
+        <div v-for="ph in authorizedPersonPlaceholders" :key="'auth-' + ph" class="form-group">
+          <label :for="'auth-' + ph">{{ formatLabel(ph) }}</label>
+          <GenderRadio v-if="isGenderField(ph)" :name="'auth-' + ph" v-model="authorizedPersonValues[ph]" />
+          <input v-else type="text" :id="'auth-' + ph" v-model="authorizedPersonValues[ph]" required>
+        </div>
+      </form>
+    </section>
+
+    <!-- Các trường riêng khác (nếu có trường nào không thuộc 4 khối trên) -->
+    <section v-for="(file, i) in otherFilesWithPlaceholders" :key="file.name" class="card file-card">
       <h3 class="title-form">Thông Tin File ({{ file.name }}.docx)</h3>
       <form>
-        <div v-for="ph in file.placeholders" :key="'f' + i + '-' + ph" class="form-group">
-          <label :for="'f' + i + '-' + ph">{{ formatLabel(ph) }}</label>
-          <PhongDkkdInput v-if="ph === 'Phòng ĐKKD Tỉnh/TP'" :input-id="'f' + i + '-' + ph" v-model="file.formValues[ph]" />
-          <GenderRadio v-else-if="isGenderField(ph)" :name="'f' + i + '-' + ph" v-model="file.formValues[ph]" />
-          <input v-else type="text" :id="'f' + i + '-' + ph" v-model="file.formValues[ph]" required>
+        <div v-for="ph in file.otherPlaceholders" :key="'other-' + i + '-' + ph" class="form-group">
+          <label :for="'other-' + i + '-' + ph">{{ formatLabel(ph) }}</label>
+          <GenderRadio v-if="isGenderField(ph)" :name="'other-' + i + '-' + ph" v-model="file.formValues[ph]" />
+          <input v-else type="text" :id="'other-' + i + '-' + ph" v-model="file.formValues[ph]" required>
         </div>
       </form>
     </section>
 
     <!-- Nhóm nút bấm -->
-    <section v-show="placeholdersCommon.length || filesWithPlaceholders.length" class="btn-group">
+    <section class="btn-group">
       <button @click="resetAll()" class="btn-refesh">Làm Mới</button>
       <button :disabled="updating" @click="applyChanges()" class="btn-primary">
         {{ updating ? 'Đang Tạo File...' : 'Tạo File Mới' }}
@@ -130,16 +154,36 @@ export default {
 
     return {
       files,
-      placeholdersCommon: [],
-      formValuesCommon: {},
+      // 1. Khối thông tin công ty
+      companyPlaceholders: [],
+      companyValues: {},
+
+      // 2. Khối thông tin người đại diện pháp luật
+      repPlaceholders: [],
+      repValues: {},
+
+      // 3. Khối thông tin người được ủy quyền (Login_*)
+      authorizedPersonPlaceholders: [],
+      authorizedPersonValues: {},
+
       userInfoForm: [],
       updating: false,
     };
   },
 
   computed: {
-    filesWithPlaceholders() {
-      return this.files.filter(f => f.placeholders && f.placeholders.length > 0);
+    otherFilesWithPlaceholders() {
+      return this.files
+        .map(f => {
+          const others = (f.placeholders || []).filter(ph => {
+            return !this.isCompanyField(ph) && !this.isRepField(ph) && !this.isLoginField(ph);
+          });
+          return {
+            ...f,
+            otherPlaceholders: others,
+          };
+        })
+        .filter(f => f.otherPlaceholders.length > 0);
     },
   },
 
@@ -155,6 +199,39 @@ export default {
       const s = String(ph);
       return s.startsWith('Login_') ? s.slice(6) : s;
     },
+
+    // Tự nhận diện biến thuộc Thông tin Công ty
+    isCompanyField(ph) {
+      if (!ph) return false;
+      const s = String(ph).trim().toLowerCase();
+      // Loại trừ các trường thuộc người đại diện hay người ủy quyền
+      if (s.includes('đại diện') || s.includes('đại điện') || s.startsWith('login_')) {
+        return false;
+      }
+      return (
+        s.includes('công ty') ||
+        s.includes('cty') ||
+        s.includes('mã số thuế') ||
+        s.includes('mst') ||
+        s.includes('doanh nghiệp') ||
+        s.includes('phòng đkkd') ||
+        s.includes('cơ quan đăng ký')
+      );
+    },
+
+    // Nhận diện biến thuộc Thông tin Người đại diện PL
+    isRepField(ph) {
+      if (!ph) return false;
+      const s = String(ph).trim();
+      return (s.includes('đại diện') || s.includes('đại điện')) && !s.startsWith('Login_');
+    },
+
+    // Nhận diện biến thuộc Người được ủy quyền
+    isLoginField(ph) {
+      if (!ph) return false;
+      return String(ph).startsWith('Login_');
+    },
+
     addUser() {
       this.userInfoForm.push({
         name: '',
@@ -203,9 +280,8 @@ export default {
         const arrays = await Promise.all(
           this.files.map(f => this.getPlaceholdersFromDoc(f.link))
         );
-        const { commonAtLeast2, uniqueByArray } = this.analyzeArrays(arrays);
 
-        // Helper lọc các biến thành viên, người đại diện và cú pháp vòng lặp khỏi form tự do
+        // Helper lọc các biến thành viên và cú pháp vòng lặp khỏi form
         const isMemberOrLoopVariable = (item) => {
           if (!item) return false;
           const trimmed = item.trim();
@@ -214,34 +290,72 @@ export default {
           if (/^cđ\d+/.test(trimmed) || /cđ\d+$/.test(trimmed)) return true;
           if (trimmed.includes('cđ1') || trimmed.includes('tv1')) return true;
           if (trimmed.includes('tỷ lệ % cđ') || trimmed.includes('tỉ lệ % cđ') || trimmed.includes('tỷ lệ % tv') || trimmed.includes('tỉ lệ % tv')) return true;
-          // Họ tên đại diện tự động lấy từ thành viên đầu tiên
-          if (trimmed === 'Họ tên đại diện') return true;
           return false;
         };
 
+        // Thu thập toàn bộ placeholder trên cả 4 file
+        const allSet = new Set();
         this.files.forEach((f, i) => {
           f.allPlaceholders = arrays[i];
-          // Lọc bỏ biến tv1_*, tv2_* và loop #listUser, /listUser
-          const filteredUnique = uniqueByArray[i].filter(key => !isMemberOrLoopVariable(key));
-          f.placeholders = this.sortCustom(filteredUnique);
+          const filtered = arrays[i].filter(k => !isMemberOrLoopVariable(k));
+          f.placeholders = filtered;
           f.formValues = {};
-          filteredUnique.forEach(key => {
-            f.formValues[key] = '';
+          filtered.forEach(k => {
+            f.formValues[k] = isGenderField(k) ? 'Nam' : '';
+            allSet.add(k);
           });
         });
 
-        // Lọc thông tin chung
-        const filteredCommon = commonAtLeast2.filter(key => !isMemberOrLoopVariable(key));
-        this.placeholdersCommon = this.sortCustom(filteredCommon);
-        this.formValuesCommon = {};
-        this.placeholdersCommon.forEach(key => {
-          this.formValuesCommon[key] = '';
+        const allPlaceholders = [...allSet];
+
+        // 1. Khối Công ty: Lọc các trường công ty và sắp xếp logic
+        const compList = allPlaceholders.filter(p => this.isCompanyField(p));
+        // Thứ tự mong muốn: Tên cty, Mã số thuế, Thành phố cty, SĐT, Email, Phòng ĐKKD
+        const compOrder = ['tên công ty', 'mã số thuế', 'thành phố công ty', 'số điện thoại cty', 'email công ty', 'phòng đkkd tỉnh/tp'];
+        compList.sort((a, b) => {
+          const idxA = compOrder.indexOf(a.toLowerCase());
+          const idxB = compOrder.indexOf(b.toLowerCase());
+          if (idxA !== -1 && idxB !== -1) return idxA - idxB;
+          if (idxA !== -1) return -1;
+          if (idxB !== -1) return 1;
+          return a.localeCompare(b);
+        });
+        this.companyPlaceholders = compList;
+        this.companyValues = {};
+        this.companyPlaceholders.forEach(k => {
+          this.companyValues[k] = '';
+        });
+
+        // 2. Khối Người đại diện PL:
+        const repList = allPlaceholders.filter(p => this.isRepField(p));
+        // Thứ tự mong muốn: Họ tên, Giới tính, Sinh ngày, Số định danh, Địa chỉ
+        const repOrder = ['họ tên đại diện', 'giới tính đại diện', 'sinh ngày đại diện', 'số định danh cá nhân đại diện', 'địa chỉ của đại điện'];
+        repList.sort((a, b) => {
+          const idxA = repOrder.indexOf(a.toLowerCase());
+          const idxB = repOrder.indexOf(b.toLowerCase());
+          if (idxA !== -1 && idxB !== -1) return idxA - idxB;
+          if (idxA !== -1) return -1;
+          if (idxB !== -1) return 1;
+          return a.localeCompare(b);
+        });
+        this.repPlaceholders = repList;
+        this.repValues = {};
+        this.repPlaceholders.forEach(k => {
+          this.repValues[k] = isGenderField(k) ? 'Nam' : '';
+        });
+
+        // 3. Khối Người được ủy quyền (Login_*)
+        const authList = allPlaceholders.filter(p => this.isLoginField(p));
+        this.authorizedPersonPlaceholders = authList;
+        this.authorizedPersonValues = {};
+        this.authorizedPersonPlaceholders.forEach(k => {
+          this.authorizedPersonValues[k] = isGenderField(k) ? 'Nam' : '';
         });
 
         // Tự động điền các placeholder có tiền tố "Login_" từ user hiện tại
         const currentUser = useAuth().state.user;
         if (currentUser) {
-          autofillLoginPlaceholders(this.formValuesCommon, currentUser);
+          autofillLoginPlaceholders(this.authorizedPersonValues, currentUser);
           this.files.forEach(f => autofillLoginPlaceholders(f.formValues, currentUser));
         }
 
@@ -276,36 +390,21 @@ export default {
       ];
     },
 
-    analyzeArrays(arrays) {
-      const countMap = new Map();
-
-      arrays.forEach(arr => {
-        [...new Set(arr)].forEach(item => {
-          countMap.set(item, (countMap.get(item) || 0) + 1);
-        });
-      });
-
-      const commonAtLeast2 = [...countMap]
-        .filter(([_, count]) => count >= 2)
-        .map(([item]) => item);
-
-      const uniqueByArray = arrays.map(arr => {
-        return [...new Set(arr)].filter(item => countMap.get(item) === 1);
-      });
-
-      return {
-        commonAtLeast2,
-        uniqueByArray
-      };
-    },
-
     resetAll() {
+      Object.keys(this.companyValues).forEach(k => (this.companyValues[k] = ''));
+      Object.keys(this.repValues).forEach(k => (this.repValues[k] = isGenderField(k) ? 'Nam' : ''));
+      Object.keys(this.authorizedPersonValues).forEach(k => (this.authorizedPersonValues[k] = isGenderField(k) ? 'Nam' : ''));
       this.files.forEach(f => {
-        Object.keys(f.formValues).forEach(k => (f.formValues[k] = ''));
+        Object.keys(f.formValues).forEach(k => (f.formValues[k] = isGenderField(k) ? 'Nam' : ''));
       });
-      Object.keys(this.formValuesCommon).forEach(k => (this.formValuesCommon[k] = ''));
       this.userInfoForm = [];
       this.addUser();
+
+      const currentUser = useAuth().state.user;
+      if (currentUser) {
+        autofillLoginPlaceholders(this.authorizedPersonValues, currentUser);
+        this.files.forEach(f => autofillLoginPlaceholders(f.formValues, currentUser));
+      }
     },
 
     // APPLY CHANGES
@@ -314,10 +413,6 @@ export default {
         alert("Vui lòng thêm ít nhất 1 thành viên");
         return;
       }
-
-      const repUser = this.userInfoForm[0] || {};
-      // Họ tên đại diện tự động lấy từ họ tên thành viên đầu tiên
-      this.formValuesCommon['Họ tên đại diện'] = repUser.name || '';
 
       const loading = document.getElementById("loading-overlay");
       if (loading) loading.style.display = "flex";
@@ -345,59 +440,54 @@ export default {
             return Math.max(r1, r2) >= 25;
           })
           .map((item, idx) => ({
-          stt: idx + 1,
-          id: idx + 1,
-          name: item.name || '',
-          gender: item.gender || '',
-          birthday: item.birthday || '',
-          idNumber: item.idNumber || '',
-          address: item.address || '',
-          tl: item.tl || '',
-          tlcd: item.tlcd || '',
-          // Key đúng theo template File 2 (DANH SÁCH CHỦ SỞ HỮU HƯỞNG LỢI)
-          'Họ tên tv1': item.name || '',
-          'ngày sinh tv1': item.birthday || '',
-          'giới tính tv1': item.gender || '',
-          'số định danh tv1': item.idNumber || '',
-          'địa chỉ tv1': item.address || '',
-          'tỷ lệ % tv1': item.tl || '',
-          'tỷ lệ % cđ1': item.tlcd || '',
-          'tỉ lệ % tv1': item.tl || '',
-          'tỉ lệ % cđ1': item.tlcd || '',
-          'tỷ lệ % cđ': item.tlcd || '',
-          'tỉ lệ % cđ': item.tlcd || '',
-          'tỷ lệ % cổ phần': item.tlcd || '',
-          'tỉ lệ % cổ phần': item.tlcd || '',
-          'Tỷ lệ % sở hữu cổ phần có quyền biểu quyết': item.tlcd || '',
-          'Tỷ lệ % sở hữu vốn điều lệ': item.tl || '',
-          // Alias tiếng Việt thuận tiện
-          'Họ và tên': item.name || '',
-          'Họ tên': item.name || '',
-          'Giới tính': item.gender || '',
-          'giới tính': item.gender || '',
-          'Ngày sinh': item.birthday || '',
-          'ngày sinh': item.birthday || '',
-          'Số định danh cá nhân': item.idNumber || '',
-          'số định danh': item.idNumber || '',
-          'Địa chỉ liên lạc': item.address || '',
-          'địa chỉ': item.address || '',
-          'tỷ lệ %': item.tl || '',
-          'tv1_Họ tên': item.name || '',
-          'tv1_Giới tính': item.gender || '',
-          'tv1_ngày sinh': item.birthday || '',
-          'tv1_Số định danh cá nhân': item.idNumber || '',
-          'tv1_địa chỉ': item.address || '',
-          'tv1_tỉ lệ %': item.tl || '',
-          'tv1_tỷ lệ %': item.tl || '',
-          'tv1_tỷ lệ % cđ': item.tlcd || '',
-          'tv1_tỉ lệ % cđ': item.tlcd || ''
-        }));
+            stt: idx + 1,
+            id: idx + 1,
+            name: item.name || '',
+            gender: item.gender || '',
+            birthday: item.birthday || '',
+            idNumber: item.idNumber || '',
+            address: item.address || '',
+            tl: item.tl || '',
+            tlcd: item.tlcd || '',
+            // Key đúng theo template File 2 (DANH SÁCH CHỦ SỞ HỮU HƯỞNG LỢI)
+            'Họ tên tv1': item.name || '',
+            'ngày sinh tv1': item.birthday || '',
+            'giới tính tv1': item.gender || '',
+            'số định danh tv1': item.idNumber || '',
+            'địa chỉ tv1': item.address || '',
+            'tỷ lệ % tv1': item.tl || '',
+            'tỷ lệ % cđ1': item.tlcd || '',
+            'tỉ lệ % tv1': item.tl || '',
+            'tỉ lệ % cđ1': item.tlcd || '',
+            'tỷ lệ % cđ': item.tlcd || '',
+            'tỉ lệ % cđ': item.tlcd || '',
+            'tỷ lệ % cổ phần': item.tlcd || '',
+            'tỉ lệ % cổ phần': item.tlcd || '',
+            'Tỷ lệ % sở hữu cổ phần có quyền biểu quyết': item.tlcd || '',
+            'Tỷ lệ % sở hữu vốn điều lệ': item.tl || '',
+            // Alias tiếng Việt thuận tiện
+            'Họ và tên': item.name || '',
+            'Họ tên': item.name || '',
+            'Giới tính': item.gender || '',
+            'giới tính': item.gender || '',
+            'Ngày sinh': item.birthday || '',
+            'ngày sinh': item.birthday || '',
+            'Số định danh cá nhân': item.idNumber || '',
+            'số định danh': item.idNumber || '',
+            'Địa chỉ': item.address || '',
+            'địa chỉ': item.address || '',
+            'Tỷ lệ': item.tl || '',
+            'tỷ lệ': item.tl || '',
+            'Tỉ lệ': item.tl || '',
+            'tỉ lệ': item.tl || '',
+            'tỷ lệ %': item.tl || '',
+            'tỉ lệ %': item.tl || '',
+          }));
 
-        // Chuẩn bị dữ liệu từng thành viên cho trường hợp template dùng tv1_*, tv2_* hoặc tv1, tv2
+        // Flatten các biến thành viên theo dạng biến phẳng (tv1_*, tv2_*, Họ tên tv1...)
         const tvVariables = {};
-        this.userInfoForm.forEach((item, idx) => {
-          const num = idx + 1;
-          // Format postfix: Họ tên tv1, ngày sinh tv1...
+        this.userInfoForm.forEach((item, index) => {
+          const num = index + 1;
           tvVariables[`Họ tên tv${num}`] = item.name || '';
           tvVariables[`giới tính tv${num}`] = item.gender || '';
           tvVariables[`ngày sinh tv${num}`] = item.birthday || '';
@@ -428,32 +518,17 @@ export default {
           tvVariables[`cđ${num}_tỉ lệ %`] = item.tlcd || '';
         });
 
-        // Thông tin người đại diện ủy quyền (mặc định lấy thành viên đầu tiên)
-        const repVariables = {
-          'Họ tên tv1': repUser.name || '',
-          'giới tính tv1': repUser.gender || '',
-          'ngày sinh tv1': repUser.birthday || '',
-          'số định danh tv1': repUser.idNumber || '',
-          'địa chỉ tv1': repUser.address || '',
-          'tv1_Họ tên': repUser.name || '',
-          'tv1_Giới tính': repUser.gender || '',
-          'tv1_giới tính': repUser.gender || '',
-          'tv1_ngày sinh': repUser.birthday || '',
-          'tv1_Số định danh cá nhân': repUser.idNumber || '',
-          'tv1_số định danh': repUser.idNumber || '',
-          'tv1_địa chỉ': repUser.address || '',
-        };
-
         // Lọc listUser cho file CSH hưởng lợi: chỉ giữ thành viên có tỷ lệ >= 25% (vốn hoặc cổ phần)
         const listUserCsh = filterCshHuongLoiList(listUser, 'auto');
 
-        const renderDataList = this.files.map((file, i) => {
+        const renderDataList = this.files.map((file) => {
           const isCshDoc = file.name && file.name.includes('DANH SÁCH CHỦ SỞ HỮU HƯỞNG LỢI');
           return {
-            ...this.formValuesCommon,
+            ...this.companyValues,
+            ...this.repValues,
+            ...this.authorizedPersonValues,
             ...file.formValues,
             ...tvVariables,
-            ...repVariables,
             listUser: isCshDoc ? listUserCsh : listUser,
           };
         });
@@ -535,47 +610,29 @@ export default {
 
     renderToBlob(doc, data, options = {}) {
       doc.render(data);
-      enforceTimesNewRoman(doc.getZip());
       const zip = doc.getZip();
 
-      // Nếu yêu cầu xoay dọc ngày sinh từ dưới lên trên (Bottom-to-Top: btLr) và căn CENTER
+      enforceTimesNewRoman(zip);
+
+      // Căn giữa ô chứa text xoay dọc
       if (options.rotateDobVertical) {
         try {
-          const docXmlFile = zip.file('word/document.xml');
-          if (docXmlFile) {
-            let xml = docXmlFile.asText();
-            // Tìm các ô bảng chứa ngày sinh dd/mm/yyyy và chèn <w:textDirection w:val="btLr"/> + căn center tuyệt đối
-            xml = xml.replace(/<w:tc[\s\S]*?<\/w:tc>/g, (tc) => {
-              const textOnly = tc.replace(/<[^>]+>/g, '').trim();
-              if (/\b\d{1,2}[/.-]\d{1,2}[/.-]\d{4}\b/.test(textOnly)) {
+          const docXml = zip.file('word/document.xml');
+          if (docXml) {
+            let xml = docXml.asText();
+            xml = xml.replace(/(<w:tc\b[\s\S]*?<\/w:tc>)/g, (tc) => {
+              if (tc.includes('<w:textDirection') || tc.includes('w:val="btLr"')) {
                 let modified = tc;
-
-                // 1. Căn giữa theo chiều dọc ô bảng (vertical alignment: center)
-                if (modified.includes('<w:vAlign')) {
-                  modified = modified.replace(/<w:vAlign[^>]*\/>/, '<w:vAlign w:val="center"/>');
-                } else if (modified.includes('<w:tcPr>')) {
-                  modified = modified.replace('<w:tcPr>', '<w:tcPr><w:vAlign w:val="center"/>');
+                if (/<w:vAlign\b[^>]*\/>/.test(modified)) {
+                  modified = modified.replace(/<w:vAlign\b[^>]*\/>/g, '<w:vAlign w:val="center"/>');
+                } else if (modified.includes('</w:tcPr>')) {
+                  modified = modified.replace('</w:tcPr>', '<w:vAlign w:val="center"/></w:tcPr>');
                 }
 
-                // 2. Căn giữa đoạn văn (horizontal alignment: center)
-                if (modified.includes('<w:jc')) {
-                  modified = modified.replace(/<w:jc[^>]*\/>/, '<w:jc w:val="center"/>');
-                } else if (modified.includes('<w:pPr>')) {
-                  modified = modified.replace('<w:pPr>', '<w:pPr><w:jc w:val="center"/>');
-                }
-
-                // 3. Xóa thụt lề thừa (w:ind) có thể làm lệch vị trí center
-                modified = modified.replace(/<w:ind[^>]*\/>/g, '<w:ind w:left="0" w:right="0" w:firstLine="0"/>');
-
-                // 4. Xoay dọc từ dưới lên trên (btLr)
-                if (modified.includes('<w:textDirection')) {
-                  modified = modified.replace(/<w:textDirection[^>]*\/>/, '<w:textDirection w:val="btLr"/>');
-                } else if (modified.includes('<w:tcPr>')) {
-                  modified = modified.replace('<w:tcPr>', '<w:tcPr><w:textDirection w:val="btLr"/>');
-                } else if (modified.includes('<w:tcPr/>')) {
-                  modified = modified.replace('<w:tcPr/>', '<w:tcPr><w:textDirection w:val="btLr"/><w:vAlign w:val="center"/></w:tcPr>');
-                } else {
-                  modified = modified.replace('<w:tc>', '<w:tc><w:tcPr><w:textDirection w:val="btLr"/><w:vAlign w:val="center"/></w:tcPr>');
+                if (/<w:jc\b[^>]*\/>/.test(modified)) {
+                  modified = modified.replace(/<w:jc\b[^>]*\/>/g, '<w:jc w:val="center"/>');
+                } else if (modified.includes('</w:pPr>')) {
+                  modified = modified.replace('</w:pPr>', '<w:jc w:val="center"/></w:pPr>');
                 }
 
                 return modified;
@@ -604,20 +661,6 @@ export default {
       const match = url.match(/\/document\/d\/([a-zA-Z0-9-_]+)/);
       return match ? match[1] : null;
     },
-
-    sortCustom(arr) {
-      const nonLogin = arr.filter(k => !String(k).startsWith('Login_'));
-      const loginFields = arr.filter(k => String(k).startsWith('Login_'));
-
-      nonLogin.sort((a, b) => {
-        const prefixA = a.substring(0, 4);
-        const prefixB = b.substring(0, 4);
-        if (prefixA === prefixB) return a.localeCompare(b);
-        return prefixA.localeCompare(prefixB);
-      });
-
-      return [...nonLogin, ...loginFields];
-    }
   }
 };
 </script>

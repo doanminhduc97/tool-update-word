@@ -233,11 +233,15 @@
           <div class="modal-info">
             <strong>{{ depositModal.target?.fullName || depositModal.target?.username }}</strong>
             <span class="sub-text">@{{ depositModal.target?.username }} · Số dư hiện tại: <strong class="text-green">{{ formatMoney(depositModal.target?.balance) }}</strong></span>
+            <span class="sub-text" v-if="depositModal.form.amount">
+              Số dư sau khi nạp: <strong class="text-blue">{{ formatMoney((depositModal.target?.balance || 0) + (Number(depositModal.form.amount) || 0)) }}</strong>
+              <span class="text-muted"> ({{ formatMoney(depositModal.target?.balance) }} + {{ formatMoney(depositModal.form.amount) }})</span>
+            </span>
           </div>
           <div class="form-group">
-            <label>Số tiền (VND)</label>
+            <label>Số tiền cần nạp thêm (VND)</label>
             <input v-model.number="depositModal.form.amount" type="number" step="1000" placeholder="VD: 50000 (nhập số âm để trừ)" />
-            <small class="sub-text">Nhập số dương để nạp tiền, số âm để trừ/điều chỉnh.</small>
+            <small class="sub-text">Số tiền này sẽ được cộng trực tiếp vào số dư hiện tại của người dùng.</small>
           </div>
           <div class="quick-amounts">
             <button type="button" class="chip" @click="depositModal.form.amount = 20000">+20.000đ</button>
@@ -570,6 +574,13 @@ export default {
 }
 .text-green {
   color: #0a8f3c;
+}
+.text-blue {
+  color: #0284c7;
+}
+.text-muted {
+  color: #64748b;
+  font-size: 12px;
 }
 .empty-cell {
   text-align: center;

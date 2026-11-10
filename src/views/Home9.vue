@@ -3,6 +3,8 @@
     <div class="card common-card" style="margin-bottom: 24px; text-align: center;">
       <h2 style="font-size: 1.25rem; font-weight: 700; color: #0284c7;">Hồ sơ giải thể công ty 2 thành viên</h2>
     </div>
+
+    <!-- Thông tin chung -->
     <section v-if="placeholdersCommon.length" class="card common-card">
       <h3 class="title-form">Thông tin chung các file</h3>
       <form>
@@ -14,6 +16,146 @@
         </div>
       </form>
     </section>
+
+    <!-- Block Thông tin 2 thành viên công ty (TV1 & Chủ tịch HĐTV) + Thành viên bổ sung nếu có -->
+    <section class="card members-card">
+      <div class="card-head">
+        <h3 class="title-form">Thông Tin Thành Viên (Biên bản họp HĐTV)</h3>
+      </div>
+
+      <!-- TV1 (Đồng thời là Thư ký cuộc họp) -->
+      <div class="member-card">
+        <div class="member-head">
+          <h4 class="member-title">Thành viên 1 (TV1 - Thư ký cuộc họp)</h4>
+          <button type="button" class="btn-action btn-deposit" style="padding: 4px 10px; font-size: 12px;" @click="setAsRepresentative(tv1.name)">
+            Gán làm Người đại diện PL
+          </button>
+        </div>
+        <div class="member-grid">
+          <div class="form-group">
+            <label>Họ tên TV1</label>
+            <input type="text" v-model="tv1.name" placeholder="Nguyễn Văn A">
+          </div>
+          <div class="form-group">
+            <label>Số vốn góp TV1</label>
+            <input type="text" v-model="tv1.soVonGop" placeholder="Ví dụ: 500.000.000" @input="onTv1VonChange">
+          </div>
+          <div class="form-group">
+            <label>Tỷ lệ % vốn góp TV1</label>
+            <input type="text" v-model="tv1.tyLe" placeholder="Ví dụ: 50% hoặc 50">
+          </div>
+          <div class="form-group">
+            <label>Số CN góp vốn TV1</label>
+            <input type="text" v-model="tv1.soCnGopVon" placeholder="Số giấy chứng nhận">
+          </div>
+          <div class="form-group">
+            <label>Ngày góp vốn TV1</label>
+            <input type="text" v-model="tv1.ngayGopVon" placeholder="DD/MM/YYYY">
+          </div>
+          <div class="form-group">
+            <label>Số phiếu biểu quyết TV1</label>
+            <input type="text" v-model="tv1.soPhieu" placeholder="Tự tính: 1.000.000đ = 1 phiếu">
+          </div>
+        </div>
+      </div>
+
+      <!-- TV2 / Chủ tịch HĐTV (Đồng thời là Chủ tọa cuộc họp) -->
+      <div class="member-card">
+        <div class="member-head">
+          <h4 class="member-title">Chủ tịch HĐTV (TV2 - Chủ tọa cuộc họp)</h4>
+          <button type="button" class="btn-action btn-deposit" style="padding: 4px 10px; font-size: 12px;" @click="setAsRepresentative(formValuesCommon['Họ tên Chủ tịch HĐTV'])">
+            Gán làm Người đại diện PL
+          </button>
+        </div>
+        <div class="member-grid">
+          <div class="form-group">
+            <label>Họ tên Chủ tịch HĐTV</label>
+            <input type="text" v-model="formValuesCommon['Họ tên Chủ tịch HĐTV']" placeholder="Trần Văn B">
+          </div>
+          <div class="form-group">
+            <label>Số vốn góp Chủ tịch HĐTV</label>
+            <input type="text" v-model="chuTich.soVonGop" placeholder="Ví dụ: 500.000.000" @input="onChuTichVonChange">
+          </div>
+          <div class="form-group">
+            <label>Tỷ lệ % vốn góp Chủ tịch HĐTV</label>
+            <input type="text" v-model="chuTich.tyLe" placeholder="Ví dụ: 50% hoặc 50">
+          </div>
+          <div class="form-group">
+            <label>Số CN góp vốn Chủ tịch HĐTV</label>
+            <input type="text" v-model="chuTich.soCnGopVon" placeholder="Số giấy chứng nhận">
+          </div>
+          <div class="form-group">
+            <label>Ngày góp vốn Chủ tịch HĐTV</label>
+            <input type="text" v-model="chuTich.ngayGopVon" placeholder="DD/MM/YYYY">
+          </div>
+          <div class="form-group">
+            <label>Số phiếu biểu quyết Chủ tịch HĐTV</label>
+            <input type="text" v-model="chuTich.soPhieu" placeholder="Tự tính: 1.000.000đ = 1 phiếu">
+          </div>
+        </div>
+      </div>
+
+      <!-- Vốn điều lệ & Tổng số phiếu (thuộc file Biên bản họp HĐTV) -->
+      <div class="member-card" style="background: #f8fafc; border: 1px dashed #cbd5e1;">
+        <div class="member-head">
+          <h4 class="member-title" style="color: #0369a1;">Tổng hợp vốn & Biểu quyết (Biên bản họp)</h4>
+        </div>
+        <div class="member-grid">
+          <div class="form-group">
+            <label>Vốn điều lệ</label>
+            <input type="text" v-model="vonDieuLe" placeholder="Ví dụ: 1.000.000.000" @input="onVonDieuLeChange">
+          </div>
+          <div class="form-group">
+            <label>Tổng Số phiếu biểu quyết công ty</label>
+            <input type="text" v-model="tongSoPhieu" placeholder="Tự tính: Vốn điều lệ / 1.000.000">
+          </div>
+        </div>
+      </div>
+
+      <!-- Thành viên bổ sung (nếu có > 2 thành viên đi vào loop [[#listUser]]) -->
+      <template v-if="extraMembers.length > 0">
+        <div v-for="(item, eIdx) in extraMembers" :key="'e' + eIdx" class="member-card">
+          <div class="member-head">
+            <h4 class="member-title">Thành viên bổ sung {{ eIdx + 1 }}</h4>
+            <button type="button" @click="removeExtraMember(eIdx)" class="btn-remove">Xóa</button>
+          </div>
+          <div class="member-grid">
+            <div class="form-group">
+              <label>Họ và tên</label>
+              <input type="text" v-model="item.name" placeholder="Lê Văn C">
+            </div>
+            <div class="form-group">
+              <label>Số vốn góp</label>
+              <input type="text" v-model="item.soVonGop" placeholder="Ví dụ: 200.000.000" @input="onExtraVonChange(item)">
+            </div>
+            <div class="form-group">
+              <label>Tỷ lệ góp vốn</label>
+              <input type="text" v-model="item.tyLeGopVon" placeholder="Ví dụ: 20% hoặc 20">
+            </div>
+            <div class="form-group">
+              <label>Số CN góp vốn</label>
+              <input type="text" v-model="item.soCnGopVon" placeholder="Số giấy chứng nhận">
+            </div>
+            <div class="form-group">
+              <label>Ngày góp vốn</label>
+              <input type="text" v-model="item.ngayGopVon" placeholder="DD/MM/YYYY">
+            </div>
+            <div class="form-group">
+              <label>Số phiếu biểu quyết</label>
+              <input type="text" v-model="item.soPhieu" placeholder="Tự tính: 1.000.000đ = 1 phiếu">
+            </div>
+          </div>
+        </div>
+      </template>
+      <p v-else class="empty-hint">Mặc định đã có TV1 & Chủ tịch HĐTV. Nhấn "Thêm thành viên" nếu công ty có từ 3 thành viên trở lên.</p>
+
+      <div class="card-head" style="margin-top: 12px; margin-bottom: 0;">
+        <h3 class="title-form"></h3>
+        <button type="button" @click="addExtraMember" class="btn-add">Thêm thành viên</button>
+      </div>
+    </section>
+
+    <!-- Các file riêng lẻ có placeholder unique -->
     <template v-for="(file, i) in filesWithPlaceholders" :key="file.name">
       <section class="card file-card">
         <h3 class="title-form">Thông Tin File ({{ file.name }}.docx)</h3>
@@ -26,50 +168,8 @@
           </div>
         </form>
       </section>
-
-      <!-- Dynamic Form Danh sách thành viên: ngay sau Thông Tin File (1. Biên bản họp HĐTV) -->
-      <section v-if="i === 0" class="card members-card">
-        <div class="card-head">
-          <h3 class="title-form">Danh Sách Thành Viên Dự Họp (Biên bản họp HĐTV)</h3>
-          <button type="button" @click="addUser" class="btn-add">Thêm thành viên</button>
-        </div>
-        <template v-if="userInfoForm.length > 0">
-          <div v-for="(item, index) in userInfoForm" :key="index" class="member-card">
-            <div class="member-head">
-              <h4 class="member-title">Thành viên {{ index + 1 }}</h4>
-              <button type="button" @click="removeUser(index)" class="btn-remove">Xóa</button>
-            </div>
-            <div class="member-grid">
-              <div class="form-group">
-                <label>Họ tên</label>
-                <input type="text" v-model="item.name" placeholder="Nguyễn Văn A">
-              </div>
-              <div class="form-group">
-                <label>Chức danh</label>
-                <input type="text" v-model="item.chucDanh" placeholder="Thành viên công ty">
-              </div>
-              <div class="form-group">
-                <label>Số vốn góp</label>
-                <input type="text" v-model="item.soVonGop" placeholder="Ví dụ: 500.000.000">
-              </div>
-              <div class="form-group">
-                <label>Tỷ lệ góp vốn</label>
-                <input type="text" v-model="item.tyLeGopVon" placeholder="Ví dụ: 50% hoặc 50">
-              </div>
-              <div class="form-group">
-                <label>Số CN góp vốn</label>
-                <input type="text" v-model="item.soCnGopVon" placeholder="Số giấy chứng nhận">
-              </div>
-              <div class="form-group">
-                <label>Ngày góp vốn</label>
-                <input type="text" v-model="item.ngayGopVon" placeholder="DD/MM/YYYY">
-              </div>
-            </div>
-          </div>
-        </template>
-        <p v-else class="empty-hint">Chưa có thành viên nào. Nhấn "Thêm thành viên" để bắt đầu.</p>
-      </section>
     </template>
+
     <section v-if="placeholdersCommon.length || filesWithPlaceholders.length" class="btn-group">
       <button @click="resetAll()" class="btn-refesh">Làm Mới</button>
       <button :disabled="updating" @click="applyChanges()" class="btn-primary">
@@ -131,7 +231,27 @@ export default {
       placeholdersCommon: [],
       formValuesCommon: {},
       updating: false,
-      userInfoForm: [],
+      // 2 thành viên cố định theo template Biên bản họp HĐTV
+      tv1: {
+        name: '',
+        soVonGop: '',
+        tyLe: '',
+        soCnGopVon: '',
+        ngayGopVon: '',
+        soPhieu: '',
+      },
+      chuTich: {
+        soVonGop: '',
+        tyLe: '',
+        soCnGopVon: '',
+        ngayGopVon: '',
+        soPhieu: '',
+      },
+      // Tổng vốn & phiếu biểu quyết
+      vonDieuLe: '',
+      tongSoPhieu: '',
+      // Thành viên bổ sung đi vào loop [[#listUser]]
+      extraMembers: [],
     };
   },
 
@@ -178,19 +298,64 @@ export default {
       return s.startsWith('Login_') ? s.slice(6) : s;
     },
 
-    addUser() {
-      this.userInfoForm.push({
+    // Tính phiếu biểu quyết tự động: 1.000.000đ = 1 phiếu
+    calcVotes(moneyStr) {
+      if (!moneyStr) return '';
+      const num = parseInt(String(moneyStr).replace(/[^\d]/g, ''), 10);
+      if (isNaN(num) || num <= 0) return '';
+      const votes = Math.floor(num / 1000000);
+      return votes > 0 ? votes.toLocaleString('vi-VN') : '0';
+    },
+
+    onTv1VonChange() {
+      if (!this.tv1.soPhieu || this.tv1.soPhieu === '0') {
+        const v = this.calcVotes(this.tv1.soVonGop);
+        if (v) this.tv1.soPhieu = v;
+      }
+    },
+
+    onChuTichVonChange() {
+      if (!this.chuTich.soPhieu || this.chuTich.soPhieu === '0') {
+        const v = this.calcVotes(this.chuTich.soVonGop);
+        if (v) this.chuTich.soPhieu = v;
+      }
+    },
+
+    onVonDieuLeChange() {
+      if (!this.tongSoPhieu || this.tongSoPhieu === '0') {
+        const v = this.calcVotes(this.vonDieuLe);
+        if (v) this.tongSoPhieu = v;
+      }
+    },
+
+    onExtraVonChange(item) {
+      if (!item.soPhieu || item.soPhieu === '0') {
+        const v = this.calcVotes(item.soVonGop);
+        if (v) item.soPhieu = v;
+      }
+    },
+
+    setAsRepresentative(name) {
+      if (!name) {
+        alert("Vui lòng nhập họ tên trước khi gán!");
+        return;
+      }
+      this.formValuesCommon['Họ tên đại diện'] = name;
+    },
+
+    addExtraMember() {
+      this.extraMembers.push({
         name: '',
-        chucDanh: '',
         soVonGop: '',
         tyLeGopVon: '',
         soCnGopVon: '',
-        ngayGopVon: ''
+        ngayGopVon: '',
+        soPhieu: ''
       });
     },
 
-    removeUser(index) {
-      this.userInfoForm.splice(index, 1);
+    removeExtraMember(index) {
+      this.extraMembers.splice(index, 1);
     },
 
     async getFile() {
@@ -202,39 +367,52 @@ export default {
         );
         const { commonAtLeast2, uniqueByArray } = this.analyzeArrays(arrays);
 
-        // Lọc cú pháp vòng lặp listUser khỏi form tự do (đi qua form members-card riêng)
-        const isListUserVariable = (item) => {
+        // Lọc các biến thuộc block thành viên / loop / vốn điều lệ / số phiếu
+        // khỏi form tự do để hiển thị ở card chuyên biệt
+        const isMemberOrVoteVariable = (item) => {
           if (!item) return false;
           const trimmed = String(item).trim();
           return (
             trimmed === '#listUser' ||
             trimmed === '/listUser' ||
             trimmed === 'listUser' ||
+            trimmed === 'Họ tên TV1' ||
+            trimmed === 'Số vốn góp TV1' ||
+            trimmed === 'Tỷ lệ % vốn góp TV1' ||
+            trimmed === 'Số CN góp vốn TV1' ||
+            trimmed === 'Ngày góp vốn TV1' ||
+            trimmed === 'Số phiếu biểu quyết TV1' ||
+            trimmed === 'Số vốn góp Chủ tịch HĐTV' ||
+            trimmed === 'Tỷ lệ % vốn góp Chủ tịch HĐTV' ||
+            trimmed === 'Số CN góp vốn Chủ tịch HĐTV' ||
+            trimmed === 'Ngày góp vốn Chủ tịch HĐTV' ||
+            trimmed === 'Số phiếu biểu quyết Chủ tịch HĐTV' ||
+            trimmed === 'Vốn điều lệ' ||
+            trimmed === 'Tổng Số phiếu biểu quyết công ty' ||
+            trimmed === 'Họ và tên' ||
             trimmed === 'Chức danh' ||
             trimmed === 'Số vốn góp' ||
             trimmed === 'Tỷ lệ góp vốn' ||
-            trimmed === 'tỷ lệ góp vốn' ||
             trimmed === 'Số CN góp vốn' ||
-            trimmed === 'số CN góp vốn' ||
             trimmed === 'Ngày góp vốn' ||
-            trimmed === 'ngày góp vốn'
+            trimmed === 'Số phiếu biểu quyết'
           );
         };
 
         this.files.forEach((f, i) => {
           f.allPlaceholders = arrays[i];
-          const filteredUnique = uniqueByArray[i].filter(key => !isListUserVariable(key));
+          const filteredUnique = uniqueByArray[i].filter(key => !isMemberOrVoteVariable(key));
           f.placeholders = this.sortCustom(filteredUnique);
           f.formValues = {};
           filteredUnique.forEach(key => {
-            f.formValues[key] = '';
+            f.formValues[key] = isGenderField(key) ? 'Nam' : '';
           });
         });
 
-        this.placeholdersCommon = this.sortCustom(commonAtLeast2.filter(key => !isListUserVariable(key)));
+        this.placeholdersCommon = this.sortCustom(commonAtLeast2.filter(key => !isMemberOrVoteVariable(key)));
         this.formValuesCommon = {};
         this.placeholdersCommon.forEach(key => {
-          this.formValuesCommon[key] = '';
+          this.formValuesCommon[key] = isGenderField(key) ? 'Nam' : '';
         });
 
         // Tự động điền các placeholder có tiền tố "Login_" từ user hiện tại
@@ -243,7 +421,6 @@ export default {
           autofillLoginPlaceholders(this.formValuesCommon, currentUser);
           this.files.forEach(f => autofillLoginPlaceholders(f.formValues, currentUser));
         }
-        // Mặc định chưa thêm thành viên nào — người dùng tự bấm "Thêm thành viên"
       } catch (error) {
         alert("Lỗi khi tải hoặc phân tích file: " + error.message);
       } finally {
@@ -300,10 +477,27 @@ export default {
 
     resetAll() {
       this.files.forEach(f => {
-        Object.keys(f.formValues).forEach(k => (f.formValues[k] = ''));
+        Object.keys(f.formValues).forEach(k => (f.formValues[k] = isGenderField(k) ? 'Nam' : ''));
       });
-      Object.keys(this.formValuesCommon).forEach(k => (this.formValuesCommon[k] = ''));
-      this.userInfoForm = [];
+      Object.keys(this.formValuesCommon).forEach(k => (this.formValuesCommon[k] = isGenderField(k) ? 'Nam' : ''));
+      this.tv1 = {
+        name: '',
+        soVonGop: '',
+        tyLe: '',
+        soCnGopVon: '',
+        ngayGopVon: '',
+        soPhieu: '',
+      };
+      this.chuTich = {
+        soVonGop: '',
+        tyLe: '',
+        soCnGopVon: '',
+        ngayGopVon: '',
+        soPhieu: '',
+      };
+      this.vonDieuLe = '';
+      this.tongSoPhieu = '';
+      this.extraMembers = [];
       const currentUser = useAuth().state.user;
       if (currentUser) {
         autofillLoginPlaceholders(this.formValuesCommon, currentUser);
@@ -313,8 +507,8 @@ export default {
 
     // APPLY CHANGES
     async applyChanges() {
-      if (this.userInfoForm.length === 0) {
-        alert("Vui lòng thêm ít nhất 1 thành viên");
+      if (!this.tv1.name || !this.formValuesCommon['Họ tên Chủ tịch HĐTV']) {
+        alert("Vui lòng nhập đầy đủ thông tin Thành viên 1 và Chủ tịch HĐTV");
         return;
       }
 
@@ -329,21 +523,42 @@ export default {
 
         const docs = buffers.map(buffer => this.createDoc(buffer));
 
-        // Chuẩn bị danh sách listUser cho template có loop [[#listUser]] (Biên bản họp HĐTV)
-        const listUser = this.userInfoForm.map(item => ({
+        // Dữ liệu mapping 2 thành viên cố định
+        const memberFixedData = {
+          'Họ tên TV1': this.tv1.name || '',
+          'Số vốn góp TV1': this.tv1.soVonGop || '',
+          'Tỷ lệ % vốn góp TV1': this.tv1.tyLe || '',
+          'Số CN góp vốn TV1': this.tv1.soCnGopVon || '',
+          'Ngày góp vốn TV1': this.tv1.ngayGopVon || '',
+          'Số phiếu biểu quyết TV1': this.tv1.soPhieu || '',
+
+          'Họ tên Chủ tịch HĐTV': this.formValuesCommon['Họ tên Chủ tịch HĐTV'] || '',
+          'Số vốn góp Chủ tịch HĐTV': this.chuTich.soVonGop || '',
+          'Tỷ lệ % vốn góp Chủ tịch HĐTV': this.chuTich.tyLe || '',
+          'Số CN góp vốn Chủ tịch HĐTV': this.chuTich.soCnGopVon || '',
+          'Ngày góp vốn Chủ tịch HĐTV': this.chuTich.ngayGopVon || '',
+          'Số phiếu biểu quyết Chủ tịch HĐTV': this.chuTich.soPhieu || '',
+
+          'Vốn điều lệ': this.vonDieuLe || '',
+          'Tổng Số phiếu biểu quyết công ty': this.tongSoPhieu || '',
+        };
+
+        // Chuẩn bị danh sách extraMembers cho loop [[#listUser]] (Biên bản họp HĐTV)
+        const listUser = this.extraMembers.map(item => ({
           name: item.name || '',
-          'Họ tên': item.name || '',
-          'Chức danh': item.chucDanh || '',
+          'Họ và tên': item.name || '',
+          'Chức danh': 'Thành viên',
           'Số vốn góp': item.soVonGop || '',
           'Tỷ lệ góp vốn': item.tyLeGopVon || '',
-          'tỷ lệ góp vốn': item.tyLeGopVon || '',
           'Số CN góp vốn': item.soCnGopVon || '',
           'Ngày góp vốn': item.ngayGopVon || '',
+          'Số phiếu biểu quyết': item.soPhieu || '',
         }));
 
         const renderDataList = this.files.map(file => ({
           ...this.formValuesCommon,
           ...file.formValues,
+          ...memberFixedData,
           listUser,
         }));
 
