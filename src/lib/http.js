@@ -84,7 +84,10 @@ export function refreshSession() {
         return res.data
       })
       .catch((err) => {
-        setAccessToken(null)
+        // Chỉ xóa token nếu không có phiên accessToken mới nào được gán đè (tránh race condition với login)
+        if (!accessToken) {
+          setAccessToken(null)
+        }
         throw err
       })
       .finally(() => {

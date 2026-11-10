@@ -9,6 +9,7 @@
       <div v-for="ph in placeholdersCommon" :key="'c-' + ph" class="form-group">
         <label :for="'c-' + ph">{{ formatLabel(ph, 'c') }}</label>
         <PhongDkkdInput v-if="ph === 'Phòng ĐKKD Tỉnh/TP'" :input-id="'c-' + ph" v-model="formValuesCommon[ph]" />
+        <GenderRadio v-else-if="isGenderField(ph)" :name="'c-' + ph" v-model="formValuesCommon[ph]" />
         <input v-else type="text" :id="'c-' + ph" v-model="formValuesCommon[ph]" required>
       </div>
     </form>
@@ -18,7 +19,8 @@
     <form>
       <div v-for="ph in placeholders" :key="'f0-' + ph" class="form-group">
         <label :for="'f0-' + ph">{{ formatLabel(ph, 'f0') }}</label>
-        <input type="text" :id="'f0-' + ph" v-model="formValues[ph]" required>
+        <GenderRadio v-if="isGenderField(ph)" :name="'f0-' + ph" v-model="formValues[ph]" />
+        <input v-else type="text" :id="'f0-' + ph" v-model="formValues[ph]" required>
       </div>
     </form>
   </section>
@@ -27,7 +29,8 @@
     <form>
       <div v-for="ph in placeholders2" :key="'f1-' + ph" class="form-group">
         <label :for="'f1-' + ph">{{ formatLabel(ph, 'f1') }}</label>
-        <input type="text" :id="'f1-' + ph" v-model="formValues2[ph]" required>
+        <GenderRadio v-if="isGenderField(ph)" :name="'f1-' + ph" v-model="formValues2[ph]" />
+        <input v-else type="text" :id="'f1-' + ph" v-model="formValues2[ph]" required>
       </div>
     </form>
   </section>
@@ -36,7 +39,8 @@
     <form>
       <div v-for="ph in placeholders3" :key="'f2-' + ph" class="form-group">
         <label :for="'f2-' + ph">{{ formatLabel(ph, 'f2') }}</label>
-        <input type="text" :id="'f2-' + ph" v-model="formValues3[ph]" required>
+        <GenderRadio v-if="isGenderField(ph)" :name="'f2-' + ph" v-model="formValues3[ph]" />
+        <input v-else type="text" :id="'f2-' + ph" v-model="formValues3[ph]" required>
       </div>
     </form>
   </section>
@@ -45,7 +49,8 @@
     <form>
       <div v-for="ph in placeholders4" :key="'f3-' + ph" class="form-group">
         <label :for="'f3-' + ph">{{ formatLabel(ph, 'f3') }}</label>
-        <input type="text" :id="'f3-' + ph" v-model="formValues4[ph]" required>
+        <GenderRadio v-if="isGenderField(ph)" :name="'f3-' + ph" v-model="formValues4[ph]" />
+        <input v-else type="text" :id="'f3-' + ph" v-model="formValues4[ph]" required>
       </div>
     </form>
   </section>
@@ -73,7 +78,7 @@
           </div>
           <div class="form-group">
             <label>Giới tính</label>
-            <input type="text" v-model="item.gender">
+            <GenderRadio :name="'tv-gender-' + index" v-model="item.gender" />
           </div>
           <div class="form-group">
             <label>Ngày sinh</label>
@@ -172,6 +177,9 @@ import { parseCccdFront } from '@/services/cccd-ocr';
 import { deductExportFee } from '@/services/wallet';
 import { useAuth } from '@/stores/auth';
 import { autofillLoginPlaceholders } from '@/lib/loginPlaceholders';
+import { enforceTimesNewRoman } from '@/lib/fontHelper';
+import { isGenderField } from '@/lib/genderHelper';
+import { filterCshHuongLoiList } from '@/lib/cshHelper';
 export default {
   data() {
     return {
@@ -302,7 +310,7 @@ export default {
     emptyMember() {
       return {
         name: '',
-        gender: '',
+        gender: 'Nam',
         birthday: '',
         idNumber: '',
         homeNumber: '',
@@ -323,7 +331,7 @@ export default {
     addUser() {
       this.userInfoForm.push({
         name: '',
-        gender: '',
+        gender: 'Nam',
         birthday: '',
         idNumber: '',
         homeNumber: '',
@@ -595,14 +603,8 @@ export default {
           'tv1_chức danh': this.formValues5.listUser[0]['tv1_chức danh'],
           'tv1_Họ tên': this.formValues5.listUser[0]['tv1_Họ tên'],
         }
-        //5. DANH SÁCH CHỦ SỞ HỮU HƯỞNG LỢI CỦA DOANH NGHIỆP (chỉ lấy thành viên có tỷ lệ góp vốn >= 25%)
-        const parseRate = (val) => {
-          if (!val) return 0;
-          const cleaned = String(val).replace(/,/g, '.').replace(/[^0-9.]/g, '');
-          return parseFloat(cleaned) || 0;
-        };
-        const cshList = this.formValues5.listUser.filter(item => parseRate(item['tv1_tỉ lệ %']) >= 25);
-        this.formValues4.listUser = cshList;
+        //5. DANH SÁCH CHỦ SỞ HỮU HƯỞNG LỢI CỦA DOANH NGHIỆP (chỉ hiển thị thành viên có tỷ lệ sở hữu vốn >= 25%)
+        this.formValues4.listUser = filterCshHuongLoiList(this.formValues5.listUser, 'von');
         this.formValues4['ct_tỉnh'] = this.formValues5['ct_tỉnh'];
         this.formValues4['tv1_chức danh'] = this.formValues5['tv1_chức danh'];
         this.formValues4['tv1_Họ tên'] = this.formValues5['tv1_Họ tên'];
@@ -721,6 +723,7 @@ export default {
 
     renderToBlob(doc, data, options = {}) {
       doc.render(data);
+      enforceTimesNewRoman(doc.getZip());
       const zip = doc.getZip();
 
       // Nếu yêu cầu xoay dọc ngày sinh từ dưới lên trên (Bottom-to-Top: btLr) và căn CENTER
@@ -783,6 +786,9 @@ export default {
     extractDocId(url) {
       const match = url.match(/\/document\/d\/([a-zA-Z0-9-_]+)/);
       return match ? match[1] : null;
+    },
+    isGenderField(ph) {
+      return isGenderField(ph);
     },
     sortCustom(arr) {
       const nonLogin = arr.filter(k => !String(k).startsWith('Login_'));

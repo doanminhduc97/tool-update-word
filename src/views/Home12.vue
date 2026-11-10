@@ -9,6 +9,7 @@
         <div v-for="ph in placeholdersCommon" :key="'c-' + ph" class="form-group">
           <label :for="'c-' + ph">{{ formatLabel(ph) }}</label>
           <PhongDkkdInput v-if="ph === 'Phòng ĐKKD Tỉnh/TP' || ph === 'Cơ quan đăng ký kinh doanh cấp tỉnh'" :input-id="'c-' + ph" v-model="formValuesCommon[ph]" />
+          <GenderRadio v-else-if="isGenderField(ph)" :name="'c-' + ph" v-model="formValuesCommon[ph]" />
           <input v-else type="text" :id="'c-' + ph" v-model="formValuesCommon[ph]" required>
         </div>
       </form>
@@ -20,6 +21,7 @@
           <div v-for="ph in file.placeholders" :key="'f' + i + '-' + ph" class="form-group">
             <label :for="'f' + i + '-' + ph">{{ formatLabel(ph) }}</label>
             <PhongDkkdInput v-if="ph === 'Phòng ĐKKD Tỉnh/TP' || ph === 'Cơ quan đăng ký kinh doanh cấp tỉnh'" :input-id="'f' + i + '-' + ph" v-model="file.formValues[ph]" />
+            <GenderRadio v-else-if="isGenderField(ph)" :name="'f' + i + '-' + ph" v-model="file.formValues[ph]" />
             <input v-else type="text" :id="'f' + i + '-' + ph" v-model="file.formValues[ph]" required>
           </div>
         </form>
@@ -49,7 +51,7 @@
               </div>
               <div class="form-group">
                 <label>Giới tính</label>
-                <input type="text" v-model="item.gender" placeholder="Nam / Nữ">
+                <GenderRadio :name="'tv12-gender-' + index" v-model="item.gender" />
               </div>
               <div class="form-group">
                 <label>Ngày sinh</label>
@@ -111,6 +113,9 @@ import Docxtemplater from 'docxtemplater';
 import { deductExportFee } from '@/services/wallet';
 import { useAuth } from '@/stores/auth';
 import { autofillLoginPlaceholders } from '@/lib/loginPlaceholders';
+import { enforceTimesNewRoman } from '@/lib/fontHelper';
+import { isGenderField } from '@/lib/genderHelper';
+import { filterCshHuongLoiList } from '@/lib/cshHelper';
 
 export default {
   name: 'Home12',
@@ -197,7 +202,7 @@ export default {
 
     addUser() {
       this.userInfoForm.push({
-        name: '', gender: '', birthday: '', idNumber: '',
+        name: '', gender: 'Nam', birthday: '', idNumber: '',
         homeNumber: '', ward: '', city: '',
         position: '', vbs: '', vbc: '', tl: ''
       });
@@ -386,13 +391,16 @@ export default {
           'Họ tên đại diện': tv1.name || '',
         };
 
+        // Lọc listUser cho file 4 (DANH SÁCH CHỦ SỞ HỮU HƯỞNG LỢI): chỉ giữ thành viên sở hữu vốn >= 25%
+        const listUserCsh = filterCshHuongLoiList(listUser, 'von');
+
         const renderDataList = this.files.map(file => {
-          const isFile4 = file.name && file.name.includes('DANH SÁCH CHỦ SỞ HỮU HƯỞNG LỢI');
+          const isCshDoc = file.name && file.name.includes('DANH SÁCH CHỦ SỞ HỮU HƯỞNG LỢI');
           return {
             ...this.formValuesCommon,
             ...file.formValues,
             ...tvFixed,
-            listUser: isFile4 ? listUserCSH : listUser,
+            listUser: isCshDoc ? listUserCsh : listUser,
           };
         });
 
@@ -471,6 +479,7 @@ export default {
 
     renderToBlob(doc, data, options = {}) {
       doc.render(data);
+      enforceTimesNewRoman(doc.getZip());
       const zip = doc.getZip();
 
       // Nếu yêu cầu xoay dọc ngày sinh từ dưới lên trên (Bottom-to-Top: btLr) và căn CENTER
@@ -529,6 +538,10 @@ export default {
         mimeType:
           "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
       });
+    },
+
+    isGenderField(ph) {
+      return isGenderField(ph);
     },
 
     extractDocId(url) {

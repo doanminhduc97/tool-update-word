@@ -165,11 +165,7 @@
           </div>
           <div class="form-group">
             <label>Giới tính Người được ủy quyền</label>
-            <select v-model="editModal.form.gender">
-              <option value="">-- Chọn giới tính --</option>
-              <option value="Nam">Nam</option>
-              <option value="Nữ">Nữ</option>
-            </select>
+            <GenderRadio name="admin-edit-gender" v-model="editModal.form.gender" />
           </div>
           <div class="form-group">
             <label>Ngày sinh Người được ủy quyền</label>
@@ -761,6 +757,16 @@ export default {
 }
 .form-group {
   margin-bottom: 12px;
+}
+.form-group:has(.gender-radio-group) {
+  display: flex;
+  align-items: center;
+  gap: 1.25rem;
+  min-height: 38px;
+}
+.form-group:has(.gender-radio-group) label {
+  margin-bottom: 0;
+  white-space: nowrap;
 }
 .form-group label {
   display: block;
