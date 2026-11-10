@@ -154,6 +154,7 @@ import { useAuth } from '@/stores/auth';
 import { autofillLoginPlaceholders } from '@/lib/loginPlaceholders';
 import { enforceTimesNewRoman } from '@/lib/fontHelper';
 import { isGenderField } from '@/lib/genderHelper';
+import { filterCshHuongLoiList } from '@/lib/cshHelper';
 
 export default {
   name: 'Home13',
@@ -420,14 +421,19 @@ export default {
         });
 
         // listUser: cổ đông bổ sung cho loop file DANH SÁCH CSH HƯỞNG LỢI (row 8 của file 4)
-        const listUser = this.extraShareholders.map(sh => ({
-          'Họ tên': sh.name || '',
-          'ngày sinh123': sh.birthday || '',
-          'giới tính123': sh.gender || '',
-          'số định danh123': sh.idNumber || '',
-          'địa chỉ123': sh.address || '',
-          'Tỷ lệ % vốn góp mới': sh.tyLe || '',
-        }));
+        // Chỉ giữ cổ đông có tỷ lệ % sở hữu cổ phần >= 25% (cột 12 & 14)
+        const listUser = filterCshHuongLoiList(
+          this.extraShareholders.map(sh => ({
+            'Họ tên': sh.name || '',
+            'ngày sinh123': sh.birthday || '',
+            'giới tính123': sh.gender || '',
+            'số định danh123': sh.idNumber || '',
+            'địa chỉ123': sh.address || '',
+            'Tỷ lệ % vốn góp mới': sh.tyLe || '',
+            tlcd: sh.tyLe || '',
+          })),
+          'cophan'
+        );
 
         const renderDataList = this.files.map(file => ({
           ...this.formValuesCommon,

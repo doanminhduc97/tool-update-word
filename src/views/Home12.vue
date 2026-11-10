@@ -115,6 +115,7 @@ import { useAuth } from '@/stores/auth';
 import { autofillLoginPlaceholders } from '@/lib/loginPlaceholders';
 import { enforceTimesNewRoman } from '@/lib/fontHelper';
 import { isGenderField } from '@/lib/genderHelper';
+import { filterCshHuongLoiList } from '@/lib/cshHelper';
 
 export default {
   name: 'Home12',
@@ -381,12 +382,18 @@ export default {
           'Họ tên đại diện': tv1.name || '',
         };
 
-        const renderDataList = this.files.map(file => ({
-          ...this.formValuesCommon,
-          ...file.formValues,
-          ...tvFixed,
-          listUser,
-        }));
+        // Lọc listUser cho file 4 (DANH SÁCH CHỦ SỞ HỮU HƯỞNG LỢI): chỉ giữ thành viên sở hữu vốn >= 25%
+        const listUserCsh = filterCshHuongLoiList(listUser, 'von');
+
+        const renderDataList = this.files.map(file => {
+          const isCshDoc = file.name && file.name.includes('DANH SÁCH CHỦ SỞ HỮU HƯỞNG LỢI');
+          return {
+            ...this.formValuesCommon,
+            ...file.formValues,
+            ...tvFixed,
+            listUser: isCshDoc ? listUserCsh : listUser,
+          };
+        });
 
         const outBlobs = docs.map((doc, i) => this.renderToBlob(doc, renderDataList[i]));
 

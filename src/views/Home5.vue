@@ -99,6 +99,7 @@ import { useAuth } from '@/stores/auth';
 import { autofillLoginPlaceholders } from '@/lib/loginPlaceholders';
 import { enforceTimesNewRoman } from '@/lib/fontHelper';
 import { isGenderField } from '@/lib/genderHelper';
+import { filterCshHuongLoiList } from '@/lib/cshHelper';
 
 export default {
   name: 'Home5',
@@ -431,13 +432,17 @@ export default {
           'tv1_địa chỉ': repUser.address || '',
         };
 
+        // Lọc listUser cho file CSH hưởng lợi: chỉ giữ thành viên có tỷ lệ >= 25% (vốn hoặc cổ phần)
+        const listUserCsh = filterCshHuongLoiList(listUser, 'auto');
+
         const renderDataList = this.files.map((file, i) => {
+          const isCshDoc = file.name && file.name.includes('DANH SÁCH CHỦ SỞ HỮU HƯỞNG LỢI');
           return {
             ...this.formValuesCommon,
             ...file.formValues,
             ...tvVariables,
             ...repVariables,
-            listUser,
+            listUser: isCshDoc ? listUserCsh : listUser,
           };
         });
 
