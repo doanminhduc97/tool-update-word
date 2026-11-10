@@ -98,10 +98,6 @@
             </div>
           </div>
 
-          <a v-if="user?.role === 'ADMIN_SYSTEM'" class="btn-menu btn-admin-tab" :class="{ 'active': isActiveMenu('/admin/users') }" @click="changeRoute('/admin/users', 10)">
-            👑 Quản lý người dùng
-          </a>
-
           <!-- <a href="#">Dịch vụ</a>
           <a href="#">Blog</a>
           <a href="#">Liên hệ</a> -->

@@ -43,8 +43,14 @@
         </button>
       </div>
 
-      <a v-if="user?.role === 'ADMIN_SYSTEM'" class="user-menu-item admin-item" @click="goAdminUsers">👑 Quản lý người dùng</a>
-      <a class="user-menu-item" @click="doLogout">Đăng xuất</a>
+      <a v-if="user?.role === 'ADMIN_SYSTEM'" class="user-menu-item admin-item" @click="goAdminUsers">
+        <span class="admin-icon">👑</span>
+        <span>Quản lý người dùng</span>
+      </a>
+      <a class="user-menu-item logout-item" @click="doLogout">
+        <span class="logout-icon">🚪</span>
+        <span>Đăng xuất</span>
+      </a>
     </div>
 
     <!-- Modal Nạp Tiền -->
