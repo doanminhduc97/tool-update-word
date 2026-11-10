@@ -327,7 +327,19 @@ export default {
         const docs = buffers.map(buffer => this.createDoc(buffer));
 
         // Chuẩn bị danh sách listUser cho template có loop [[#listUser]]
-        const listUser = this.userInfoForm.map((item, idx) => ({
+        const parseRate = (val) => {
+          if (!val) return 0;
+          const cleaned = String(val).replace(/,/g, '.').replace(/[^0-9.]/g, '');
+          return parseFloat(cleaned) || 0;
+        };
+
+        const listUser = this.userInfoForm
+          .filter(item => {
+            const r1 = parseRate(item.tl);
+            const r2 = parseRate(item.tlcd);
+            return Math.max(r1, r2) >= 25;
+          })
+          .map((item, idx) => ({
           stt: idx + 1,
           id: idx + 1,
           name: item.name || '',
@@ -437,7 +449,10 @@ export default {
           };
         });
 
-        const outBlobs = docs.map((doc, i) => this.renderToBlob(doc, renderDataList[i]));
+        const outBlobs = docs.map((doc, i) => {
+          const isFileCSH = this.files[i]?.name?.includes('DANH SÁCH CHỦ SỞ HỮU HƯỞNG LỢI');
+          return this.renderToBlob(doc, renderDataList[i], { rotateDobVertical: isFileCSH });
+        });
 
         this.files.forEach((file, i) => {
           const url = URL.createObjectURL(outBlobs[i]);
@@ -509,9 +524,62 @@ export default {
       });
     },
 
-    renderToBlob(doc, data) {
+    renderToBlob(doc, data, options = {}) {
       doc.render(data);
-      return doc.getZip().generate({
+      const zip = doc.getZip();
+
+      // Nếu yêu cầu xoay dọc ngày sinh từ dưới lên trên (Bottom-to-Top: btLr) và căn CENTER
+      if (options.rotateDobVertical) {
+        try {
+          const docXmlFile = zip.file('word/document.xml');
+          if (docXmlFile) {
+            let xml = docXmlFile.asText();
+            // Tìm các ô bảng chứa ngày sinh dd/mm/yyyy và chèn <w:textDirection w:val="btLr"/> + căn center tuyệt đối
+            xml = xml.replace(/<w:tc[\s\S]*?<\/w:tc>/g, (tc) => {
+              const textOnly = tc.replace(/<[^>]+>/g, '').trim();
+              if (/\b\d{1,2}[/.-]\d{1,2}[/.-]\d{4}\b/.test(textOnly)) {
+                let modified = tc;
+
+                // 1. Căn giữa theo chiều dọc ô bảng (vertical alignment: center)
+                if (modified.includes('<w:vAlign')) {
+                  modified = modified.replace(/<w:vAlign[^>]*\/>/, '<w:vAlign w:val="center"/>');
+                } else if (modified.includes('<w:tcPr>')) {
+                  modified = modified.replace('<w:tcPr>', '<w:tcPr><w:vAlign w:val="center"/>');
+                }
+
+                // 2. Căn giữa đoạn văn (horizontal alignment: center)
+                if (modified.includes('<w:jc')) {
+                  modified = modified.replace(/<w:jc[^>]*\/>/, '<w:jc w:val="center"/>');
+                } else if (modified.includes('<w:pPr>')) {
+                  modified = modified.replace('<w:pPr>', '<w:pPr><w:jc w:val="center"/>');
+                }
+
+                // 3. Xóa thụt lề thừa (w:ind) có thể làm lệch vị trí center
+                modified = modified.replace(/<w:ind[^>]*\/>/g, '<w:ind w:left="0" w:right="0" w:firstLine="0"/>');
+
+                // 4. Xoay dọc từ dưới lên trên (btLr)
+                if (modified.includes('<w:textDirection')) {
+                  modified = modified.replace(/<w:textDirection[^>]*\/>/, '<w:textDirection w:val="btLr"/>');
+                } else if (modified.includes('<w:tcPr>')) {
+                  modified = modified.replace('<w:tcPr>', '<w:tcPr><w:textDirection w:val="btLr"/>');
+                } else if (modified.includes('<w:tcPr/>')) {
+                  modified = modified.replace('<w:tcPr/>', '<w:tcPr><w:textDirection w:val="btLr"/><w:vAlign w:val="center"/></w:tcPr>');
+                } else {
+                  modified = modified.replace('<w:tc>', '<w:tc><w:tcPr><w:textDirection w:val="btLr"/><w:vAlign w:val="center"/></w:tcPr>');
+                }
+
+                return modified;
+              }
+              return tc;
+            });
+            zip.file('word/document.xml', xml);
+          }
+        } catch (e) {
+          console.warn('Lỗi khi xoay dọc textDirection ngày sinh:', e);
+        }
+      }
+
+      return zip.generate({
         type: "blob",
         mimeType:
           "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
