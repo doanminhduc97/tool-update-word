@@ -92,8 +92,8 @@
               <a class="dropdown-item" :class="{ 'active': isActiveMenu('/giam-von-2tv') }" @click="selectThayDoiVon('/giam-von-2tv')">
                 5. Giảm Vốn Cty 2 Thành Viên
               </a>
-              <a class="dropdown-item disabled-item" title="Chức năng đang phát triển" @click.stop="notifyComingSoon('Giảm Vốn Cty Cổ Phần')">
-                6. Giảm Vốn Cty Cổ Phần <span class="badge-soon">Sắp có</span>
+              <a class="dropdown-item" :class="{ 'active': isActiveMenu('/giam-von-cp') }" @click="selectThayDoiVon('/giam-von-cp')">
+                6. Giảm Vốn Cty Cổ Phần
               </a>
             </div>
           </div>
