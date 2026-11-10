@@ -84,9 +84,17 @@ export function refreshSession() {
         return res.data
       })
       .catch((err) => {
-        // Chỉ xóa token nếu không có phiên accessToken mới nào được gán đè (tránh race condition với login)
-        if (!accessToken) {
-          setAccessToken(null)
+        // Refresh token đã hết hạn hoặc không hợp lệ -> xóa sạch phiên
+        setAccessToken(null)
+        if (onRefreshed) onRefreshed(null)
+
+        // Tự động điều hướng về trang /login nếu đang ở các trang yêu cầu đăng nhập
+        if (typeof window !== 'undefined') {
+          const path = window.location.pathname
+          if (path !== '/login' && path !== '/register') {
+            const redirectUrl = encodeURIComponent(window.location.pathname + window.location.search)
+            window.location.replace(`/login?redirect=${redirectUrl}`)
+          }
         }
         throw err
       })
@@ -117,14 +125,28 @@ http.interceptors.response.use(
 
     // Chỉ thử refresh 1 lần cho các API nghiệp vụ bị 401
     if (!response || response.status !== 401 || !config || config._retry || isAuthCall) {
+      // Nếu API trả về 401 không phải gọi login/register mà do phiên lỗi -> tự động về login
+      if (response?.status === 401 && !url.includes('/auth/login') && !url.includes('/auth/register')) {
+        if (typeof window !== 'undefined') {
+          const path = window.location.pathname
+          if (path !== '/login' && path !== '/register') {
+            const redirectUrl = encodeURIComponent(window.location.pathname + window.location.search)
+            window.location.replace(`/login?redirect=${redirectUrl}`)
+          }
+        }
+      }
       throw error
     }
 
     config._retry = true
-    const data = await refreshSession()
-    config.headers = config.headers || {}
-    config.headers.Authorization = `Bearer ${data.accessToken}`
-    return http(config)
+    try {
+      const data = await refreshSession()
+      config.headers = config.headers || {}
+      config.headers.Authorization = `Bearer ${data.accessToken}`
+      return http(config)
+    } catch (refreshErr) {
+      throw refreshErr
+    }
   },
 )
 
