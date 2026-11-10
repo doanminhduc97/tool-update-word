@@ -86,8 +86,8 @@
               <a class="dropdown-item" :class="{ 'active': isActiveMenu('/tang-von-cp') }" @click="selectThayDoiVon('/tang-von-cp')">
                 3. Tăng Vốn Cty Cổ Phần
               </a>
-              <a class="dropdown-item disabled-item" title="Chức năng đang phát triển" @click.stop="notifyComingSoon('Giảm Vốn Cty 1 Thành Viên')">
-                4. Giảm Vốn Cty 1 Thành Viên <span class="badge-soon">Sắp có</span>
+              <a class="dropdown-item" :class="{ 'active': isActiveMenu('/giam-von-1tv') }" @click="selectThayDoiVon('/giam-von-1tv')">
+                4. Giảm Vốn Cty 1 Thành Viên
               </a>
               <a class="dropdown-item disabled-item" title="Chức năng đang phát triển" @click.stop="notifyComingSoon('Giảm Vốn Cty 2 Thành Viên')">
                 5. Giảm Vốn Cty 2 Thành Viên <span class="badge-soon">Sắp có</span>

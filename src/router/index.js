@@ -14,6 +14,7 @@ import Home10 from '@/views/Home10.vue'
 import Home11 from '@/views/Home11.vue'
 import Home12 from '@/views/Home12.vue'
 import Home13 from '@/views/Home13.vue'
+import Home14 from '@/views/Home14.vue'
 import { useAuth } from '@/stores/auth'
 
 const routes = [
@@ -37,6 +38,7 @@ const routes = [
   { path: '/tang-von-1tv', component: Home11, meta: { requiresAuth: true } },
   { path: '/tang-von-2tv', component: Home12, meta: { requiresAuth: true } },
   { path: '/tang-von-cp', component: Home13, meta: { requiresAuth: true } },
+  { path: '/giam-von-1tv', component: Home14, meta: { requiresAuth: true } },
   { path: '/giai-the-thue', component: Home8, meta: { requiresAuth: true } },
   { path: '/csh-huong-loi', component: Home5, meta: { requiresAuth: true } },
   { path: '/hdcn-bbtl', component: Home6, meta: { requiresAuth: true } },
