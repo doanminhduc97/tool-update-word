@@ -3,40 +3,97 @@
     <div class="card common-card" style="margin-bottom: 24px; text-align: center;">
       <h2 style="font-size: 1.25rem; font-weight: 700; color: #0284c7;">Hồ sơ tăng vốn công ty cổ phần</h2>
     </div>
-    <section v-if="placeholdersCommon.length" class="card common-card">
-      <h3 class="title-form">Thông tin chung các file</h3>
+
+    <!-- KHỐI 1: THÔNG TIN CÔNG TY (Gom tất cả các biến liên quan đến công ty & vốn) -->
+    <section v-show="companyPlaceholders.length" class="card common-card">
+      <h3 class="title-form">Thông Tin Công Ty</h3>
       <form>
-        <div v-for="ph in placeholdersCommon" :key="'c-' + ph" class="form-group">
-          <label :for="'c-' + ph">{{ formatLabel(ph) }}</label>
-          <PhongDkkdInput v-if="ph === 'Phòng ĐKKD Tỉnh/TP' || ph === 'Cơ quan đăng ký kinh doanh cấp tỉnh'" :input-id="'c-' + ph" v-model="formValuesCommon[ph]" />
-          <GenderRadio v-else-if="isGenderField(ph)" :name="'c-' + ph" v-model="formValuesCommon[ph]" />
-          <input v-else type="text" :id="'c-' + ph" v-model="formValuesCommon[ph]" required>
+        <div v-for="ph in companyPlaceholders" :key="'comp-' + ph" class="form-group">
+          <label :for="'comp-' + ph">{{ formatLabel(ph) }}</label>
+          <PhongDkkdInput v-if="ph === 'Phòng ĐKKD Tỉnh/TP' || ph === 'Cơ quan đăng ký kinh doanh cấp tỉnh'" :input-id="'comp-' + ph" v-model="companyValues[ph]" />
+          <GenderRadio v-else-if="isGenderField(ph)" :name="'comp-' + ph" v-model="companyValues[ph]" />
+          <input v-else type="text" :id="'comp-' + ph" v-model="companyValues[ph]" required>
         </div>
       </form>
     </section>
-    <template v-for="(file, i) in filesWithPlaceholders" :key="file.name">
-      <section class="card file-card">
-        <h3 class="title-form">Thông Tin File ({{ file.name }}.docx)</h3>
-        <form>
-          <div v-for="ph in file.placeholders" :key="'f' + i + '-' + ph" class="form-group">
-            <label :for="'f' + i + '-' + ph">{{ formatLabel(ph) }}</label>
-            <PhongDkkdInput v-if="ph === 'Phòng ĐKKD Tỉnh/TP' || ph === 'Cơ quan đăng ký kinh doanh cấp tỉnh'" :input-id="'f' + i + '-' + ph" v-model="file.formValues[ph]" />
-            <GenderRadio v-else-if="isGenderField(ph)" :name="'f' + i + '-' + ph" v-model="file.formValues[ph]" />
-            <input v-else type="text" :id="'f' + i + '-' + ph" v-model="file.formValues[ph]" required>
-          </div>
-        </form>
-      </section>
 
-      <!-- Block thông tin cổ đông: ngay sau Thông Tin File (2. Quyết định ĐHĐCĐ) -->
-      <section v-if="i === 1" class="card members-card">
-        <div class="card-head">
-          <h3 class="title-form">Thông Tin Cổ Đông (Quyết định ĐHĐCĐ + DANH SÁCH CSH HƯỞNG LỢI)</h3>
+    <!-- KHỐI 2: THÔNG TIN NGƯỜI ĐẠI DIỆN PL & CHỦ TỊCH HĐQT -->
+    <section v-show="repPlaceholders.length" class="card common-card">
+      <h3 class="title-form">Thông Tin Người Đại Diện Pháp Luật &amp; Chủ Tịch HĐQT</h3>
+      <form>
+        <div v-for="ph in repPlaceholders" :key="'rep-' + ph" class="form-group">
+          <label :for="'rep-' + ph">{{ formatLabel(ph) }}</label>
+          <GenderRadio v-if="isGenderField(ph)" :name="'rep-' + ph" v-model="repValues[ph]" />
+          <input v-else type="text" :id="'rep-' + ph" v-model="repValues[ph]" required>
         </div>
+      </form>
+    </section>
 
-        <!-- 3 slot cố định khớp template CĐ1/CĐ2/CĐ3 -->
-        <div v-for="(sh, index) in shareholders" :key="index" class="member-card">
+    <!-- KHỐI 3: THÔNG TIN CỔ ĐÔNG (Quyết định ĐHĐCĐ + DANH SÁCH CSH HƯỞNG LỢI, từ 25%) -->
+    <section class="card members-card">
+      <div class="card-head">
+        <h3 class="title-form">Thông Tin Cổ Đông (Quyết định ĐHĐCĐ + DANH SÁCH CSH HƯỞNG LỢI)</h3>
+      </div>
+
+      <!-- 3 slot cố định khớp template CĐ1/CĐ2/CĐ3 -->
+      <div v-for="(sh, index) in shareholders" :key="index" class="member-card">
+        <div class="member-head">
+          <h4 class="member-title">Cổ đông {{ index + 1 }}</h4>
+        </div>
+        <div class="member-grid">
+          <div class="form-group">
+            <label>Họ tên</label>
+            <input type="text" v-model="sh.name" placeholder="Nguyễn Văn A">
+          </div>
+          <div class="form-group">
+            <label>Ngày sinh</label>
+            <input type="text" v-model="sh.birthday" placeholder="DD/MM/YYYY">
+          </div>
+          <div class="form-group">
+            <label>Giới tính</label>
+            <GenderRadio :name="'sh13-gender-' + index" v-model="sh.gender" />
+          </div>
+          <div class="form-group">
+            <label>Số định danh cá nhân</label>
+            <input type="text" v-model="sh.idNumber" placeholder="Số CCCD">
+          </div>
+          <div class="form-group">
+            <label>Địa chỉ</label>
+            <input type="text" v-model="sh.address" placeholder="Số nhà, đường, phường, tỉnh...">
+          </div>
+          <div class="form-group">
+            <label>Số cổ phần hiện tại</label>
+            <input type="text" v-model="sh.soCoPhanHienTai" placeholder="Ví dụ: 10000">
+          </div>
+          <div class="form-group">
+            <label>Vốn hiện tại</label>
+            <input type="text" v-model="sh.vonHienTai" placeholder="Ví dụ: 1.000.000.000">
+          </div>
+          <div class="form-group">
+            <label>Tỷ lệ % vốn góp hiện tại</label>
+            <input type="text" v-model="sh.tyLeHienTai" placeholder="Ví dụ: 50 hoặc 50%">
+          </div>
+          <div class="form-group">
+            <label>Số cổ phần mới</label>
+            <input type="text" v-model="sh.soCoPhanMoi" placeholder="Ví dụ: 15000">
+          </div>
+          <div class="form-group">
+            <label>Vốn mới</label>
+            <input type="text" v-model="sh.vonMoi" placeholder="Ví dụ: 1.500.000.000">
+          </div>
+          <div class="form-group">
+            <label>Tỷ lệ % vốn góp mới</label>
+            <input type="text" v-model="sh.tyLeMoi" placeholder="Ví dụ: 50 hoặc 50%">
+          </div>
+        </div>
+      </div>
+
+      <!-- Cổ đông bổ sung (render qua loop [[#listUser]] trong DANH SÁCH CSH HƯỞNG LỢI) -->
+      <template v-if="extraShareholders.length > 0">
+        <div v-for="(sh, eIdx) in extraShareholders" :key="'e' + eIdx" class="member-card">
           <div class="member-head">
-            <h4 class="member-title">Cổ đông {{ index + 1 }}</h4>
+            <h4 class="member-title">Cổ đông bổ sung {{ eIdx + 1 }}</h4>
+            <button type="button" @click="removeExtraShareholder(eIdx)" class="btn-remove">Xóa</button>
           </div>
           <div class="member-grid">
             <div class="form-group">
@@ -49,7 +106,7 @@
             </div>
             <div class="form-group">
               <label>Giới tính</label>
-              <GenderRadio :name="'sh13-gender-' + index" v-model="sh.gender" />
+              <GenderRadio :name="'extra-sh13-gender-' + eIdx" v-model="sh.gender" />
             </div>
             <div class="form-group">
               <label>Số định danh cá nhân</label>
@@ -60,81 +117,52 @@
               <input type="text" v-model="sh.address" placeholder="Số nhà, đường, phường, tỉnh...">
             </div>
             <div class="form-group">
-              <label>Số cổ phần hiện tại</label>
-              <input type="text" v-model="sh.soCoPhanHienTai" placeholder="Ví dụ: 10000">
-            </div>
-            <div class="form-group">
-              <label>Vốn hiện tại</label>
-              <input type="text" v-model="sh.vonHienTai" placeholder="Ví dụ: 1.000.000.000">
-            </div>
-            <div class="form-group">
-              <label>Tỷ lệ % vốn góp hiện tại</label>
-              <input type="text" v-model="sh.tyLeHienTai" placeholder="Ví dụ: 50 hoặc 50%">
-            </div>
-            <div class="form-group">
-              <label>Số cổ phần mới</label>
-              <input type="text" v-model="sh.soCoPhanMoi" placeholder="Ví dụ: 15000">
-            </div>
-            <div class="form-group">
-              <label>Vốn mới</label>
-              <input type="text" v-model="sh.vonMoi" placeholder="Ví dụ: 1.500.000.000">
-            </div>
-            <div class="form-group">
-              <label>Tỷ lệ % vốn góp mới</label>
-              <input type="text" v-model="sh.tyLeMoi" placeholder="Ví dụ: 50 hoặc 50%">
+              <label>Tỷ lệ % sở hữu cổ phần có quyền biểu quyết</label>
+              <input type="text" v-model="sh.tyLe" placeholder="Ví dụ: 10 hoặc 10%">
             </div>
           </div>
         </div>
+      </template>
+      <p v-else class="empty-hint">Chưa có cổ đông bổ sung nào. Nhấn "Thêm cổ đông" để bắt đầu.</p>
+      <p :class="hasNoMatchCsh ? 'required-hint missing' : 'required-hint ok'">
+        {{ hasNoMatchCsh
+          ? '⚠️ DANH SÁCH CSH HƯỞNG LỢI yêu cầu tỷ lệ % tổng 100% — kiểm tra lại các cổ đông.'
+          : '✓ Tỷ lệ cổ đông hợp lệ (trống hoặc tổng 100%).' }}
+      </p>
 
-        <!-- Cổ đông bổ sung (render qua loop [[#listUser]] trong DANH SÁCH CSH HƯỞNG LỢI) -->
-        <template v-if="extraShareholders.length > 0">
-          <div v-for="(sh, eIdx) in extraShareholders" :key="'e' + eIdx" class="member-card">
-            <div class="member-head">
-              <h4 class="member-title">Cổ đông bổ sung {{ eIdx + 1 }}</h4>
-              <button type="button" @click="removeExtraShareholder(eIdx)" class="btn-remove">Xóa</button>
-            </div>
-            <div class="member-grid">
-              <div class="form-group">
-                <label>Họ tên</label>
-                <input type="text" v-model="sh.name" placeholder="Nguyễn Văn A">
-              </div>
-              <div class="form-group">
-                <label>Ngày sinh</label>
-                <input type="text" v-model="sh.birthday" placeholder="DD/MM/YYYY">
-              </div>
-              <div class="form-group">
-                <label>Giới tính</label>
-                <GenderRadio :name="'extra-sh13-gender-' + eIdx" v-model="sh.gender" />
-              </div>
-              <div class="form-group">
-                <label>Số định danh cá nhân</label>
-                <input type="text" v-model="sh.idNumber" placeholder="Số CCCD">
-              </div>
-              <div class="form-group">
-                <label>Địa chỉ</label>
-                <input type="text" v-model="sh.address" placeholder="Số nhà, đường, phường, tỉnh...">
-              </div>
-              <div class="form-group">
-                <label>Tỷ lệ % sở hữu vốn điều lệ</label>
-                <input type="text" v-model="sh.tyLe" placeholder="Ví dụ: 10 hoặc 10%">
-              </div>
-            </div>
-          </div>
-        </template>
-        <p v-else class="empty-hint">Chưa có cổ đông bổ sung nào. Nhấn "Thêm cổ đông" để bắt đầu.</p>
-        <p :class="hasNoMatchCsh ? 'required-hint missing' : 'required-hint ok'">
-          {{ hasNoMatchCsh
-            ? '⚠️ DANH SÁCH CSH HƯỞNG LỢI yêu cầu tỷ lệ % tổng 100% — kiểm tra lại các cổ đông.'
-            : '✓ Tỷ lệ cổ đông hợp lệ (trống hoặc tổng 100%).' }}
-        </p>
+      <div class="card-head">
+        <h3 class="title-form"></h3>
+        <button type="button" @click="addExtraShareholder" class="btn-add">Thêm cổ đông</button>
+      </div>
+    </section>
 
-        <div class="card-head">
-          <h3 class="title-form"></h3>
-          <button type="button" @click="addExtraShareholder" class="btn-add">Thêm cổ đông</button>
+    <!-- KHỐI 4: THÔNG TIN NGƯỜI ĐƯỢC ỦY QUYỀN (Autofill từ phiên đăng nhập) -->
+    <section v-show="authorizedPersonPlaceholders.length" class="card common-card">
+      <h3 class="title-form">Thông Tin Người Được Ủy Quyền</h3>
+      <form>
+        <div v-for="ph in authorizedPersonPlaceholders" :key="'auth-' + ph" class="form-group">
+          <label :for="'auth-' + ph">{{ formatLabel(ph) }}</label>
+          <GenderRadio v-if="isGenderField(ph)" :name="'auth-' + ph" v-model="authorizedPersonValues[ph]" />
+          <input v-else type="text" :id="'auth-' + ph" v-model="authorizedPersonValues[ph]" required>
         </div>
-      </section>
-    </template>
-    <section v-if="placeholdersCommon.length || filesWithPlaceholders.length" class="btn-group">
+      </form>
+    </section>
+
+    <!-- Các trường riêng khác (nếu có trường nào không thuộc 4 khối trên) -->
+    <section v-for="(file, i) in otherFilesWithPlaceholders" :key="file.name" class="card file-card">
+      <h3 class="title-form">Thông Tin File ({{ file.name }}.docx)</h3>
+      <form>
+        <div v-for="ph in file.otherPlaceholders" :key="'other-' + i + '-' + ph" class="form-group">
+          <label :for="'other-' + i + '-' + ph">{{ formatLabel(ph) }}</label>
+          <PhongDkkdInput v-if="ph === 'Phòng ĐKKD Tỉnh/TP' || ph === 'Cơ quan đăng ký kinh doanh cấp tỉnh'" :input-id="'other-' + i + '-' + ph" v-model="file.formValues[ph]" />
+          <GenderRadio v-else-if="isGenderField(ph)" :name="'other-' + i + '-' + ph" v-model="file.formValues[ph]" />
+          <input v-else type="text" :id="'other-' + i + '-' + ph" v-model="file.formValues[ph]" required>
+        </div>
+      </form>
+    </section>
+
+    <!-- Nhóm nút bấm -->
+    <section v-if="hasAnyForm" class="btn-group">
       <button @click="resetAll()" class="btn-refesh">Làm Mới</button>
       <button :disabled="updating" @click="applyChanges()" class="btn-primary">
         {{ updating ? 'Đang Tạo File...' : 'Tạo File Mới' }}
@@ -185,8 +213,18 @@ export default {
     }));
     return {
       files,
-      placeholdersCommon: [],
-      formValuesCommon: {},
+      // 1. Khối thông tin công ty
+      companyPlaceholders: [],
+      companyValues: {},
+
+      // 2. Khối thông tin người đại diện PL + Chủ tịch HĐQT
+      repPlaceholders: [],
+      repValues: {},
+
+      // 3. Khối thông tin người được ủy quyền (Login_*)
+      authorizedPersonPlaceholders: [],
+      authorizedPersonValues: {},
+
       updating: false,
       // 3 slot cố định khớp template: CĐ1, CĐ2, CĐ3
       shareholders: [
@@ -200,8 +238,24 @@ export default {
   },
 
   computed: {
-    filesWithPlaceholders() {
-      return this.files.filter(f => f.placeholders.length > 0);
+    otherFilesWithPlaceholders() {
+      return this.files
+        .map(f => {
+          const others = (f.placeholders || []).filter(ph => {
+            return !this.isCompanyField(ph) && !this.isRepField(ph) && !this.isLoginField(ph);
+          });
+          return {
+            ...f,
+            otherPlaceholders: others,
+          };
+        })
+        .filter(f => f.otherPlaceholders.length > 0);
+    },
+    hasAnyForm() {
+      return this.companyPlaceholders.length > 0
+        || this.repPlaceholders.length > 0
+        || this.authorizedPersonPlaceholders.length > 0
+        || this.otherFilesWithPlaceholders.length > 0;
     },
     hasNoMatchCsh() {
       if (this.extraShareholders.length === 0) return false;
@@ -248,6 +302,48 @@ export default {
       return s.startsWith('Login_') ? s.slice(6) : s;
     },
 
+    // Tự nhận diện biến thuộc Thông tin Công ty
+    isCompanyField(ph) {
+      if (!ph) return false;
+      const s = String(ph).trim().toLowerCase();
+      // Loại trừ các trường thuộc người đại diện hay người ủy quyền
+      if (s.includes('đại diện') || s.includes('đại điện') || s.startsWith('login_')) {
+        return false;
+      }
+      if (s.endsWith('cđ1') || s.endsWith('cđ2') || s.endsWith('cđ3')) {
+        return false;
+      }
+      return (
+        s.includes('công ty') ||
+        s.includes('cty') ||
+        s.includes('mã số thuế') ||
+        s.includes('mst') ||
+        s.includes('doanh nghiệp') ||
+        s.includes('phòng đkkd') ||
+        s.includes('cơ quan đăng ký') ||
+        s.includes('vốn điều lệ') ||
+        s.includes('hình thức tăng vốn') ||
+        s.includes('số lượng cổ phần') ||
+        s.includes('tổng số cổ phần') ||
+        s.includes('số cổ phần mới')
+      );
+    },
+
+    // Nhận diện biến thuộc Thông tin Người đại diện PL / Chủ tịch HĐQT
+    isRepField(ph) {
+      if (!ph) return false;
+      const s = String(ph).trim().toLowerCase();
+      if (s.startsWith('login_')) return false;
+      if (s.endsWith('cđ1') || s.endsWith('cđ2') || s.endsWith('cđ3')) return false;
+      return s.includes('đại diện') || s.includes('đại điện') || s.includes('chủ tịch');
+    },
+
+    // Nhận diện biến thuộc Người được ủy quyền
+    isLoginField(ph) {
+      if (!ph) return false;
+      return String(ph).startsWith('Login_');
+    },
+
     addExtraShareholder() {
       this.extraShareholders.push({
         name: '', birthday: '', gender: 'Nam', idNumber: '', address: '', tyLe: ''
@@ -265,7 +361,7 @@ export default {
         const arrays = await Promise.all(
           this.files.map(f => this.getPlaceholdersFromDoc(f.link))
         );
-        const { commonAtLeast2, uniqueByArray } = this.analyzeArrays(arrays);
+        const { uniqueByArray } = this.analyzeArrays(arrays);
 
         // Lọc biến cổ đông CĐ1/CĐ2/CĐ3 + cú pháp loop listUser + các biến loop của file 4
         const isShareholderVar = (item) => {
@@ -275,6 +371,9 @@ export default {
           // Các biến trong hàng loop của file 4 (DANH SÁCH CSH HƯỞNG LỢI)
           if (t === 'Họ tên' || t === 'ngày sinh123' || t === 'giới tính123' ||
               t === 'số định danh123' || t === 'địa chỉ123' || t === 'Tỷ lệ % vốn góp mới') return true;
+          // Các biến trong 2 hàng loop của file 2 (Quyết định ĐHĐCĐ: hiện tại + sau thay đổi)
+          if (t === 'Số cổ phần hiện tại123' || t === 'Vốn hiện tại123' || t === 'Tỷ lệ % vốn góp hiện tại123' ||
+              t === 'Số cổ phần mới123' || t === 'Vốn mới123' || t === 'Tỷ lệ % vốn góp mới123') return true;
           // Alias loop cũ nếu có
           if (t === 'Họ tên tv1' || t === 'ngày sinh tv1' || t === 'giới tính tv1' ||
               t === 'số định danh tv1' || t === 'địa chỉ tv1' || t === 'tỷ lệ % tv1' ||
@@ -285,24 +384,97 @@ export default {
         this.files.forEach((f, i) => {
           f.allPlaceholders = arrays[i];
           const filteredUnique = uniqueByArray[i].filter(key => !isShareholderVar(key));
-          f.placeholders = this.sortCustom(filteredUnique);
+          f.placeholders = filteredUnique;
           f.formValues = {};
           filteredUnique.forEach(key => {
-            f.formValues[key] = '';
+            f.formValues[key] = isGenderField(key) ? 'Nam' : '';
           });
         });
 
-        // 'Họ tên đại diện' xuất hiện ở nhiều file -> giữ nguyên là biến chung ở card Thông tin chung
-        this.placeholdersCommon = this.sortCustom(commonAtLeast2.filter(key => !isShareholderVar(key)));
-        this.formValuesCommon = {};
-        this.placeholdersCommon.forEach(key => {
-          this.formValuesCommon[key] = '';
+        // Thu thập toàn bộ placeholder (cả common >= 2 file lẫn unique từng file, đã lọc loop/cổ đông)
+        const allSet = new Set();
+        arrays.forEach(arr => arr.forEach(k => {
+          if (!isShareholderVar(k)) allSet.add(k);
+        }));
+        const allPlaceholders = [...allSet];
+
+        // 1. Khối Công ty
+        const compList = allPlaceholders.filter(p => this.isCompanyField(p));
+        const compOrder = [
+          'tên công ty',
+          'mã số doanh nghiệp',
+          'tỉnh công ty',
+          'cơ quan đăng ký kinh doanh cấp tỉnh',
+          'vốn điều lệ hiện tại',
+          'vốn điều lệ hiện tại bằng chữ',
+          'hình thức tăng vốn',
+          'số lượng cổ phần mới',
+          'tổng số cổ phần hiện tại',
+          'số cổ phần mới',
+          'vốn điều lệ mới',
+          'vốn điều lệ mới bằng chữ',
+        ];
+        compList.sort((a, b) => {
+          const idxA = compOrder.indexOf(a.trim().toLowerCase());
+          const idxB = compOrder.indexOf(b.trim().toLowerCase());
+          if (idxA !== -1 && idxB !== -1) return idxA - idxB;
+          if (idxA !== -1) return -1;
+          if (idxB !== -1) return 1;
+          return a.localeCompare(b);
+        });
+        this.companyPlaceholders = compList;
+        this.companyValues = {};
+        this.companyPlaceholders.forEach(k => {
+          this.companyValues[k] = isGenderField(k) ? 'Nam' : '';
+        });
+
+        // 2. Khối Người đại diện PL + Chủ tịch HĐQT
+        const repList = allPlaceholders.filter(p => this.isRepField(p));
+        const repOrder = [
+          'họ tên đại diện',
+          'giới tính đại diện',
+          'sinh ngày đại diện',
+          'ngày sinh đại diện',
+          'số định danh cá nhân đại diện',
+          'địa chỉ của đại điện',
+          'họ tên chủ tịch hdqt',
+        ];
+        repList.sort((a, b) => {
+          const idxA = repOrder.indexOf(a.trim().toLowerCase());
+          const idxB = repOrder.indexOf(b.trim().toLowerCase());
+          if (idxA !== -1 && idxB !== -1) return idxA - idxB;
+          if (idxA !== -1) return -1;
+          if (idxB !== -1) return 1;
+          return a.localeCompare(b);
+        });
+        this.repPlaceholders = repList;
+        this.repValues = {};
+        this.repPlaceholders.forEach(k => {
+          this.repValues[k] = isGenderField(k) ? 'Nam' : '';
+        });
+
+        // 3. Khối Người được ủy quyền (Login_*)
+        const authList = allPlaceholders.filter(p => this.isLoginField(p));
+        this.authorizedPersonPlaceholders = authList;
+        this.authorizedPersonValues = {};
+        this.authorizedPersonPlaceholders.forEach(k => {
+          this.authorizedPersonValues[k] = isGenderField(k) ? 'Nam' : '';
+        });
+
+        // Prune: loại các key đã thuộc 3 khối ra khỏi formValues từng file (tránh trùng lặp / ghi đè)
+        const blockKeys = new Set([...this.companyPlaceholders, ...this.repPlaceholders, ...this.authorizedPersonPlaceholders]);
+        this.files.forEach(f => {
+          const kept = f.placeholders.filter(k => !blockKeys.has(k));
+          const newFv = {};
+          kept.forEach(k => { newFv[k] = f.formValues[k] ?? ''; });
+          f.placeholders = kept;
+          f.formValues = newFv;
         });
 
         // Tự động điền các placeholder có tiền tố "Login_" từ user hiện tại
         const currentUser = useAuth().state.user;
         if (currentUser) {
-          autofillLoginPlaceholders(this.formValuesCommon, currentUser);
+          autofillLoginPlaceholders(this.authorizedPersonValues, currentUser);
           this.files.forEach(f => autofillLoginPlaceholders(f.formValues, currentUser));
         }
       } catch (error) {
@@ -360,17 +532,20 @@ export default {
     },
 
     resetAll() {
+      Object.keys(this.companyValues).forEach(k => (this.companyValues[k] = isGenderField(k) ? 'Nam' : ''));
+      Object.keys(this.repValues).forEach(k => (this.repValues[k] = isGenderField(k) ? 'Nam' : ''));
+      Object.keys(this.authorizedPersonValues).forEach(k => (this.authorizedPersonValues[k] = isGenderField(k) ? 'Nam' : ''));
       this.files.forEach(f => {
-        Object.keys(f.formValues).forEach(k => (f.formValues[k] = ''));
+        Object.keys(f.formValues).forEach(k => (f.formValues[k] = isGenderField(k) ? 'Nam' : ''));
       });
-      Object.keys(this.formValuesCommon).forEach(k => (this.formValuesCommon[k] = ''));
       this.shareholders.forEach(sh => {
-        Object.keys(sh).forEach(k => (sh[k] = ''));
+        Object.keys(sh).forEach(k => (sh[k] = k === 'gender' ? 'Nam' : ''));
       });
       this.extraShareholders = [];
+
       const currentUser = useAuth().state.user;
       if (currentUser) {
-        autofillLoginPlaceholders(this.formValuesCommon, currentUser);
+        autofillLoginPlaceholders(this.authorizedPersonValues, currentUser);
         this.files.forEach(f => autofillLoginPlaceholders(f.formValues, currentUser));
       }
     },
@@ -420,26 +595,39 @@ export default {
           shareholderData['Tỷ lệ % vốn góp mớiCĐ' + n] = sh.tyLeMoi || ''; // không có space trước CĐ
         });
 
-        // listUser: cổ đông bổ sung cho loop file DANH SÁCH CSH HƯỞNG LỢI (row 8 của file 4)
-        // Chỉ giữ cổ đông có tỷ lệ % sở hữu cổ phần >= 25% (cột 12 & 14)
-        const listUser = filterCshHuongLoiList(
-          this.extraShareholders.map(sh => ({
-            'Họ tên': sh.name || '',
-            'ngày sinh123': sh.birthday || '',
-            'giới tính123': sh.gender || '',
-            'số định danh123': sh.idNumber || '',
-            'địa chỉ123': sh.address || '',
-            'Tỷ lệ % vốn góp mới': sh.tyLe || '',
-            tlcd: sh.tyLe || '',
-          })),
+        // listUser: cổ đông bổ sung cho loop [[#listUser]] của file 2 (Quyết định ĐHĐCĐ)
+        // và file 4 (DANH SÁCH CHỦ SỞ HỮU HƯỞNG LỢI). File 2 dùng toàn bộ cổ đông bổ sung,
+        // còn file 4 (CSH) chỉ giữ cổ đông có tỷ lệ % sở hữu cổ phần >= 25% (cột 12 & 14).
+        const listUserFull = this.extraShareholders.map(sh => ({
+          'Họ tên': sh.name || '',
+          // File 2: hàng loop hiện tại
+          'Số cổ phần hiện tại123': sh.soCoPhanHienTai || '',
+          'Vốn hiện tại123': sh.vonHienTai || '',
+          'Tỷ lệ % vốn góp hiện tại123': sh.tyLeHienTai || '',
+          // File 2: hàng loop sau thay đổi
+          'Số cổ phần mới123': sh.soCoPhanMoi || '',
+          'Vốn mới123': sh.vonMoi || '',
+          'Tỷ lệ % vốn góp mới123': sh.tyLeMoi || '',
+          // File 4: hàng loop CSH hưởng lợi
+          'ngày sinh123': sh.birthday || '',
+          'giới tính123': sh.gender || '',
+          'số định danh123': sh.idNumber || '',
+          'địa chỉ123': sh.address || '',
+          'Tỷ lệ % vốn góp mới': sh.tyLe || '',
+          tlcd: sh.tyLe || '',
+        }));
+        const listUserCsh = filterCshHuongLoiList(
+          listUserFull.map(x => ({ 'Họ tên': x['Họ tên'], 'ngày sinh123': x['ngày sinh123'], 'giới tính123': x['giới tính123'], 'số định danh123': x['số định danh123'], 'địa chỉ123': x['địa chỉ123'], 'Tỷ lệ % vốn góp mới': x['Tỷ lệ % vốn góp mới'], tlcd: x.tlcd })),
           'cophan'
         );
 
         const renderDataList = this.files.map(file => ({
-          ...this.formValuesCommon,
+          ...this.companyValues,
+          ...this.repValues,
+          ...this.authorizedPersonValues,
+          ...file.formValues, // formValues của từng file sẽ override, giữ nguyên giá trị riêng
           ...shareholderData,
-          ...file.formValues, // formValues của từng file sẽ override, giữ nguyên 'Họ tên đại diện' nhập riêng ở file 5
-          listUser,
+          listUser: file.name.includes('DANH SÁCH CHỦ SỞ HỮU HƯỞNG LỢI') ? listUserCsh : listUserFull,
         }));
 
         const outBlobs = docs.map((doc, i) => {
@@ -586,20 +774,6 @@ export default {
       const match = url.match(/\/document\/d\/([a-zA-Z0-9-_]+)/);
       return match ? match[1] : null;
     },
-
-    sortCustom(arr) {
-      const nonLogin = arr.filter(k => !String(k).startsWith('Login_'));
-      const loginFields = arr.filter(k => String(k).startsWith('Login_'));
-
-      nonLogin.sort((a, b) => {
-        const prefixA = a.substring(0, 4);
-        const prefixB = b.substring(0, 4);
-        if (prefixA === prefixB) return a.localeCompare(b);
-        return prefixA.localeCompare(prefixB);
-      });
-
-      return [...nonLogin, ...loginFields];
-    }
   }
 }
 </script>
