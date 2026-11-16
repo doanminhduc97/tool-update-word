@@ -137,6 +137,22 @@ Hệ thống TUW bao gồm 18 phân hệ tương ứng với 18 view chuyên bi�
   - Áp dụng **riêng biệt** cho file `DANH SÁCH CHỦ SỞ HỮU HƯỞNG LỢI CỦA DOANH NGHIỆP`.
   - Các tài liệu khác (Điều lệ, Danh sách thành viên/cổ đông) giữ nguyên 100% tất cả thành viên không bị lọc.
 
+### J. Quy chuẩn xác thực Refresh Token & Tương thích Prisma MongoDB (BSON Undefined vs Null)
+- **Bối cảnh lỗi (Critical Bug):** Trong cơ chế Token Rotation, khi truy vấn các refresh token chưa bị thu hồi (`revokedAt: null`), Prisma MongoDB ORM không match được các bản ghi trong MongoDB Atlas vì trường `revokedAt` chưa được set được lưu là BSON undefined (`isSet: false`) thay vì `BSON null`.
+- **Hậu quả:** Câu lệnh `tx.refreshToken.updateMany({ where: { id: existing.id, revokedAt: null } })` trả về `count: 0` $\rightarrow$ hệ thống hiểu lầm là token bị đánh cắp/tái sử dụng $\rightarrow$ kích hoạt `REFRESH_RACE_DETECTED` $\rightarrow$ thu hồi toàn bộ token family và trả về 401 $\rightarrow$ người dùng bị văng ra trang login ngay sau khi tạo file hoặc khi F5.
+- **Giải pháp bắt buộc (Chuẩn hóa Backend):** Mọi câu lệnh truy vấn trạng thái chưa thu hồi của token trên MongoDB bắt buộc phải dùng helper:
+  ```javascript
+  function notRevoked() {
+    return {
+      OR: [
+        { revokedAt: null },
+        { revokedAt: { isSet: false } },
+      ],
+    }
+  }
+  ```
+  Áp dụng cho toàn bộ các hàm `refresh`, `logout`, `logoutAll`, `changePassword`.
+
 ### B. Quy chuẩn hiển thị Ngày sinh ô bảng Word (Vertical Text & Center Alignment)
 - Cột ngày tháng năm sinh trong bảng Word có độ rộng hẹp, chuỗi `DD/MM/YYYY` (10 ký tự) dễ bị gãy thành 3 dòng xấu.
 - **Yêu cầu kỹ thuật bất biến (Tránh lỗi giả định template có sẵn thẻ xoay)**:
