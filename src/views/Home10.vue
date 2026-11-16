@@ -270,8 +270,6 @@ export default {
     },
 
     async getFile() {
-      const loading = document.getElementById("loading-overlay");
-      if (loading) loading.style.display = "flex";
       try {
         const arrays = await Promise.all(
           this.files.map(f => this.getPlaceholdersFromDoc(f.link))
@@ -322,8 +320,6 @@ export default {
         console.error("Lỗi khi tải hoặc phân tích file:", error);
         this.pageError = error.message;
         throw error;
-      } finally {
-        if (loading) loading.style.display = "none";
       }
     },
 

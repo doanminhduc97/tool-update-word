@@ -308,8 +308,6 @@ export default {
     //   this.tokenClient.requestAccessToken();
     // },
     async getFile() {
-      const loading = document.getElementById("loading-overlay");
-      loading.style.display = "flex";
       try {
       if (!this.docLink) return alert('Vui Lòng Nhập Link!');
       if (this.docLink) {
@@ -376,8 +374,6 @@ export default {
         console.error("Lỗi khi tải hoặc phân tích file:", error);
         this.pageError = error.message;
         throw error;
-      } finally {
-        if (loading) loading.style.display = "none";
       }
     },
     async getPlaceholdersFromDoc(link) {

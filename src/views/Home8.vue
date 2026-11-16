@@ -140,8 +140,6 @@ export default {
       return s.startsWith('Login_') ? s.slice(6) : s;
     },
     async getFile() {
-      const loading = document.getElementById("loading-overlay");
-      loading.style.display = "flex";
       try {
         const arrays = await Promise.all(
           this.files.map(f => this.getPlaceholdersFromDoc(f.link))
@@ -173,8 +171,6 @@ export default {
         console.error("Lỗi khi tải hoặc phân tích file:", error);
         this.pageError = error.message;
         throw error;
-      } finally {
-        if (loading) loading.style.display = "none";
       }
     },
     async getPlaceholdersFromDoc(link) {
