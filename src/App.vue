@@ -321,16 +321,25 @@ export default {
 
 <style scoped>
 .app-footer {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  width: 100%;
+  z-index: 999;
   display: flex;
   justify-content: center;
+  align-items: center;
   flex-wrap: wrap;
   gap: 0.5rem 1.5rem;
-  padding: 1rem;
-  margin-top: 2rem;
+  padding: 0.6rem 1rem;
+  margin: 0;
   border-top: 1px solid #e2e8f0;
   font-size: 13px;
   color: #64748b;
-  background: #f8fafc;
+  background: rgba(248, 250, 252, 0.95);
+  backdrop-filter: blur(8px);
+  box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.03);
 }
 .app-footer strong {
   color: #0284c7;
