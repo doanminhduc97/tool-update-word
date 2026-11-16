@@ -9,6 +9,7 @@ import PhongDkkdInput from './components/PhongDkkdInput.vue'
 import GenderRadio from './components/GenderRadio.vue'
 import ProvinceSelectInput from './components/ProvinceSelectInput.vue'
 import SearchableSelectInput from './components/SearchableSelectInput.vue'
+import PageLoader from './components/PageLoader.vue'
 
 // Tự động gán tooltip (thuộc tính title) cho mọi ô input khi hover vào để show giá trị bên trong
 if (typeof window !== 'undefined') {
@@ -34,6 +35,7 @@ app.component('SearchableSelectInput', SearchableSelectInput)
 app.component('PhongDkkdInput', PhongDkkdInput)
 app.component('GenderRadio', GenderRadio)
 app.component('ProvinceSelectInput', ProvinceSelectInput)
+app.component('PageLoader', PageLoader)
 
 app.use(router) // gắn router
 app.mount('#app')

@@ -1,8 +1,10 @@
 <template>
 <div class="editor">
-  <div class="card common-card" style="margin-bottom: 24px; text-align: center;">
-    <h2 style="font-size: 1.25rem; font-weight: 700; color: #0284c7;">Hồ sơ thành lập công ty cổ phần</h2>
-  </div>
+  <PageLoader v-if="pageLoading" title="Đang tải hồ sơ Thành lập công ty cổ phần..." :error="pageError" @retry="loadData" />
+  <template v-else>
+    <div class="card common-card" style="margin-bottom: 24px; text-align: center;">
+      <h2 style="font-size: 1.25rem; font-weight: 700; color: #0284c7;">Hồ sơ thành lập công ty cổ phần</h2>
+    </div>
   <section v-show="placeholdersCommon.length" class="card common-card">
     <h3 class="title-form">Thông Tin Chung Của Các File</h3>
     <form>
@@ -156,6 +158,7 @@
     <button @click="resetAll()" class="btn-refesh">Làm Mới</button>
     <button :disabled="updating" @click="applyChanges()" class="btn-primary">{{ updating ? 'Đang Tạo File...' : 'Tạo File Mới' }}</button>
   </section>
+  </template>
 </div>
 </template>
 <script>
@@ -220,21 +223,29 @@ export default {
       nnmm: false,
       nnbbth: false,
       userInfoForm: [],
-
-
-      // tokenClient: null,
+      pageLoading: true,
+      pageError: null,
     };
   },
 
-  mounted() {
-    
-  },
-  async created() {
-    await this.initGapi();
-    await this.initAuth();
-    await this.getFile();
+  async mounted() {
+    await this.loadData();
   },
   methods: {
+    async loadData() {
+      this.pageLoading = true;
+      this.pageError = null;
+      try {
+        await this.initGapi();
+        await this.initAuth();
+        await this.getFile();
+      } catch (err) {
+        console.error(err);
+        this.pageError = err?.message || 'Lỗi khi kết nối hoặc tải dữ liệu từ Google Drive';
+      } finally {
+        this.pageLoading = false;
+      }
+    },
     formatLabel(ph, type) {
       if (!ph) return ''
       let s = String(ph)
@@ -362,9 +373,11 @@ export default {
           autofillLoginPlaceholders(this.formValues5, currentUser);
         }
       } catch (error) {
-        alert("Lỗi khi tải hoặc phân tích file: " + error.message);
+        console.error("Lỗi khi tải hoặc phân tích file:", error);
+        this.pageError = error.message;
+        throw error;
       } finally {
-        loading.style.display = "none";
+        if (loading) loading.style.display = "none";
       }
     },
     async getPlaceholdersFromDoc(link) {

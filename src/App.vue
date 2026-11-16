@@ -122,7 +122,7 @@
           <UserMenu />
         </nav>
       </header>
-      <router-view /> <!-- Nơi render page -->
+      <router-view :key="$route.fullPath" /> <!-- Nơi render page -->
       <footer v-if="user" class="app-footer">
         <span>© {{ year }} Tool Update Word — Thiết kế &amp; phát triển bởi <strong>Đoàn Minh Đức (Liam)</strong></span>
         <span class="app-footer-links">

@@ -1,8 +1,10 @@
 <template>
   <div class="editor">
-    <div class="card common-card" style="margin-bottom: 24px; text-align: center;">
-      <h2 style="font-size: 1.25rem; font-weight: 700; color: #0284c7;">Hồ sơ cập nhật CSH hưởng lợi, địa chỉ công ty, địa chỉ đại diện PL</h2>
-    </div>
+    <PageLoader v-if="pageLoading" title="Đang tải hồ sơ Cập nhật CSH hưởng lợi, địa chỉ cty, đại diện PL..." :error="pageError" @retry="loadData" />
+    <template v-else>
+      <div class="card common-card" style="margin-bottom: 24px; text-align: center;">
+        <h2 style="font-size: 1.25rem; font-weight: 700; color: #0284c7;">Hồ sơ cập nhật CSH hưởng lợi, địa chỉ công ty, địa chỉ đại diện PL</h2>
+      </div>
 
     <!-- KHỐI 1: THÔNG TIN CÔNG TY -->
     <section v-show="companyPlaceholders.length" class="card common-card">
@@ -127,6 +129,7 @@
         {{ updating ? 'Đang Tạo File...' : 'Tạo File Mới' }}
       </button>
     </section>
+    </template>
   </div>
 </template>
 
@@ -187,6 +190,8 @@ export default {
       authorizedPersonValues: {},
 
       updating: false,
+      pageLoading: true,
+      pageError: null,
     };
   },
 
@@ -201,11 +206,23 @@ export default {
   },
 
   async mounted() {
-    await this.initGapi();
-    await this.initAuth();
-    await this.getFile();
+    await this.loadData();
   },
   methods: {
+    async loadData() {
+      this.pageLoading = true;
+      this.pageError = null;
+      try {
+        await this.initGapi();
+        await this.initAuth();
+        await this.getFile();
+      } catch (err) {
+        console.error(err);
+        this.pageError = err?.message || 'Lỗi khi kết nối hoặc tải dữ liệu từ Google Drive';
+      } finally {
+        this.pageLoading = false;
+      }
+    },
     async initGapi() {
       await new Promise((resolve) => {
         gapi.load("client", resolve);
@@ -425,7 +442,9 @@ export default {
           this.files.forEach(f => autofillLoginPlaceholders(f.formValues, currentUser));
         }
       } catch (error) {
-        alert("Lỗi khi tải hoặc phân tích file: " + error.message);
+        console.error("Lỗi khi tải hoặc phân tích file:", error);
+        this.pageError = error.message;
+        throw error;
       } finally {
         if (loading) loading.style.display = "none";
       }

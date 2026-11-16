@@ -1,6 +1,7 @@
 <template>
   <div class="admin-page">
-    <div class="card admin-card">
+    <PageLoader v-if="initialLoading" title="Đang tải dữ liệu quản lý người dùng..." />
+    <div v-else class="card admin-card">
       <div class="card-head admin-head">
         <div>
           <h2>👑 Quản lý người dùng</h2>
@@ -286,6 +287,7 @@ export default {
       users: [],
       stats: null,
       loading: false,
+      initialLoading: true,
       error: '',
       searchTimer: null,
       filters: {
@@ -391,6 +393,7 @@ export default {
         this.error = err?.response?.data?.error || err?.message || 'Không thể tải danh sách người dùng'
       } finally {
         this.loading = false
+        this.initialLoading = false
       }
     },
     onSearchInput() {

@@ -1,58 +1,62 @@
 <template>
   <div class="editor profile-page">
-    <div class="card common-card" style="margin-bottom: 24px; text-align: center;">
-      <h2 style="font-size: 1.25rem; font-weight: 700; color: #0284c7;">Thông Tin Người Được Ủy Quyền</h2>
-      <p class="profile-desc">
-        Thông tin này sẽ tự động điền vào các chức năng tạo hồ sơ (Login_*), bạn không cần nhập lại mỗi lần.
-      </p>
-    </div>
+    <PageLoader v-if="pageLoading" title="Đang tải thông tin người được ủy quyền..." />
+    <template v-else>
+      <div class="card common-card" style="margin-bottom: 24px; text-align: center;">
+        <h2 style="font-size: 1.25rem; font-weight: 700; color: #0284c7;">Thông Tin Người Được Ủy Quyền</h2>
+        <p class="profile-desc">
+          Thông tin này sẽ tự động điền vào các chức năng tạo hồ sơ, bạn không cần nhập lại mỗi lần.
+        </p>
+      </div>
 
-    <section class="card common-card">
-      <form @submit.prevent="save">
-        <div class="form-group">
-          <label>Họ tên Người được ủy quyền</label>
-          <input type="text" v-model="form.fullName" required>
-        </div>
-        <div class="form-group">
-          <label>Số điện thoại Người được ủy quyền</label>
-          <input type="text" v-model="form.phone" placeholder="Ví dụ: 0974255602">
-        </div>
-        <div class="form-group">
-          <label>Giới tính Người được ủy quyền</label>
-          <GenderRadio name="profile-gender" v-model="form.gender" />
-        </div>
-        <div class="form-group">
-          <label>Ngày sinh Người được ủy quyền</label>
-          <input type="text" v-model="form.birthday" placeholder="DD/MM/YYYY">
-        </div>
-        <div class="form-group">
-          <label>Số định danh Người được ủy quyền</label>
-          <input type="text" v-model="form.idNumber" placeholder="Số CCCD">
-        </div>
-        <div class="form-group">
-          <label>Tỉnh / Thành phố làm việc</label>
-          <ProvinceSelectInput
-            v-model="form.provinceCity"
-            placeholder="Tìm hoặc chọn Tỉnh / Thành phố..."
-          />
-        </div>
-        <div class="form-group">
-          <label>Địa chỉ Người được ủy quyền</label>
-          <input type="text" v-model="form.address" placeholder="Số nhà, đường, phường/xã, tỉnh/TP">
-        </div>
-        <div class="form-group">
-          <label>Email (không thể thay đổi)</label>
-          <input type="text" :value="auth.state.user?.email || ''" disabled>
-        </div>
+      <section class="card common-card">
+        <form id="profile-form" @submit.prevent="save">
+          <div class="form-group">
+            <label>Họ tên Người được ủy quyền</label>
+            <input type="text" v-model="form.fullName" required>
+          </div>
+          <div class="form-group">
+            <label>Số điện thoại Người được ủy quyền</label>
+            <input type="text" v-model="form.phone" placeholder="Ví dụ: 0974255602">
+          </div>
+          <div class="form-group">
+            <label>Giới tính Người được ủy quyền</label>
+            <GenderRadio name="profile-gender" v-model="form.gender" />
+          </div>
+          <div class="form-group">
+            <label>Ngày sinh Người được ủy quyền</label>
+            <input type="text" v-model="form.birthday" placeholder="DD/MM/YYYY">
+          </div>
+          <div class="form-group">
+            <label>Số định danh Người được ủy quyền</label>
+            <input type="text" v-model="form.idNumber" placeholder="Số CCCD">
+          </div>
+          <div class="form-group">
+            <label>Tỉnh / Thành phố làm việc</label>
+            <ProvinceSelectInput
+              v-model="form.provinceCity"
+              placeholder="Tìm hoặc chọn Tỉnh / Thành phố..."
+            />
+          </div>
+          <div class="form-group">
+            <label>Địa chỉ Người được ủy quyền</label>
+            <input type="text" v-model="form.address" placeholder="Số nhà, đường, phường/xã, tỉnh/TP">
+          </div>
+          <div class="form-group">
+            <label>Email (không thể thay đổi)</label>
+            <input type="text" :value="auth.state.user?.email || ''" disabled>
+          </div>
+        </form>
+      </section>
 
-        <div class="btn-group">
-          <button type="button" @click="reload" class="btn-refesh">Hoàn Tác</button>
-          <button type="submit" :disabled="saving" class="btn-primary">
-            {{ saving ? 'Đang Lưu...' : 'Lưu Thông Tin' }}
-          </button>
-        </div>
-      </form>
-    </section>
+      <!-- Nhóm nút bấm đưa ra ngoài card, canh sát lề phải layout -->
+      <section class="btn-group">
+        <button type="button" @click="reload" class="btn-refesh">Hoàn Tác</button>
+        <button type="submit" form="profile-form" @click="save" :disabled="saving" class="btn-primary">
+          {{ saving ? 'Đang Lưu...' : 'Lưu Thông Tin' }}
+        </button>
+      </section>
+    </template>
   </div>
 </template>
 
@@ -69,6 +73,7 @@ export default {
     const u = auth.state.user || {};
     return {
       auth,
+      pageLoading: !auth.state.ready,
       saving: false,
       form: {
         fullName: u.fullName || '',
@@ -80,6 +85,13 @@ export default {
         address: u.address || '',
       },
     };
+  },
+  async mounted() {
+    if (!this.auth.state.ready) {
+      await this.auth.init();
+    }
+    this.fillFromUser();
+    this.pageLoading = false;
   },
   methods: {
     fillFromUser() {
