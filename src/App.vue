@@ -123,6 +123,14 @@
         </nav>
       </header>
       <router-view /> <!-- Nơi render page -->
+      <footer v-if="user" class="app-footer">
+        <span>© {{ year }} Tool Update Word — Thiết kế &amp; phát triển bởi <strong>Đoàn Minh Đức (Liam)</strong></span>
+        <span class="app-footer-links">
+          <a href="mailto:ducdm.atech@gmail.com">ducdm.atech@gmail.com</a>
+          <span class="app-footer-sep">|</span>
+          <a href="tel:0974255602">Hotline: 0974255602</a>
+        </span>
+      </footer>
       <!-- <HelloWorld msg="You did it!" /> -->
     </div>
 </template>
@@ -152,6 +160,7 @@ export default {
       isCshOpen: false,
       auth: useAuth(),
       touchTimer: null,
+      year: new Date().getFullYear(),
     }
   },
   computed: {
@@ -309,3 +318,33 @@ export default {
 }
 </script>
 
+
+<style scoped>
+.app-footer {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 0.5rem 1.5rem;
+  padding: 1rem;
+  margin-top: 2rem;
+  border-top: 1px solid #e2e8f0;
+  font-size: 13px;
+  color: #64748b;
+  background: #f8fafc;
+}
+.app-footer strong {
+  color: #0284c7;
+}
+.app-footer-links a {
+  color: #0369a1;
+  text-decoration: none;
+  font-weight: 600;
+}
+.app-footer-links a:hover {
+  text-decoration: underline;
+}
+.app-footer-sep {
+  margin: 0 0.5rem;
+  color: #cbd5e1;
+}
+</style>
