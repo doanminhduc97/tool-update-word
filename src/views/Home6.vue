@@ -82,7 +82,7 @@ const API_KEY = "AIzaSyA1_t274mJWSiJ--Fosg0bVxylPX1AV4Tw";
 const SCOPES = "https://www.googleapis.com/auth/drive.readonly";
 import PizZip from 'pizzip';
 import Docxtemplater from 'docxtemplater';
-import { deductExportFee } from '@/services/wallet';
+import { checkExportBalance, deductExportFee } from '@/services/wallet';
 import { useAuth } from '@/stores/auth';
 import { autofillLoginPlaceholders } from '@/lib/loginPlaceholders';
 import { enforceTimesNewRoman } from '@/lib/fontHelper';
@@ -421,7 +421,7 @@ export default {
       this.updating = true;
 
       try {
-        await deductExportFee('HĐCN và BBTL');
+        await checkExportBalance();
         const buffers = await Promise.all(
           this.files.map(f => this.fetchDocxBuffer(this.extractDocId(f.link)))
         );
@@ -446,6 +446,7 @@ export default {
           a.download = `${this.files[i].name}.docx`;
           a.click();
         });
+        await deductExportFee('HĐCN và BBTL');
       } catch (error) {
         alert("Lỗi khi tạo file: " + error.message);
       } finally {

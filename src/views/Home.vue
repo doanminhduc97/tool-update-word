@@ -122,7 +122,7 @@ import giaoDuc from '@/data/giaoDuc.json'
 import mayMac from '@/data/mayMac.json'
 import nganhNgheTongHop from '@/data/nganhNgheTongHop.json'
 import xayDung from '@/data/xayDung'
-import { deductExportFee } from '@/services/wallet'
+import { checkExportBalance, deductExportFee } from '@/services/wallet'
 import { useAuth } from '@/stores/auth'
 import { autofillLoginPlaceholders } from '@/lib/loginPlaceholders'
 import { enforceTimesNewRoman } from '@/lib/fontHelper'
@@ -376,7 +376,7 @@ export default {
       // if (!this.placeholders.length) return;
       this.updating = true;
       try {
-        await deductExportFee('Đăng ký kinh doanh 1 thành viên');
+        await checkExportBalance();
         // Lấy lại file gốc (đảm bảo không dùng file đã bị thay đổi)
         // extract fileId
         const ids = [
@@ -458,6 +458,7 @@ export default {
           // (Tùy chọn) mở hộp thoại Save As ngay lập tức
           // saveAs(item.data, item.name + '.docx');
         })
+        await deductExportFee('Đăng ký kinh doanh 1 thành viên');
         // this.resetAll();
       } catch (error) {
         alert("không thể tạo file: " + error.message);

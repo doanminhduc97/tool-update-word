@@ -61,13 +61,14 @@
               <th>Trạng thái</th>
               <th class="text-right">Số dư</th>
               <th class="text-right">Đã nạp</th>
+              <th class="text-center">Đã tạo hồ sơ</th>
               <th>Đăng nhập cuối</th>
               <th>Hành động</th>
             </tr>
           </thead>
           <tbody>
             <tr v-if="!loading && users.length === 0">
-              <td colspan="8" class="empty-cell">Không có người dùng nào phù hợp.</td>
+              <td colspan="9" class="empty-cell">Không có người dùng nào phù hợp.</td>
             </tr>
             <tr v-for="u in users" :key="u.id">
               <td>
@@ -86,6 +87,13 @@
               <td><span class="status-badge" :class="'status-' + (u.status || 'active').toLowerCase()">{{ u.status }}</span></td>
               <td class="text-right"><strong class="text-green">{{ formatMoney(u.balance) }}</strong></td>
               <td class="text-right">{{ formatMoney(u.totalDeposited) }}</td>
+              <td class="text-center">
+                <div class="export-stat-cell">
+                  <span class="export-count-badge">{{ u.exportCount || 0 }} lần</span>
+                  <span class="sub-text" v-if="u.lastExportAt">{{ formatDate(u.lastExportAt) }}</span>
+                  <span class="sub-text text-muted" v-else>Chưa tạo</span>
+                </div>
+              </td>
               <td class="sub-text">{{ formatDate(u.lastLoginAt) }}</td>
               <td>
                 <div class="action-buttons">
@@ -569,11 +577,29 @@ export default {
   color: #777;
   font-size: 12px;
 }
+.text-center {
+  text-align: center !important;
+}
 .text-right {
   text-align: right !important;
 }
 .text-green {
   color: #0a8f3c;
+}
+.export-stat-cell {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+}
+.export-count-badge {
+  display: inline-block;
+  padding: 2px 8px;
+  background-color: #e0f2fe;
+  color: #0369a1;
+  font-weight: 600;
+  font-size: 13px;
+  border-radius: 9999px;
 }
 .text-blue {
   color: #0284c7;

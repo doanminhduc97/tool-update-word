@@ -37,7 +37,7 @@ const API_KEY = "AIzaSyA1_t274mJWSiJ--Fosg0bVxylPX1AV4Tw";
 const SCOPES = "https://www.googleapis.com/auth/drive.readonly";
 import PizZip from 'pizzip';
 import Docxtemplater from  'docxtemplater';
-import { deductExportFee } from '@/services/wallet';
+import { checkExportBalance, deductExportFee } from '@/services/wallet';
 import { useAuth } from '@/stores/auth';
 import { autofillLoginPlaceholders } from '@/lib/loginPlaceholders';
 import { enforceTimesNewRoman } from '@/lib/fontHelper';
@@ -213,7 +213,7 @@ export default {
       loading.style.display = "flex";
       this.updating = true;
       try {
-        await deductExportFee('Giải thể thuế');
+        await checkExportBalance();
         const buffers = await Promise.all(
           this.files.map(f => this.fetchDocBuffer(this.extractDocId(f.link)))
         );
@@ -236,6 +236,7 @@ export default {
           link.click();
           document.body.removeChild(link);
         });
+        await deductExportFee('Giải thể thuế');
       } catch (error) {
         alert("không thể tạo file: " + error.message);
         console.log(JSON.stringify(error, null, 2));

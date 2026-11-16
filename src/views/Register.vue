@@ -90,16 +90,14 @@
             />
           </label>
 
-          <label class="auth-field">
+          <div class="auth-field">
             <span>Tỉnh / Thành phố làm việc</span>
-            <input
+            <ProvinceSelectInput
               v-model="provinceCity"
-              class="auth-input"
-              type="text"
-              placeholder="Hà Nội, TP. Hồ Chí Minh..."
+              placeholder="Tìm hoặc chọn Tỉnh / Thành phố..."
               :disabled="loading"
             />
-          </label>
+          </div>
 
           <label class="auth-field field-full">
             <span>Địa chỉ <span class="req-star">*</span></span>
