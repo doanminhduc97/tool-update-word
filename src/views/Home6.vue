@@ -348,6 +348,14 @@ export default {
         // Tự động điền các placeholder có tiền tố "Login_" từ user hiện tại
         const currentUser = useAuth().state.user;
         if (currentUser) {
+          autofillLoginPlaceholders(this.companyValues, currentUser);
+
+          autofillLoginPlaceholders(this.sellerValues, currentUser);
+
+          autofillLoginPlaceholders(this.buyerValues, currentUser);
+
+          autofillLoginPlaceholders(this.dealValues, currentUser);
+
           this.files.forEach(f => autofillLoginPlaceholders(f.formValues, currentUser));
         }
       } catch (error) {
@@ -411,6 +419,14 @@ export default {
 
       const currentUser = useAuth().state.user;
       if (currentUser) {
+        autofillLoginPlaceholders(this.companyValues, currentUser);
+
+        autofillLoginPlaceholders(this.sellerValues, currentUser);
+
+        autofillLoginPlaceholders(this.buyerValues, currentUser);
+
+        autofillLoginPlaceholders(this.dealValues, currentUser);
+
         this.files.forEach(f => autofillLoginPlaceholders(f.formValues, currentUser));
       }
     },

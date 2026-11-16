@@ -69,6 +69,7 @@ export function sortPlaceholdersWithLoginAtEnd(arr) {
 }
 
 import phongDkkdList from '@/data/phong-dkkd.json'
+import provinceList from '@/data/provinces-vn.json'
 
 function normalizeVietnamese(str) {
   if (!str) return ''
@@ -142,6 +143,56 @@ export function findBestMatchingPhongDkkd(address) {
 }
 
 /**
+ * Tìm tỉnh/thành phố khớp nhất từ chuỗi địa chỉ của người dùng
+ * @param {string} address Chuỗi địa chỉ (user.address)
+ * @returns {string} Tên đầy đủ của tỉnh/thành phố hoặc '' nếu không tìm thấy
+ */
+export function findBestMatchingProvince(address) {
+  if (!address) return ''
+  const normAddr = normalizeVietnamese(address)
+
+  // 1. Kiểm tra alias viết tắt phổ biến trước (hcm, hn, da nang, hai phong...)
+  for (const [alias, targetKey] of Object.entries(aliasProvinceMap)) {
+    const reg = new RegExp(`(^|[^a-z0-9])${alias}([^a-z0-9]|$)`)
+    if (reg.test(normAddr)) {
+      const found = provinceList.find(p => normalizeVietnamese(p) === normalizeVietnamese(targetKey))
+      if (found) return found
+    }
+  }
+
+  // 2. Tìm tên tỉnh/thành xuất hiện trong địa chỉ (ưu tiên tên dài nhất để chính xác nhất)
+  let bestMatch = ''
+  let maxLen = 0
+
+  for (const item of provinceList) {
+    const normProv = normalizeVietnamese(item)
+    if (normAddr.includes(normProv)) {
+      if (normProv.length > maxLen) {
+        maxLen = normProv.length
+        bestMatch = item
+      }
+    }
+  }
+
+  return bestMatch
+}
+
+/**
+ * Nhận diện trường là Tỉnh / Thành phố (VD: "Tỉnh công ty", "Tỉnh / Thành phố làm việc")
+ * Loại trừ các trường Phòng ĐKKD / Cơ quan ĐKKD (được xử lý riêng) và "Giới tính"
+ */
+export function isProvinceField(key) {
+  if (!key) return false
+  const raw = String(key).trim()
+  if (raw.startsWith('Login_')) return false
+  if (raw === 'Phòng ĐKKD Tỉnh/TP' || raw === 'Cơ quan đăng ký kinh doanh cấp tỉnh') return false
+  const norm = normalizeVietnamese(raw)
+  if (norm.includes('gioi tinh')) return false
+  if (norm.includes('diachi') || norm.includes('dia chi')) return false
+  return norm.includes('tinh') || norm.includes('thanh pho')
+}
+
+/**
  * Tự động điền giá trị cho form dựa trên user hiện tại
  * @param {Object} formTarget Object chứa các key placeholder (VD: formValuesCommon hoặc file.formValues)
  * @param {Object} user Thông tin user đang login
@@ -151,6 +202,8 @@ export function autofillLoginPlaceholders(formTarget, user) {
 
   // Tự động tìm Phòng ĐKKD mặc định từ địa chỉ người dùng nếu form có trường này
   const matchedDkkd = findBestMatchingPhongDkkd(user.address)
+  // Tỉnh/Thành phố làm việc của user (ưu tiên) hoặc suy ra từ địa chỉ
+  const userProvince = user.provinceCity || findBestMatchingProvince(user.address)
 
   Object.keys(formTarget).forEach((key) => {
     if (key.startsWith('Login_')) {
@@ -164,6 +217,12 @@ export function autofillLoginPlaceholders(formTarget, user) {
     ) {
       // Gán giá trị mặc định của ô input từ tỉnh thành của user, nếu không tìm thấy khớp nào thì mặc định để rỗng
       formTarget[key] = matchedDkkd || ''
+    } else if (
+      !formTarget[key] &&
+      isProvinceField(key)
+    ) {
+      // Các trường như "Tỉnh công ty" mặc định là Tỉnh/Thành phố làm việc của user
+      formTarget[key] = userProvince || ''
     }
   })
 }
