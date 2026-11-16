@@ -67,7 +67,29 @@ export default {
       this.loading = true
       try {
         const hashedPassword = await hashPasswordClient(this.password)
-        await useAuth().login(this.account, hashedPassword)
+        // Thử tối đa 2 lần: lần đầu có thể rớt do kết nối/proxy chưa sẵn sàng (backend vừa khởi động,
+        // MongoDB Atlas cold-start, Vite proxy reset socket) — tự thử lại 1 lần trước khi báo lỗi.
+        const maxAttempts = 2
+        let lastErr = null
+        for (let attempt = 1; attempt <= maxAttempts; attempt++) {
+          try {
+            await useAuth().login(this.account, hashedPassword)
+            lastErr = null
+            break
+          } catch (err) {
+            lastErr = err
+            const status = err?.response?.status
+            // Chỉ tự thử lại khi là lỗi kết nối/máy chủ (network, timeout, 5xx) —
+            // 401/400/403 là do sai thông tin, không thử lại.
+            const isTransient = !err.response || status >= 500 || err.code === 'ECONNABORTED'
+            if (attempt < maxAttempts && isTransient) {
+              await new Promise((r) => setTimeout(r, 500))
+              continue
+            }
+            break
+          }
+        }
+        if (lastErr) throw lastErr
         const redirect = this.$route.query.redirect
         const target = typeof redirect === 'string' && redirect.startsWith('/') ? redirect : '/'
         this.$router.replace(target)

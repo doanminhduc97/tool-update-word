@@ -110,8 +110,8 @@ async function logout() {
   notify()
 }
 
-async function updateProfile(fullName) {
-  const { data } = await http.patch('/auth/me', { fullName })
+async function updateProfile(payload) {
+  const { data } = await http.patch('/auth/me', payload)
   state.user = data.user
   notify()
   return data.user

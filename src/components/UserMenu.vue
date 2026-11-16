@@ -43,6 +43,10 @@
         </button>
       </div>
 
+      <a class="user-menu-item" @click="goProfile">
+        <span class="admin-icon">👤</span>
+        <span>Thông tin Người được ủy quyền</span>
+      </a>
       <a v-if="user?.role === 'ADMIN_SYSTEM'" class="user-menu-item admin-item" @click="goAdminUsers">
         <span class="admin-icon">👑</span>
         <span>Quản lý người dùng</span>
@@ -136,6 +140,12 @@ export default {
       this.open = false
       if (this.$route.path !== '/admin/users') {
         this.$router.push('/admin/users')
+      }
+    },
+    goProfile() {
+      this.open = false
+      if (this.$route.path !== '/thong-tin-ca-nhan') {
+        this.$router.push('/thong-tin-ca-nhan')
       }
     },
     async doLogout() {
