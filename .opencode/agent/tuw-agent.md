@@ -54,7 +54,7 @@ Hệ thống TUW bao gồm 18 phân hệ tương ứng với 18 view chuyên bi�
      - *Khối 1: Thông tin công ty* (Tên cty, MST, Tỉnh/TP, SĐT, Email, Cơ quan ĐKKD cấp tỉnh).
      - *Khối 2: Thông tin Người đại diện PL* (Họ tên, Giới tính, Ngày sinh, CCCD, Địa chỉ).
      - *Khối 3: Danh sách CSH hưởng lợi (từ 25%)* (Dynamic form + OCR CCCD, tỷ lệ % vốn hoặc cổ phần).
-     - *Khối 4: Thông tin Người được ủy quyền* (Autofill tự động từ phiên đăng nhập `Login_*`).
+     - *Khối 4: Thông tin Người được ủy quyền* (Autofill tự động từ phiên đăng nhập).
    - **Bộ lọc CSHHL**: Áp dụng `filterCshHuongLoiList(listUser, 'auto')` loại bỏ các thành viên có tỷ lệ sở hữu < 25%.
 5. **Cập nhật CSH hưởng lợi, địa chỉ cty, địa chỉ đại diện PL** (`Home18.vue` - `/csh-dia-chi`):
    - **Biểu mẫu Word**: `1. Giấy đề nghị đăng ký thay đổi nội dung ĐKDN`, `2. DANH SÁCH CHỦ SỞ HỮU HƯỞNG LỢI CỦA DOANH NGHIỆP`, `3. Giấy ủy quyền`.
@@ -160,6 +160,19 @@ Hệ thống TUW bao gồm 18 phân hệ tương ứng với 18 view chuyên bi�
   $$\text{Số dư sau nạp} = \text{Số dư hiện tại} + \text{Số tiền nạp thêm}$$
 - Cung cấp các chip nạp nhanh (+20.000đ, +50.000đ, +100.000đ, +200.000đ, +500.000đ), tránh nhầm lẫn giữa nạp cộng dồn và gán số dư cố định.
 
+### G. Quy chuẩn Render đồng bộ & Loading độc lập (`PageLoader.vue`)
+- Mọi trang hồ sơ (`Home.vue` $\rightarrow$ `Home18.vue`, `Profile.vue`, `AdminUsers.vue`) đều sử dụng trạng thái `pageLoading: true`.
+- Giao diện chính của trang chỉ hiển thị (`<template v-else>`) khi toàn bộ dữ liệu API & tệp docx đã tải và bóc tách hoàn tất, triệt tiêu hoàn toàn hiện tượng layout flash/nhảy giật.
+- **Quy tắc Loading**: Tuyệt đối **không** kích hoạt `#loading-overlay` (loading toàn màn hình) trong quá trình nạp trang `getFile()`. Chỉ kích hoạt `#loading-overlay` khi người dùng bấm **Tạo File Mới** (`applyChanges`). Khi nạp trang, chỉ dùng duy nhất `PageLoader`.
+
+### H. Quy chuẩn trang Thông Tin Người Được Ủy Quyền (`Profile.vue`)
+- Không hiển thị tiền tố kỹ thuật `(Login_*)` trên tiêu đề và phần mô tả giao diện người dùng.
+- 2 nút bấm thao tác ("Hoàn Tác" và "Lưu Thông Tin") được đặt ra ngoài thẻ card và căn sát lề phải layout (`justify-content: flex-end`) để đồng bộ tuyệt đối với các trang hồ sơ.
+
+### I. Quy chuẩn Footer Copyright Cố Định (`App.vue` & `global.scss`)
+- Thanh bản quyền chân trang hiển thị cố định ở đáy màn hình (`position: fixed; bottom: 0; left: 0; right: 0; z-index: 999;`).
+- Phần thân trang (`body`) luôn có `padding-bottom: 55px;` để nội dung và các nút bấm cuối trang không bao giờ bị che khuất.
+
 ---
 
 ## 4. BẢNG PHÍ, VÍ VÀ TÍCH HỢP THANH TOÁN (PRICING & WALLET)
@@ -183,7 +196,21 @@ Hệ thống TUW bao gồm 18 phân hệ tương ứng với 18 view chuyên bi�
 1. **Nghiệp vụ pháp lý chính xác**: Luôn đối chiếu với quy định của Luật Doanh nghiệp 2020 và các biểu mẫu ban hành kèm Thông tư 01/2021/TT-BKHĐT.
 2. **Kỹ thuật Frontend (Vue 3)**:
    - Giữ nguyên cấu trúc phân khối chuẩn (Khối Cty, Khối Đại diện, Khối Thành viên/CSH, Khối Ủy quyền, Khối riêng).
-   - Tái sử dụng `PhongDkkdInput`, `ProvinceSelectInput`, `GenderRadio`, `SearchableSelectInput`.
+   - Tái sử dụng `PhongDkkdInput`, `ProvinceSelectInput`, `GenderRadio`, `SearchableSelectInput`, `PageLoader`.
 3. **Kỹ thuật Backend (Express + Prisma)**:
    - Xác thực qua JWT Cookie, kiểm tra `requiresAuth` và `requiresAdmin`.
    - Đối chiếu giao dịch ngân hàng theo `gatewayRef` tránh cộng tiền trùng lặp (idempotent webhook).
+
+---
+
+## 6. QUY TẮC BẮT BUỘC: TỰ ĐỘNG CẬP NHẬT KIẾN THỨC & ĐỒNG BỘ AGENT (MANDATORY AUTO-UPDATE PROTOCOL)
+
+**Đây là nguyên tắc bất biến của hệ thống:**
+1. **Tự động cập nhật tức thì (Self-Updating)**: Mỗi khi có bất kỳ thay đổi nào về mã nguồn, giao diện, luồng xử lý hoặc nghiệp vụ pháp lý trên project (`tool-update-word` hoặc `tool-update-word-be`), Agent **PHẢI TỰ ĐỘNG CẬP NHẬT NGAY LẬP TỨC** toàn bộ kiến thức và nghiệp vụ mới vào tài liệu đặc tả của Agent.
+2. **Đồng bộ 3 vị trí bắt buộc**:
+   - `C:\Users\ADMIN\.config\opencode\agent\tuw-agent.md` *(Cấu hình Agent Global)*
+   - `D:\PROJECT\tool-update-word\.opencode\agent\tuw-agent.md` *(Cấu hình Agent Frontend)*
+   - `D:\PROJECT\tool-update-word-be\.opencode\agent\tuw-agent.md` *(Cấu hình Agent Backend)*
+3. **Quy trình đóng gói công việc (Workflow Closure)**:
+   $$\text{Thực hiện Code} \longrightarrow \text{Test/Build} \longrightarrow \textbf{Cập nhật tuw-agent.md (3 nơi)} \longrightarrow \text{Git Commit \& Push}$$
+   *Không bao giờ kết thúc một phiên làm việc mà để kiến thức của Agent bị lỗi thời so với codebase.*
