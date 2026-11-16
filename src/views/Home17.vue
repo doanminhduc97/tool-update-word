@@ -13,6 +13,7 @@
         <div v-for="ph in companyPlaceholders" :key="'comp-' + ph" class="form-group">
           <label :for="'comp-' + ph">{{ formatLabel(ph) }}</label>
           <PhongDkkdInput v-if="ph === 'Phòng ĐKKD Tỉnh/TP' || ph === 'Cơ quan đăng ký kinh doanh cấp tỉnh'" :input-id="'comp-' + ph" v-model="companyValues[ph]" />
+          <ProvinceSelectInput v-else-if="isProvinceField(ph)" :input-id="'comp-' + ph" v-model="companyValues[ph]" />
           <GenderRadio v-else-if="isGenderField(ph)" :name="'comp-' + ph" v-model="companyValues[ph]" />
           <input v-else type="text" :id="'comp-' + ph" v-model="companyValues[ph]" required>
         </div>
@@ -25,7 +26,8 @@
       <form>
         <div v-for="ph in oldOwnerPlaceholders" :key="'old-' + ph" class="form-group">
           <label :for="'old-' + ph">{{ formatLabel(ph) }}</label>
-          <GenderRadio v-if="isGenderField(ph)" :name="'old-' + ph" v-model="oldOwnerValues[ph]" />
+          <ProvinceSelectInput v-if="isProvinceField(ph)" :input-id="'old-' + ph" v-model="oldOwnerValues[ph]" />
+          <GenderRadio v-else-if="isGenderField(ph)" :name="'old-' + ph" v-model="oldOwnerValues[ph]" />
           <input v-else type="text" :id="'old-' + ph" v-model="oldOwnerValues[ph]" required>
         </div>
       </form>
@@ -37,7 +39,8 @@
       <form>
         <div v-for="ph in newOwnerPlaceholders" :key="'new-' + ph" class="form-group">
           <label :for="'new-' + ph">{{ formatLabel(ph) }}</label>
-          <GenderRadio v-if="isGenderField(ph)" :name="'new-' + ph" v-model="newOwnerValues[ph]" />
+          <ProvinceSelectInput v-if="isProvinceField(ph)" :input-id="'new-' + ph" v-model="newOwnerValues[ph]" />
+          <GenderRadio v-else-if="isGenderField(ph)" :name="'new-' + ph" v-model="newOwnerValues[ph]" />
           <input v-else type="text" :id="'new-' + ph" v-model="newOwnerValues[ph]" required>
         </div>
       </form>
@@ -60,7 +63,8 @@
       <form>
         <div v-for="ph in authorizedPersonPlaceholders" :key="'auth-' + ph" class="form-group">
           <label :for="'auth-' + ph">{{ formatLabel(ph) }}</label>
-          <GenderRadio v-if="isGenderField(ph)" :name="'auth-' + ph" v-model="authorizedPersonValues[ph]" />
+          <ProvinceSelectInput v-if="isProvinceField(ph)" :input-id="'auth-' + ph" v-model="authorizedPersonValues[ph]" />
+          <GenderRadio v-else-if="isGenderField(ph)" :name="'auth-' + ph" v-model="authorizedPersonValues[ph]" />
           <input v-else type="text" :id="'auth-' + ph" v-model="authorizedPersonValues[ph]" required>
         </div>
       </form>
@@ -73,6 +77,7 @@
         <div v-for="ph in file.otherPlaceholders" :key="'other-' + i + '-' + ph" class="form-group">
           <label :for="'other-' + i + '-' + ph">{{ formatLabel(ph) }}</label>
           <PhongDkkdInput v-if="ph === 'Phòng ĐKKD Tỉnh/TP' || ph === 'Cơ quan đăng ký kinh doanh cấp tỉnh'" :input-id="'other-' + i + '-' + ph" v-model="file.formValues[ph]" />
+          <ProvinceSelectInput v-else-if="isProvinceField(ph)" :input-id="'other-' + i + '-' + ph" v-model="file.formValues[ph]" />
           <GenderRadio v-else-if="isGenderField(ph)" :name="'other-' + i + '-' + ph" v-model="file.formValues[ph]" />
           <input v-else type="text" :id="'other-' + i + '-' + ph" v-model="file.formValues[ph]" required>
         </div>
@@ -98,7 +103,7 @@ import PizZip from 'pizzip';
 import Docxtemplater from 'docxtemplater';
 import { checkExportBalance, deductExportFee } from '@/services/wallet';
 import { useAuth } from '@/stores/auth';
-import { autofillLoginPlaceholders } from '@/lib/loginPlaceholders';
+import { autofillLoginPlaceholders, isProvinceField } from '@/lib/loginPlaceholders';
 import { enforceTimesNewRoman } from '@/lib/fontHelper';
 import { isGenderField } from '@/lib/genderHelper';
 
@@ -244,15 +249,19 @@ export default {
     formatLabel(ph) {
       if (!ph) return '';
       const s = String(ph);
+      if (s === 'số HĐ' || s === 'số hđ') return 'Số Hợp Đồng';
       return s.startsWith('Login_') ? s.slice(6) : s;
+    },
+
+    // Nhận diện file DANH SÁCH CHỦ SỞ HỮU HƯỞNG LỢI
+    isCshListFile(file) {
+      return String(file.name || '').toUpperCase().includes('DANH SÁCH CHỦ SỞ HỮU HƯỞNG LỢI');
     },
 
     // Các field được tự động điền (mirror) từ khối khác khi render
     isAutoMappedField(ph) {
       if (!ph) return false;
       const s = String(ph).trim().toLowerCase();
-      if (s === 'họ tên csh cũ') return true;
-      if (s === 'tên công ty') return true;
       if (s === 'họ tên đại diện') return true;
       if (s.includes('bên nhận cn')) return true;
       return false;
@@ -359,6 +368,7 @@ export default {
         // 2. Khối CSH cũ (Bên chuyển nhượng)
         const oldList = allPlaceholders.filter(p => this.isOldOwnerField(p));
         const oldOrder = [
+          'họ tên csh cũ',
           'họ tên bên cn',
           'giới tính bên cn',
           'ngày sinh bên cn',
@@ -527,6 +537,8 @@ export default {
 
         // Auto-map: CSH mới = Bên nhận chuyển nhượng (Bên B) & đại diện PL mới
         const cshMoi = this.newOwnerValues || {};
+        const cshCu = this.oldOwnerValues || {};
+        const hoTenCshCu = cshCu['Họ tên CSH cũ'] || cshCu['Họ tên bên CN'] || '';
         const diaChiCshMoi = [
           cshMoi['Số nhà CSH mới'],
           cshMoi['Phường CSH mới'],
@@ -535,8 +547,9 @@ export default {
         const autoMapped = {
           // Tên công ty: template dùng cả "TÊN CÔNG TY" lẫn "Tên công ty"
           'Tên công ty': this.companyValues['TÊN CÔNG TY'] || this.companyValues['Tên công ty'] || '',
-          // CSH cũ = Bên chuyển nhượng
-          'Họ tên CSH cũ': this.oldOwnerValues['Họ tên bên CN'] || '',
+          // Đồng bộ cả 2 alias CSH cũ & Bên chuyển nhượng
+          'Họ tên CSH cũ': hoTenCshCu,
+          'Họ tên bên CN': hoTenCshCu,
           // Bên nhận chuyển nhượng = CSH mới
           'Họ tên bên nhận CN': cshMoi['Họ tên CSH mới'] || '',
           'giới tính bên nhận CN': cshMoi['giới tính CSH mới'] || '',
@@ -557,7 +570,10 @@ export default {
           ...autoMapped,
         }));
 
-        const outBlobs = docs.map((doc, i) => this.renderToBlob(doc, renderDataList[i]));
+        const outBlobs = docs.map((doc, i) => {
+          const isFileCSH = this.isCshListFile(this.files[i]);
+          return this.renderToBlob(doc, renderDataList[i], { rotateDobVertical: isFileCSH });
+        });
 
         this.files.forEach((file, i) => {
           const url = URL.createObjectURL(outBlobs[i]);
@@ -628,10 +644,63 @@ export default {
       });
     },
 
-    renderToBlob(doc, data) {
+    renderToBlob(doc, data, options = {}) {
       doc.render(data);
       enforceTimesNewRoman(doc.getZip());
-      return doc.getZip().generate({
+      const zip = doc.getZip();
+
+      // Nếu yêu cầu xoay dọc ngày sinh từ dưới lên trên (Bottom-to-Top: btLr) và căn CENTER
+      if (options.rotateDobVertical) {
+        try {
+          const docXmlFile = zip.file('word/document.xml');
+          if (docXmlFile) {
+            let xml = docXmlFile.asText();
+            // Tìm các ô bảng chứa ngày sinh dd/mm/yyyy và chèn <w:textDirection w:val="btLr"/> + căn center tuyệt đối
+            xml = xml.replace(/<w:tc[\s\S]*?<\/w:tc>/g, (tc) => {
+              const textOnly = tc.replace(/<[^>]+>/g, '').trim();
+              if (/\b\d{1,2}[/.-]\d{1,2}[/.-]\d{4}\b/.test(textOnly)) {
+                let modified = tc;
+
+                // 1. Căn giữa theo chiều dọc ô bảng (vertical alignment: center)
+                if (modified.includes('<w:vAlign')) {
+                  modified = modified.replace(/<w:vAlign[^>]*\/>/, '<w:vAlign w:val="center"/>');
+                } else if (modified.includes('<w:tcPr>')) {
+                  modified = modified.replace('<w:tcPr>', '<w:tcPr><w:vAlign w:val="center"/>');
+                }
+
+                // 2. Căn giữa đoạn văn (horizontal alignment: center)
+                if (modified.includes('<w:jc')) {
+                  modified = modified.replace(/<w:jc[^>]*\/>/, '<w:jc w:val="center"/>');
+                } else if (modified.includes('<w:pPr>')) {
+                  modified = modified.replace('<w:pPr>', '<w:pPr><w:jc w:val="center"/>');
+                }
+
+                // 3. Xóa thụt lề thừa (w:ind) có thể làm lệch vị trí center
+                modified = modified.replace(/<w:ind[^>]*\/>/g, '<w:ind w:left="0" w:right="0" w:firstLine="0"/>');
+
+                // 4. Xoay dọc từ dưới lên trên (btLr)
+                if (modified.includes('<w:textDirection')) {
+                  modified = modified.replace(/<w:textDirection[^>]*\/>/, '<w:textDirection w:val="btLr"/>');
+                } else if (modified.includes('<w:tcPr>')) {
+                  modified = modified.replace('<w:tcPr>', '<w:tcPr><w:textDirection w:val="btLr"/>');
+                } else if (modified.includes('<w:tcPr/>')) {
+                  modified = modified.replace('<w:tcPr/>', '<w:tcPr><w:textDirection w:val="btLr"/><w:vAlign w:val="center"/></w:tcPr>');
+                } else {
+                  modified = modified.replace('<w:tc>', '<w:tc><w:tcPr><w:textDirection w:val="btLr"/><w:vAlign w:val="center"/></w:tcPr>');
+                }
+
+                return modified;
+              }
+              return tc;
+            });
+            zip.file('word/document.xml', xml);
+          }
+        } catch (e) {
+          console.warn('Lỗi khi xoay dọc textDirection ngày sinh:', e);
+        }
+      }
+
+      return zip.generate({
         type: "blob",
         mimeType:
           "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
@@ -640,6 +709,10 @@ export default {
 
     isGenderField(ph) {
       return isGenderField(ph);
+    },
+
+    isProvinceField(ph) {
+      return isProvinceField(ph);
     },
 
     extractDocId(url) {

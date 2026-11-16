@@ -179,6 +179,7 @@ export default {
     formatLabel(ph) {
       if (!ph) return '';
       const s = String(ph);
+      if (s === 'số HĐ' || s === 'số hđ') return 'Số Hợp Đồng';
       return s.startsWith('Login_') ? s.slice(6) : s;
     },
 

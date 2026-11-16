@@ -634,29 +634,47 @@ export default {
 
     renderToBlob(doc, data, options = {}) {
       doc.render(data);
+      enforceTimesNewRoman(doc.getZip());
       const zip = doc.getZip();
 
-      enforceTimesNewRoman(zip);
-
-      // Căn giữa ô chứa text xoay dọc
+      // Nếu yêu cầu xoay dọc ngày sinh từ dưới lên trên (Bottom-to-Top: btLr) và căn CENTER
       if (options.rotateDobVertical) {
         try {
-          const docXml = zip.file('word/document.xml');
-          if (docXml) {
-            let xml = docXml.asText();
-            xml = xml.replace(/(<w:tc\b[\s\S]*?<\/w:tc>)/g, (tc) => {
-              if (tc.includes('<w:textDirection') || tc.includes('w:val="btLr"')) {
+          const docXmlFile = zip.file('word/document.xml');
+          if (docXmlFile) {
+            let xml = docXmlFile.asText();
+            // Tìm các ô bảng chứa ngày sinh dd/mm/yyyy và chèn <w:textDirection w:val="btLr"/> + căn center tuyệt đối
+            xml = xml.replace(/<w:tc[\s\S]*?<\/w:tc>/g, (tc) => {
+              const textOnly = tc.replace(/<[^>]+>/g, '').trim();
+              if (/\b\d{1,2}[/.-]\d{1,2}[/.-]\d{4}\b/.test(textOnly)) {
                 let modified = tc;
-                if (/<w:vAlign\b[^>]*\/>/.test(modified)) {
-                  modified = modified.replace(/<w:vAlign\b[^>]*\/>/g, '<w:vAlign w:val="center"/>');
-                } else if (modified.includes('</w:tcPr>')) {
-                  modified = modified.replace('</w:tcPr>', '<w:vAlign w:val="center"/></w:tcPr>');
+
+                // 1. Căn giữa theo chiều dọc ô bảng (vertical alignment: center)
+                if (modified.includes('<w:vAlign')) {
+                  modified = modified.replace(/<w:vAlign[^>]*\/>/, '<w:vAlign w:val="center"/>');
+                } else if (modified.includes('<w:tcPr>')) {
+                  modified = modified.replace('<w:tcPr>', '<w:tcPr><w:vAlign w:val="center"/>');
                 }
 
-                if (/<w:jc\b[^>]*\/>/.test(modified)) {
-                  modified = modified.replace(/<w:jc\b[^>]*\/>/g, '<w:jc w:val="center"/>');
-                } else if (modified.includes('</w:pPr>')) {
-                  modified = modified.replace('</w:pPr>', '<w:jc w:val="center"/></w:pPr>');
+                // 2. Căn giữa đoạn văn (horizontal alignment: center)
+                if (modified.includes('<w:jc')) {
+                  modified = modified.replace(/<w:jc[^>]*\/>/, '<w:jc w:val="center"/>');
+                } else if (modified.includes('<w:pPr>')) {
+                  modified = modified.replace('<w:pPr>', '<w:pPr><w:jc w:val="center"/>');
+                }
+
+                // 3. Xóa thụt lề thừa (w:ind) có thể làm lệch vị trí center
+                modified = modified.replace(/<w:ind[^>]*\/>/g, '<w:ind w:left="0" w:right="0" w:firstLine="0"/>');
+
+                // 4. Xoay dọc từ dưới lên trên (btLr)
+                if (modified.includes('<w:textDirection')) {
+                  modified = modified.replace(/<w:textDirection[^>]*\/>/, '<w:textDirection w:val="btLr"/>');
+                } else if (modified.includes('<w:tcPr>')) {
+                  modified = modified.replace('<w:tcPr>', '<w:tcPr><w:textDirection w:val="btLr"/>');
+                } else if (modified.includes('<w:tcPr/>')) {
+                  modified = modified.replace('<w:tcPr/>', '<w:tcPr><w:textDirection w:val="btLr"/><w:vAlign w:val="center"/></w:tcPr>');
+                } else {
+                  modified = modified.replace('<w:tc>', '<w:tc><w:tcPr><w:textDirection w:val="btLr"/><w:vAlign w:val="center"/></w:tcPr>');
                 }
 
                 return modified;

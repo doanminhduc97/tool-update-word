@@ -139,11 +139,14 @@ Hệ thống TUW bao gồm 18 phân hệ tương ứng với 18 view chuyên bi�
 
 ### B. Quy chuẩn hiển thị Ngày sinh ô bảng Word (Vertical Text & Center Alignment)
 - Cột ngày tháng năm sinh trong bảng Word có độ rộng hẹp, chuỗi `DD/MM/YYYY` (10 ký tự) dễ bị gãy thành 3 dòng xấu.
-- **Giải pháp**: Trong `renderToBlob(doc, data, { rotateDobVertical: true })`:
-  1. `<w:textDirection w:val="btLr"/>`: Xoay chữ dọc 90 độ từ dưới lên.
-  2. `<w:vAlign w:val="center"/>`: Căn giữa ô theo chiều dọc.
-  3. `<w:jc w:val="center"/>`: Căn giữa đoạn văn bản.
-  4. `<w:ind w:left="0" w:right="0" w:firstLine="0"/>`: Triệt tiêu thụt lề biên cũ để chữ nằm ở tâm tuyệt đối.
+- **Yêu cầu kỹ thuật bất biến (Tránh lỗi giả định template có sẵn thẻ xoay)**:
+  - Tuyệt đối **không** kiểm tra điều kiện `tc.includes('<w:textDirection') || tc.includes('w:val="btLr"')` vì đa số file mẫu trên Drive là bảng trống, hoàn toàn không có sẵn thẻ xoay trong OpenXML.
+  - Phải dùng regex nhận diện ô bảng chứa ngày sinh (`/\b\d{1,2}[/.-]\d{1,2}[/.-]\d{4}\b/.test(textOnly)`) và **chủ động chèn/thay thế** đầy đủ các thẻ:
+    1. `<w:textDirection w:val="btLr"/>`: Xoay chữ dọc 90 độ từ dưới lên (Bottom-to-Top).
+    2. `<w:vAlign w:val="center"/>`: Căn giữa ô theo chiều dọc.
+    3. `<w:jc w:val="center"/>`: Căn giữa đoạn văn bản.
+    4. `<w:ind w:left="0" w:right="0" w:firstLine="0"/>`: Triệt tiêu thụt lề biên cũ để chữ nằm ở tâm tuyệt đối.
+  - Áp dụng đồng bộ trên toàn bộ các view có xuất file CSH hưởng lợi (`Home.vue`, `Home2.vue`, `Home3.vue`, `Home5.vue`, `Home12.vue`, `Home13.vue`, `Home17.vue`, `Home18.vue`).
 
 ### C. Cưỡng chế Font chữ Times New Roman toàn diện (`src/lib/fontHelper.js`)
 - Mọi thao tác xuất file đều gọi `enforceTimesNewRoman(doc.getZip())`.
