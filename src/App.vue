@@ -60,7 +60,6 @@
               </a>
               <a class="dropdown-item" :class="{ 'active': isActiveMenu('/csh-dia-chi') }" @click="selectCsh('/csh-dia-chi')">
                 2. Cập nhật CSH hưởng lợi, địa chỉ cty, địa chỉ đại diện PL
-                <span v-if="!hasRoute('/csh-dia-chi')" class="badge-coming-soon">Sắp có</span>
               </a>
               <a class="dropdown-item" :class="{ 'active': isActiveMenu('/thay-doi-csh-1tv') }" @click="selectCsh('/thay-doi-csh-1tv')">
                 3. Thay đổi CSH, đại diện cty 1TV

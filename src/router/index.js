@@ -18,6 +18,7 @@ import Home14 from '@/views/Home14.vue'
 import Home15 from '@/views/Home15.vue'
 import Home16 from '@/views/Home16.vue'
 import Home17 from '@/views/Home17.vue'
+import Home18 from '@/views/Home18.vue'
 import { useAuth } from '@/stores/auth'
 
 const routes = [
@@ -46,6 +47,7 @@ const routes = [
   { path: '/giam-von-cp', component: Home16, meta: { requiresAuth: true } },
   { path: '/giai-the-thue', component: Home8, meta: { requiresAuth: true } },
   { path: '/csh-huong-loi', component: Home5, meta: { requiresAuth: true } },
+  { path: '/csh-dia-chi', component: Home18, meta: { requiresAuth: true } },
   { path: '/thay-doi-csh-1tv', component: Home17, meta: { requiresAuth: true } },
   { path: '/hdcn-bbtl', component: Home6, meta: { requiresAuth: true } },
   // Tạm ngừng công ty
