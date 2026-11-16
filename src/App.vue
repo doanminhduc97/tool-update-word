@@ -64,7 +64,6 @@
               </a>
               <a class="dropdown-item" :class="{ 'active': isActiveMenu('/thay-doi-csh-1tv') }" @click="selectCsh('/thay-doi-csh-1tv')">
                 3. Thay đổi CSH, đại diện cty 1TV
-                <span v-if="!hasRoute('/thay-doi-csh-1tv')" class="badge-coming-soon">Sắp có</span>
               </a>
             </div>
           </div>
