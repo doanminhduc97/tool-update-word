@@ -1,12 +1,15 @@
 <template>
-    <!-- <img alt="Vue logo" class="logo" src="./assets/logo.svg" width="125" height="125" /> -->
-
     <div>
       <div id="loading-overlay">
         <div class="spinner"></div>
       </div>
       <header v-if="user">
         <nav>
+          <!-- Brand Logo TUW -->
+          <router-link to="/" class="nav-brand-btn" title="Hệ Thống Tool Update Word (TUW)">
+            <TuwLogo :size="32" :showText="true" theme="light" />
+          </router-link>
+
           <!-- Dropdown Thành lập mới -->
           <div class="dropdown-menu-container" :class="{ 'open': isThanhLapMoiOpen }" ref="thanhLapMoiRef">
             <a class="btn-menu dropdown-toggle" :class="{ 'active': isThanhLapMoiActive }" @click="toggleThanhLapMoi">
@@ -131,25 +134,17 @@
           <a href="tel:0974255602">Hotline: 0974255602</a>
         </span>
       </footer>
-      <!-- <HelloWorld msg="You did it!" /> -->
     </div>
 </template>
 <script>
 // import axios from 'axios'
 import UserMenu from '@/components/UserMenu.vue'
+import TuwLogo from '@/components/TuwLogo.vue'
 import { useAuth } from '@/stores/auth'
 import { touchSession } from '@/lib/http'
 
 export default {
-  components: { UserMenu },
-  //  async created() {
-  //   const url = '/api/macros/s/AKfycby4Z-N86_35u1CmHhQVA0Edz8TzQKHUFX1jJMCxTBCvB6Pcz4uFvLrXcHtBF8YOSC4E-A/exec';
-  //   axios.get(url).then(res => {
-  //     console.log(res);
-  //   }).catch(err => {
-
-  //   })
-  // },
+  components: { UserMenu, TuwLogo },
   data() {
     return {
       id: 1,
@@ -355,5 +350,21 @@ export default {
 .app-footer-sep {
   margin: 0 0.5rem;
   color: #cbd5e1;
+}
+
+/* Nav brand logo button */
+.nav-brand-btn {
+  display: inline-flex;
+  align-items: center;
+  text-decoration: none;
+  padding: 4px 10px;
+  border-radius: 8px;
+  transition: all 0.2s;
+  margin-right: 6px;
+  flex-shrink: 0;
+}
+.nav-brand-btn:hover {
+  background: #f1f5f9;
+  transform: translateY(-1px);
 }
 </style>

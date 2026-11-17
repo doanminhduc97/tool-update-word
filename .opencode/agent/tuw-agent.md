@@ -29,6 +29,9 @@ Hệ thống **TUW** giải quyết bài toán tự động hóa hoàn toàn quy
 4. **Bảo mật phiên đăng nhập & Tự động điều hướng**:
    - Cơ chế Sliding Refresh Token trong Cookie HttpOnly.
    - Khi token hết hạn (`401 Unauthorized`), hệ thống tự động lưu URL hiện tại và điều hướng về `/login?redirect=...` để người dùng đăng nhập lại mà không mất công việc đang dở dang.
+5. **Quy tắc pháp lý bất khả xâm phạm về Logo & Biểu mẫu Word (Strict Legal Compliance)**:
+   - Logo thương hiệu TUW (Option 1: The Legal Quill & Doc Matrix) chỉ xuất hiện trên Website (Navbar), Favicon trình duyệt, và Biểu tượng Ứng dụng.
+   - **VĨNH VIỄN TUYỆT ĐỐI KHÔNG ĐƯA LOGO, WATERMARK HAY BẤT KỲ NHÃN HIỆU NÀO VÀO CÁC FILE WORD (`.docx`) XUẤT RA**. Toàn bộ hồ sơ nộp Phòng ĐKKD - Sở Kế hoạch & Đầu tư phải giữ nguyên 100% định dạng biểu mẫu chuẩn quốc gia theo Nghị định 01/2021/NĐ-CP và Thông tư 01/2021/TT-BKHĐT, tránh mọi nguy cơ bị trả hồ sơ.
 
 ---
 

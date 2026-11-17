@@ -1,6 +1,9 @@
 <template>
   <div class="auth-page">
     <div class="auth-card">
+      <div class="auth-brand-header">
+        <TuwLogo :size="42" :showText="true" theme="light" />
+      </div>
       <h1 class="auth-title">Đăng nhập</h1>
       <p class="auth-sub">Hệ thống tạo hồ sơ pháp lý tự động</p>
 
@@ -47,8 +50,10 @@
 <script>
 import { useAuth } from '@/stores/auth'
 import { hashPasswordClient } from '@/lib/crypto'
+import TuwLogo from '@/components/TuwLogo.vue'
 
 export default {
+  components: { TuwLogo },
   data() {
     return {
       account: '',
@@ -102,3 +107,11 @@ export default {
   },
 }
 </script>
+
+<style scoped>
+.auth-brand-header {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 20px;
+}
+</style>

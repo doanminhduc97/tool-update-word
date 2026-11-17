@@ -1,0 +1,44 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" fill="none">
+  <defs>
+    <linearGradient id="opt1-doc-grad" x1="15" y1="10" x2="85" y2="90" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#1E3A8A" />
+      <stop offset="100%" stop-color="#0284C7" />
+    </linearGradient>
+    <linearGradient id="opt1-fold-grad" x1="58" y1="12" x2="82" y2="36" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#38BDF8" />
+      <stop offset="100%" stop-color="#0284C7" />
+    </linearGradient>
+    <linearGradient id="opt1-quill-grad" x1="30" y1="35" x2="70" y2="85" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#10B981" />
+      <stop offset="100%" stop-color="#047857" />
+    </linearGradient>
+  </defs>
+
+  <!-- Document Body with Folded Top-Right Corner -->
+  <path
+    d="M22 14C22 10.6863 24.6863 8 28 8H60L82 30V86C82 89.3137 79.3137 92 76 92H28C24.6863 92 22 89.3137 22 86V14Z"
+    fill="url(#opt1-doc-grad)"
+  />
+
+  <!-- Folded Corner Sheet -->
+  <path
+    d="M60 8V24C60 27.3137 62.6863 30 66 30H82L60 8Z"
+    fill="url(#opt1-fold-grad)"
+    opacity="0.95"
+  />
+
+  <!-- Document Grid Lines -->
+  <rect x="32" y="24" width="20" height="3" rx="1.5" fill="#BAE6FD" opacity="0.8" />
+  <rect x="32" y="32" width="14" height="3" rx="1.5" fill="#BAE6FD" opacity="0.6" />
+
+  <!-- Stylized "W" & Quill Pen Intersection -->
+  <!-- Left stem of W -->
+  <path d="M32 46L40 76H46L39 46H32Z" fill="#FFFFFF" />
+  <!-- Middle V of W -->
+  <path d="M44 56L51 76H56L63 46H57L53.5 65L48 46H42L45 56" fill="#E0F2FE" />
+  <!-- Right Quill Pen Nib -->
+  <path d="M58 44L68 76H74L79 44H71L68 58L65 44H58Z" fill="url(#opt1-quill-grad)" />
+  <!-- Pen Nib slit line and legal seal -->
+  <circle cx="68" cy="74" r="3" fill="#34D399" />
+  <circle cx="68" cy="74" r="1.5" fill="#FFFFFF" />
+</svg>
