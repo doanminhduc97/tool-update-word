@@ -33,11 +33,12 @@ nav {
   top: 0;
   left: 0;
   width: 100%;
+  box-sizing: border-box;
   display: flex;
-  gap: 12px;
+  gap: 6px;
   align-items: center;
   background: #fff;
-  padding: 10px 20px;
+  padding: 8px 16px;
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.06);
   z-index: 1000;
   flex-wrap: nowrap;
@@ -48,18 +49,19 @@ nav {
 nav a {
   color: #111827;
   text-decoration: none;
-  font-size: 14px;
+  font-size: 13.5px;
   transition: 0.2s;
   white-space: nowrap;
 }
 
 .btn-menu {
   cursor: pointer;
-  padding: 7px 12px;
-  border-radius: 8px;
+  padding: 6px 10px;
+  border-radius: 7px;
   transition: 0.2s;
   white-space: nowrap;
   flex-shrink: 0;
+  font-size: 13.5px;
 
   &:hover {
     background: #f1f5f9;
@@ -677,9 +679,10 @@ nav a {
   margin-left: auto;
   display: inline-flex;
   align-items: center;
-  gap: 10px;
+  gap: 8px;
   flex-shrink: 0;
   white-space: nowrap;
+  padding-right: 2px;
 }
 
 .wallet-badge {
@@ -808,6 +811,7 @@ nav a {
   top: calc(100% + 8px);
   right: 0;
   min-width: 260px;
+  max-width: calc(100vw - 20px);
   background: #fff;
   border: 1px solid #e5e7eb;
   border-radius: 10px;
@@ -904,5 +908,93 @@ nav a {
 @media (max-width: 900px) {
   .user-menu {
     margin-left: 0;
+  }
+}
+
+/* ---------- RESPONSIVE NAVBAR LABELS & LAPTOP COMPATIBILITY ---------- */
+.nav-label-short {
+  display: none;
+}
+
+@media (max-width: 1536px) {
+  nav {
+    gap: 5px;
+    padding: 7px 12px;
+  }
+  nav a, .btn-menu {
+    font-size: 13px;
+    padding: 5px 8px;
+  }
+  .user-menu-toggle .user-name {
+    max-width: 110px;
+  }
+}
+
+@media (max-width: 1440px) {
+  nav {
+    gap: 4px;
+    padding: 6px 10px;
+  }
+  nav a, .btn-menu {
+    font-size: 12.5px;
+    padding: 5px 7px;
+  }
+  .nav-label-long {
+    display: none;
+  }
+  .nav-label-short {
+    display: inline;
+  }
+  .user-menu {
+    gap: 6px;
+  }
+  .wallet-badge {
+    padding: 3px 6px;
+    font-size: 12px;
+    .role-tag {
+      display: none;
+    }
+  }
+  .user-menu-toggle {
+    padding: 4px 7px;
+    .user-name {
+      max-width: 85px;
+      font-size: 12.5px;
+    }
+    .user-avatar {
+      width: 24px;
+      height: 24px;
+      font-size: 12px;
+    }
+  }
+}
+
+@media (max-width: 1280px) {
+  nav {
+    gap: 3px;
+    padding: 6px 8px;
+  }
+  nav a, .btn-menu {
+    font-size: 12px;
+    padding: 4px 5px;
+  }
+  .dropdown-toggle {
+    gap: 3px;
+  }
+  .user-menu {
+    gap: 4px;
+  }
+  .wallet-badge {
+    gap: 4px;
+    padding: 2px 5px;
+    font-size: 11.5px;
+    .btn-deposit-badge {
+      padding: 2px 6px;
+      font-size: 11px;
+    }
+  }
+  .user-menu-toggle .user-name {
+    max-width: 70px;
+    font-size: 12px;
   }
 }

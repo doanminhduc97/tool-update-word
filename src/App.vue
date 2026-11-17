@@ -7,7 +7,7 @@
         <nav>
           <!-- Brand Logo TUW -->
           <router-link to="/" class="nav-brand-btn" title="Hệ Thống Tool Update Word (TUW)">
-            <TuwLogo :size="32" :showText="true" theme="light" />
+            <TuwLogo :size="28" :showText="true" theme="light" />
           </router-link>
 
           <!-- Dropdown Thành lập mới -->
@@ -54,7 +54,8 @@
           <!-- Dropdown Cập nhật / Thay đổi CSH -->
           <div class="dropdown-menu-container" :class="{ 'open': isCshOpen }" ref="cshRef">
             <a class="btn-menu dropdown-toggle" :class="{ 'active': isCshActive }" @click="toggleCsh">
-              Cập nhật/Thay đổi CSH
+              <span class="nav-label-long">Cập nhật/Thay đổi CSH</span>
+              <span class="nav-label-short">Đổi CSH</span>
               <span class="caret"></span>
             </a>
             <div v-show="isCshOpen" class="dropdown-list">
@@ -75,7 +76,8 @@
           <!-- Dropdown Tạm ngừng công ty -->
           <div class="dropdown-menu-container" :class="{ 'open': isDropdownOpen }" ref="dropdownRef">
             <a class="btn-menu dropdown-toggle" :class="{ 'active': isTamNgungActive }" @click="toggleDropdown">
-              Tạm ngừng công ty
+              <span class="nav-label-long">Tạm ngừng công ty</span>
+              <span class="nav-label-short">Tạm ngừng</span>
               <span class="caret"></span>
             </a>
             <div v-show="isDropdownOpen" class="dropdown-list">
@@ -94,7 +96,8 @@
           <!-- Dropdown Thay Đổi Vốn Điều Lệ -->
           <div class="dropdown-menu-container" :class="{ 'open': isThayDoiVonOpen }" ref="thayDoiVonRef">
             <a class="btn-menu dropdown-toggle" :class="{ 'active': isThayDoiVonActive }" @click="toggleThayDoiVon">
-              Thay Đổi Vốn Điều Lệ
+              <span class="nav-label-long">Thay Đổi Vốn Điều Lệ</span>
+              <span class="nav-label-short">Thay Đổi Vốn</span>
               <span class="caret"></span>
             </a>
             <div v-show="isThayDoiVonOpen" class="dropdown-list">
@@ -357,10 +360,10 @@ export default {
   display: inline-flex;
   align-items: center;
   text-decoration: none;
-  padding: 4px 10px;
+  padding: 3px 6px;
   border-radius: 8px;
   transition: all 0.2s;
-  margin-right: 6px;
+  margin-right: 2px;
   flex-shrink: 0;
 }
 .nav-brand-btn:hover {

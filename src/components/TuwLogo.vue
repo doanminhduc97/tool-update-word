@@ -161,6 +161,12 @@ export default {
   color: #94A3B8;
 }
 
+@media (max-width: 1440px) {
+  .brand-subtitle {
+    display: none !important;
+  }
+}
+
 .badge-dot {
   width: 6px;
   height: 6px;
