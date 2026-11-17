@@ -40,6 +40,10 @@ Hệ thống **TUW** giải quyết bài toán tự động hóa hoàn toàn quy
      - **CẤM** tự ý sửa đổi số dư ví, thông tin tài khoản người dùng, lịch sử giao dịch nạp tiền hay dữ liệu thực tế trong DB.
      - **CẤM** chạy các script seed hoặc chèn dữ liệu mẫu/rác vào DB Production này.
      - Mọi thao tác can thiệp trực tiếp vào database bắt buộc phải trình bày rõ ràng mục đích, đối tượng bản ghi và **chỉ được phép thực hiện khi người dùng phê duyệt dứt khoát**.
+7. **KỶ LUẬT GIT COMMIT & DEPLOY (STRICT GIT COMMIT/PUSH MANDATE - CRITICAL RULE)**:
+   - **TUYỆT ĐỐI KHÔNG TỰ Ý COMMIT HOẶC PUSH CODE LÊN GITHUB.**
+   - **Lý do**: Nhánh `main` của repository được kết nối trực tiếp với Vercel CI/CD (tự động kích hoạt build & redeploy lên Production mỗi khi có commit mới). Việc tự ý commit/push sẽ trigger deploy liên tục làm gián đoạn phiên làm việc, gián đoạn tải trang hoặc gây lỗi phiên của khách hàng thực tế đang sử dụng hệ thống.
+   - **CHỈ ĐƯỢC PHÉP COMMIT VÀ PUSH KHI NGƯỜI DÙNG YÊU CẦU TRỰC TIẾP**: Trong suốt quá trình phát triển, mọi công việc sửa đổi, tối ưu và kiểm thử chỉ được thực hiện ở môi trường cục bộ (local). Khi nào người dùng ra lệnh commit rõ ràng mới được phép thực hiện commit/push lên GitHub.
 
 ---
 

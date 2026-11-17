@@ -21,11 +21,10 @@
           <div class="alert-icon">⚠️</div>
           <div class="alert-text">
             <strong>LƯU Ý CỰC KỲ QUAN TRỌNG:</strong>
-            <p>
-              Quý khách vui lòng chuyển khoản <b>CHÍNH XÁC NỘI DUNG</b> theo mẫu dưới đây.
-              <br />
-              <span class="text-danger">Nếu nội dung chuyển khoản bị sai lệch hoặc thiếu, hệ thống sẽ <b>KHÔNG THỂ tự động nạp tiền</b> vào tài khoản của bạn!</span>
-            </p>
+            <p>Quý khách vui lòng chuyển khoản <b>CHÍNH XÁC NỘI DUNG</b> theo mẫu dưới đây.</p>
+            <div class="text-danger">
+              Nếu nội dung chuyển khoản bị sai lệch hoặc thiếu, hệ thống sẽ <b>KHÔNG THỂ tự động nạp tiền</b> vào tài khoản của bạn!
+            </div>
           </div>
         </div>
 
@@ -109,7 +108,7 @@ export default {
     return {
       visible: false,
       copiedField: '',
-      selectedAmount: 50000,
+      selectedAmount: 100000,
       presetAmounts: [20000, 50000, 100000, 200000, 500000],
       pollTimer: null,
       polling: false,
@@ -144,6 +143,7 @@ export default {
     async open() {
       this.visible = true
       this.copiedField = ''
+      this.selectedAmount = 100000
       // Chỉ nhận giao dịch phát sinh SAU thời điểm mở modal để tránh báo nhầm giao dịch cũ
       this.openedAt = Date.now()
       try {
@@ -240,6 +240,7 @@ export default {
   z-index: 100000;
   padding: 16px;
   overflow: hidden;
+  white-space: normal !important; /* Hủy bỏ triệt để thuộc tính white-space: nowrap kế thừa từ nav và user-menu */
 }
 
 .deposit-modal-card {
@@ -252,6 +253,9 @@ export default {
   flex-direction: column;
   overflow: hidden;
   animation: modalIn 0.2s ease-out;
+  white-space: normal !important;
+  word-break: normal;
+  overflow-wrap: break-word;
 }
 
 @keyframes modalIn {
@@ -306,7 +310,10 @@ export default {
 .modal-body {
   padding: 20px 24px;
   overflow-y: auto;
+  overflow-x: hidden; /* Ngăn chặn hoàn toàn scroll ngang */
   max-height: calc(85vh - 120px);
+  width: 100%;
+  box-sizing: border-box;
 }
 
 .status-waiting-box {
@@ -321,6 +328,10 @@ export default {
   color: #15803d;
   font-weight: 600;
   margin-bottom: 14px;
+  width: 100%;
+  box-sizing: border-box;
+  min-width: 0;
+  word-break: break-word;
 }
 
 .pulse-dot {
@@ -348,42 +359,67 @@ export default {
   background: #fffbeb;
   border: 1.5px solid #fde68a;
   border-radius: 10px;
-  padding: 14px 16px;
+  padding: 12px 16px;
   display: flex;
+  align-items: flex-start;
   gap: 12px;
   margin-bottom: 20px;
+  width: 100%;
+  box-sizing: border-box;
+  min-width: 0;
+  white-space: normal !important;
 }
 
 .alert-icon {
-  font-size: 24px;
+  font-size: 22px;
+  line-height: 1;
+  flex-shrink: 0;
+  margin-top: 2px;
 }
 
 .alert-text {
   font-size: 13.5px;
   color: #92400e;
   line-height: 1.5;
+  flex: 1;
+  min-width: 0;
+  white-space: normal !important;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
 }
 
 .alert-text strong {
   display: block;
-  font-size: 14px;
-  margin-bottom: 2px;
+  font-size: 13.5px;
+  margin-bottom: 3px;
   color: #b45309;
+  white-space: normal !important;
 }
 
 .alert-text p {
-  margin: 0;
+  margin: 0 0 4px;
+  line-height: 1.45;
+  white-space: normal !important;
 }
 
 .text-danger {
   color: #dc2626;
   font-weight: 700;
+  display: block;
+  line-height: 1.5;
+  margin-top: 4px;
+  white-space: normal !important;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
 }
 
 .deposit-layout {
   display: grid;
   grid-template-columns: 240px 1fr;
   gap: 20px;
+  width: 100%;
+  box-sizing: border-box;
+  min-width: 0;
 }
 
 .qr-pane {
@@ -457,6 +493,15 @@ export default {
 .highlight-group .info-val-row {
   background: #fef2f2;
   border: 1.5px dashed #f87171;
+}
+
+.val-highlight {
+  font-size: 13.5px;
+  color: #1e293b;
+  min-width: 0;
+  overflow-wrap: break-word;
+  word-break: break-word;
+  line-height: 1.4;
 }
 
 .val-mono {
