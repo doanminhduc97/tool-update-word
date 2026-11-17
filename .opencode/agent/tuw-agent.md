@@ -31,7 +31,7 @@ Hệ thống **TUW** giải quyết bài toán tự động hóa hoàn toàn quy
    - Khi token hết hạn (`401 Unauthorized`), hệ thống tự động lưu URL hiện tại và điều hướng về `/login?redirect=...` để người dùng đăng nhập lại mà không mất công việc đang dở dang.
 5. **Quy tắc pháp lý bất khả xâm phạm về Logo & Biểu mẫu Word (Strict Legal Compliance)**:
    - Logo thương hiệu TUW (Option 1: The Legal Quill & Doc Matrix) chỉ xuất hiện trên Website (Navbar), Favicon trình duyệt, và Biểu tượng Ứng dụng.
-   - **VĨNH VIỄN TUYỆT ĐỐI KHÔNG ĐƯA LOGO, WATERMARK HAY BẤT KỲ NHÃN HIỆU NÀO VÀO CÁC FILE WORD (`.docx`) XUẤT RA**. Toàn bộ hồ sơ nộp Phòng ĐKKD - Sở Kế hoạch & Đầu tư phải giữ nguyên 100% định dạng biểu mẫu chuẩn quốc gia theo Nghị định 01/2021/NĐ-CP và Thông tư 01/2021/TT-BKHĐT, tránh mọi nguy cơ bị trả hồ sơ.
+   - **VĨNH VIỄN TUYỆT ĐỐI KHÔNG ĐƯA LOGO, WATERMARK HAY BẤT KỲ NHÃN HIỆU NÀO VÀO CÁC FILE WORD (`.docx`) XUẤT RA**. Toàn bộ hồ sơ nộp Phòng ĐKKD - Sở Tài Chính phải giữ nguyên 100% định dạng biểu mẫu chuẩn quốc gia theo Nghị định 01/2021/NĐ-CP và Thông tư 01/2021/TT-BKHĐT, tránh mọi nguy cơ bị trả hồ sơ.
 6. **KỶ LUẬT BẢO TOÀN DỮ LIỆU DB (STRICT DATABASE INTEGRITY MANDATE - CRITICAL RULE)**:
    - ⚠️ **CẢNH BÁO MÔI TRƯỜNG (PRODUCTION ENVIRONMENT)**: Căn cứ chỉ đạo từ người dùng, toàn bộ thông tin kết nối Database hiện tại (`DATABASE_URL` trong `.env` trỏ tới MongoDB Atlas `cluster0.eijy8y7.mongodb.net/tool_update_word`) **CHÍNH LÀ MÔI TRƯỜNG PRODUCTION THỰC TẾ**. Mọi bản ghi (User, RefreshToken, Transaction nạp tiền SePay, số dư ví thật) đều là dữ liệu sống của khách hàng.
    - **TUYỆT ĐỐI KHÔNG TỰ Ý THÊM, SỬA, XÓA DỮ LIỆU TỪ DATABASE KHI CHƯA CÓ SỰ CHO PHÉP TRỰC TIẾP CỦA TÔI.**
