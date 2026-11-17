@@ -117,6 +117,20 @@ async function updateProfile(payload) {
   return data.user
 }
 
+async function refreshUser() {
+  try {
+    const { data } = await http.get('/auth/me')
+    if (data?.user) {
+      state.user = data.user
+      notify()
+      return data.user
+    }
+  } catch {
+    // bỏ qua nếu lỗi mạng tạm thời
+  }
+  return state.user
+}
+
 async function changePassword(currentPassword, newPassword) {
   await http.post('/auth/change-password', { currentPassword, newPassword })
   setAccessToken(null)
@@ -133,6 +147,7 @@ export function useAuth() {
     register,
     logout,
     updateProfile,
+    refreshUser,
     changePassword,
     onAuthChange,
   }

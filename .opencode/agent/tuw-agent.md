@@ -205,7 +205,26 @@ Hệ thống TUW bao gồm 18 phân hệ tương ứng với 18 view chuyên bi�
 
 ### I. Quy chuẩn Footer Copyright Cố Định (`App.vue` & `global.scss`)
 - Thanh bản quyền chân trang hiển thị cố định ở đáy màn hình (`position: fixed; bottom: 0; left: 0; right: 0; z-index: 999;`).
-- Phần thân trang (`body`) luôn có `padding-bottom: 55px;` để nội dung và các nút bấm cuối trang không bao giờ bị che khuất.
+- Email chính thức của tác giả hiển thị tại footer: `ducdm.aptech@gmail.com` kèm hotline: `0974255602`.
+- Phần thân trang (`body`) luôn có `padding-bottom: 55px;`, riêng trang Dashboard (`.dashboard-page`) có `padding-bottom: 100px;` để nội dung và các nút bấm cuối trang không bao giờ bị che khuất.
+
+### K. Kiến trúc Trạm Điều Hướng Trung Tâm Dashboard (`Dashboard.vue` - `/dashboard`)
+- **Vai trò**: Đóng vai trò là Mission Control trung tâm của hệ thống TUW với tiêu chí: *Siêu nhẹ (<8KB), Zero-dependency (không dùng chart nặng), Tải tức thì 0ms, Đơn giản và trực quan tuyệt đối*.
+- **3 khối chức năng tinh gọn**:
+  1. *Hero Stats Cards*: Lời chào cá nhân hóa, vai trò role badge, 3 thẻ chỉ số tức thì (Số dư ví kèm nút nạp nhanh, Tổng số lượt hồ sơ đã tạo `exportCount`, Đơn giá xuất hồ sơ theo gói tài khoản). Cả 3 thẻ đều có nút 🔄 làm mới thủ công và cơ chế auto-refresh khi user quay lại Dashboard hoặc chuyển tab browser (`window.focus`).
+  2. *Quick Launcher (Danh mục 20 Phân Hệ Nghiệp Vụ)*: Ô tìm kiếm tức thì (Instant Filter) gõ từ khóa lọc 0ms thời gian thực + 5 tab phân loại nghiệp vụ (*Thành Lập Mới, Đổi CSH / Địa Chỉ, Tăng / Giảm Vốn, Giải Thể, Tạm Ngừng*). Mỗi card thể hiện tên phân hệ, mô tả ngắn, danh sách các file `.docx` cụ thể sẽ xuất ra và nút điều hướng soạn thảo.
+  3. *Recent Activity Log*: Bảng sao kê thu nhỏ 5 biến động số dư gần nhất từ API `GET /api/wallet/transactions?limit=5` (phân biệt màu xanh `+ Nạp tiền` và màu đỏ `- Xuất hồ sơ`).
+- **Quy tắc z-index điều hướng**: Header chính trên `App.vue` mang class `app-main-header` (`z-index: 5000`) và `nav` (`z-index: 5000`), menu con `.dropdown-list` và `.user-menu-list` mang `z-index: 6000`, đảm bảo toàn bộ menu xổ xuống luôn nổi 100% lên trên bề mặt Dashboard và các trang nghiệp vụ mà không bao giờ bị che khuất.
+
+### L. Chức Năng Đổi Mật Khẩu Tại Profile (`Profile.vue` & `/api/auth/change-password`)
+- Giao diện form đổi mật khẩu đặt ngay dưới phần thông tin người được ủy quyền.
+- **Bảo mật**: Mã hóa băm SHA-256 client-side bằng Web Crypto API (`hashPasswordClient`) trước khi gửi lên API Backend.
+- Cố định chiều cao input `height: 40px !important; line-height: 38px !important; padding: 0 40px 0 12px !important;` cùng nút mắt 👁️/🙈 căn giữa tuyệt đối, triệt tiêu hoàn toàn hiện tượng nhấp nháy xô lệch giao diện khi bật/tắt xem mật khẩu.
+- Sau khi đổi mật khẩu thành công: Tự động thu hồi refresh token, hủy cookie phiên và chuyển hướng về `/login` sau 2 giây.
+
+### M. Quy chuẩn Modal Nạp Tiền VietQR (`DepositModal.vue`)
+- Số tiền nạp được đặt mặc định là **`100.000 VNĐ`** khi mở modal.
+- Bắt buộc thiết lập `white-space: normal !important; word-wrap: break-word;` cho toàn bộ các khối văn bản và cảnh báo trong modal, triệt tiêu hoàn toàn hiện tượng kế thừa `white-space: nowrap` từ Navbar gây ẩn chữ hoặc sinh thanh cuộn ngang.
 
 ---
 

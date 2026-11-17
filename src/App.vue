@@ -3,11 +3,18 @@
       <div id="loading-overlay">
         <div class="spinner"></div>
       </div>
-      <header v-if="user">
+      <header v-if="user" class="app-main-header">
         <nav>
           <!-- Brand Logo TUW -->
-          <router-link to="/" class="nav-brand-btn" title="Hệ Thống Tool Update Word (TUW)">
+          <router-link to="/dashboard" class="nav-brand-btn" title="Trang chủ Bảng Điều Khiển TUW">
             <TuwLogo :size="28" :showText="true" theme="light" />
+          </router-link>
+
+          <!-- Nút điều hướng Dashboard -->
+          <router-link to="/dashboard" class="btn-menu btn-nav-dashboard" :class="{ 'active': isActiveMenu('/dashboard') }" title="Bảng điều khiển trung tâm">
+            <span class="nav-icon-dash">📊</span>
+            <span class="nav-label-long">Bảng Điều Khiển</span>
+            <span class="nav-label-short">Dashboard</span>
           </router-link>
 
           <!-- Dropdown Thành lập mới -->
@@ -132,7 +139,7 @@
       <footer v-if="user" class="app-footer">
         <span>© {{ year }} Tool Update Word — Thiết kế &amp; phát triển bởi <strong>Đoàn Minh Đức (Liam)</strong></span>
         <span class="app-footer-links">
-          <a href="mailto:ducdm.atech@gmail.com">ducdm.atech@gmail.com</a>
+          <a href="mailto:ducdm.aptech@gmail.com">ducdm.aptech@gmail.com</a>
           <span class="app-footer-sep">|</span>
           <a href="tel:0974255602">Hotline: 0974255602</a>
         </span>
@@ -369,5 +376,29 @@ export default {
 .nav-brand-btn:hover {
   background: #f1f5f9;
   transform: translateY(-1px);
+}
+
+.btn-nav-dashboard {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  background: #f0f9ff;
+  color: #0369a1 !important;
+  font-weight: 700;
+  border: 1px solid #bae6fd;
+
+  &:hover {
+    background: #e0f2fe !important;
+  }
+
+  &.active {
+    background: #0284c7 !important;
+    color: #ffffff !important;
+    border-color: #0284c7;
+  }
+}
+
+.nav-icon-dash {
+  font-size: 14px;
 }
 </style>

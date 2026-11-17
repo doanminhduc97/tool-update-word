@@ -43,6 +43,10 @@
         </button>
       </div>
 
+      <a class="user-menu-item" @click="goDashboard">
+        <span class="admin-icon">📊</span>
+        <span>Bảng điều khiển (Dashboard)</span>
+      </a>
       <a class="user-menu-item" @click="goProfile">
         <span class="admin-icon">👤</span>
         <span>Thông tin Người được ủy quyền</span>
@@ -134,6 +138,12 @@ export default {
       this.open = false
       if (this.$refs.depositModal) {
         this.$refs.depositModal.open()
+      }
+    },
+    goDashboard() {
+      this.open = false
+      if (this.$route.path !== '/dashboard') {
+        this.$router.push('/dashboard')
       }
     },
     goAdminUsers() {

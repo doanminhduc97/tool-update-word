@@ -30,6 +30,9 @@ const routes = [
   // Admin
   { path: '/admin/users', component: () => import('@/views/AdminUsers.vue'), meta: { requiresAuth: true, requiresAdmin: true } },
 
+  // Dashboard người dùng
+  { path: '/dashboard', component: () => import('@/views/Dashboard.vue'), meta: { requiresAuth: true } },
+
   // Đăng kí kinh doanh 1 thành viên
   { path: '/', component: Home, meta: { requiresAuth: true } },
   // Đăng kí kinh doanh nhiều thành viên
