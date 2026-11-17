@@ -1,8 +1,7 @@
 <template>
   <div class="user-menu" ref="root">
-    <!-- Hiển thị nhanh số dư ví & role trên header kèm nút Nạp tiền -->
-    <div class="wallet-badge" :title="`Role: ${roleLabel} | Phí xuất: ${pricingText}`">
-      <span class="role-tag" :class="roleClass">{{ roleLabel }}</span>
+    <!-- Hiển thị nhanh số dư ví trên header kèm nút Nạp tiền (đã bỏ role tag để tối ưu chỗ cho navbar) -->
+    <div class="wallet-badge" :title="`Gói: ${roleLabel} | Phí xuất: ${pricingText}`">
       <span class="balance-amount">💰 {{ formattedBalance }}</span>
       <button type="button" class="btn-deposit-badge" @click="openDepositModal" title="Nạp tiền vào tài khoản">
         + Nạp tiền

@@ -917,7 +917,7 @@ nav a {
   display: none;
 }
 
-@media (max-width: 1536px) {
+@media (max-width: 1600px) {
   nav {
     gap: 5px;
     padding: 7px 12px;
@@ -927,7 +927,7 @@ nav a {
     padding: 5px 8px;
   }
   .user-menu-toggle .user-name {
-    max-width: 110px;
+    max-width: 100px;
   }
 }
 
@@ -937,8 +937,8 @@ nav a {
     padding: 6px 10px;
   }
   nav a, .btn-menu {
-    font-size: 12.5px;
-    padding: 5px 7px;
+    font-size: 12px;
+    padding: 4px 6px;
   }
   .nav-label-long {
     display: none;
@@ -947,25 +947,22 @@ nav a {
     display: inline;
   }
   .user-menu {
-    gap: 6px;
+    gap: 5px;
   }
   .wallet-badge {
     padding: 3px 6px;
-    font-size: 12px;
-    .role-tag {
-      display: none;
-    }
+    font-size: 11.5px;
   }
   .user-menu-toggle {
-    padding: 4px 7px;
+    padding: 3px 6px;
     .user-name {
-      max-width: 85px;
-      font-size: 12.5px;
+      max-width: 75px;
+      font-size: 12px;
     }
     .user-avatar {
-      width: 24px;
-      height: 24px;
-      font-size: 12px;
+      width: 22px;
+      height: 22px;
+      font-size: 11px;
     }
   }
 }
