@@ -52,7 +52,7 @@ Hệ thống **TUW** giải quyết bài toán tự động hóa hoàn toàn quy
 Hệ thống TUW bao gồm 18 phân hệ tương ứng với 18 view chuyên biệt:
 
 ### Nhóm 1: Thành lập doanh nghiệp mới (New Business Registration)
-1. **Đăng ký kinh doanh Công ty TNHH 1 Thành viên** (`Home.vue` - `/`):
+1. **Đăng ký kinh doanh Công ty TNHH 1 Thành viên** (`Home.vue` - `/dkkd1tv`):
    - **Biểu mẫu Word**: `Điều lệ.docx`, `GĐN đăng ký doanh nghiệp.docx`, `Giấy ủy quyền.docx`, `DANH SÁCH CHỦ SỞ HỮU HƯỞNG LỢI CỦA DOANH NGHIỆP.docx`.
    - **Nghiệp vụ**: Chủ sở hữu là 1 cá nhân hoặc 1 tổ chức; bổ nhiệm Giám đốc/Tổng giám đốc kiêm Người đại diện PL. Tích hợp thư viện 7 ngành nghề mẫu: Buôn bán tổng hợp, May mặc, Xây dựng, Buôn bán quần áo, Ngành nghề tổng hợp, Cây xanh/Cảnh quan, Giáo dục.
 2. **Đăng ký kinh doanh Công ty TNHH 2 Thành viên trở lên** (`Home2.vue` - `/dkkdntv`):

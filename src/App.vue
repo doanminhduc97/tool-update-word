@@ -24,7 +24,7 @@
               <span class="caret"></span>
             </a>
             <div v-show="isThanhLapMoiOpen" class="dropdown-list">
-              <a class="dropdown-item" :class="{ 'active': isActiveMenu('/') }" @click="selectThanhLapMoi('/', 1)">
+              <a class="dropdown-item" :class="{ 'active': isActiveMenu('/dkkd1tv') }" @click="selectThanhLapMoi('/dkkd1tv', 1)">
                 1. Đăng ký kinh doanh 1 thành viên
               </a>
               <a class="dropdown-item" :class="{ 'active': isActiveMenu('/dkkdntv') }" @click="selectThanhLapMoi('/dkkdntv', 2)">
@@ -173,7 +173,7 @@ export default {
       return this.auth.state.user;
     },
     isThanhLapMoiActive() {
-      return ['/', '/dkkdntv', '/tlctcp'].includes(this.$route.path);
+      return ['/dkkd1tv', '/dkkdntv', '/tlctcp'].includes(this.$route.path);
     },
     isGiaiTheActive() {
       return ['/gt', '/giai-the-1tv', '/giai-the-2tv', '/giai-the-co-phan', '/giai-the-thue'].includes(this.$route.path);

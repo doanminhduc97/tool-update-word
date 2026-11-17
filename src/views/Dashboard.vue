@@ -252,7 +252,7 @@ export default {
       modules: [
         {
           name: '1. Đăng ký kinh doanh 1 thành viên',
-          path: '/',
+          path: '/dkkd1tv',
           category: 'thanh-lap',
           description: 'Soạn hồ sơ thành lập mới Công ty TNHH 1 Thành viên (chủ sở hữu cá nhân/tổ chức).',
           docs: ['Điều lệ.docx', 'GĐN đăng ký doanh nghiệp.docx', 'Giấy ủy quyền.docx', 'Danh sách CSH hưởng lợi.docx'],

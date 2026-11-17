@@ -34,7 +34,8 @@ const routes = [
   { path: '/dashboard', component: () => import('@/views/Dashboard.vue'), meta: { requiresAuth: true } },
 
   // Đăng kí kinh doanh 1 thành viên
-  { path: '/', component: Home, meta: { requiresAuth: true } },
+  { path: '/dkkd1tv', component: Home, meta: { requiresAuth: true } },
+  { path: '/', redirect: '/dashboard' },
   // Đăng kí kinh doanh nhiều thành viên
   { path: '/dkkdntv', component: Home2, meta: { requiresAuth: true } },
   { path: '/tlctcp', component: Home3, meta: { requiresAuth: true } },
@@ -60,7 +61,7 @@ const routes = [
   { path: '/tam-ngung-2tv', component: Home7, props: { type: '2tv' }, meta: { requiresAuth: true } },
   { path: '/tam-ngung-cp', component: Home7, props: { type: 'cp' }, meta: { requiresAuth: true } },
 
-  { path: '/:pathMatch(.*)*', redirect: '/' } // redirect tất cả route không tồn tại về Home
+  { path: '/:pathMatch(.*)*', redirect: '/dashboard' } // redirect tất cả route không tồn tại về Dashboard
 ]
 
 const router = createRouter({
@@ -80,11 +81,11 @@ router.beforeEach(async (to) => {
   }
 
   if (to.meta.requiresAdmin && auth.state.user?.role !== 'ADMIN_SYSTEM') {
-    return { path: '/' }
+    return { path: '/dashboard' }
   }
 
   if (to.meta.public && auth.isAuthenticated.value) {
-    return { path: '/' }
+    return { path: '/dashboard' }
   }
 
   return true

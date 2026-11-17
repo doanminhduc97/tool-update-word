@@ -11,6 +11,7 @@
         <label class="auth-field">
           <span>Tài khoản hoặc Email</span>
           <input
+            ref="accountInput"
             v-model="account"
             class="auth-input"
             type="text"
@@ -23,6 +24,7 @@
         <label class="auth-field">
           <span>Mật khẩu</span>
           <input
+            ref="passwordInput"
             v-model="password"
             class="auth-input"
             type="password"
@@ -65,20 +67,32 @@ export default {
   methods: {
     async submit() {
       this.error = ''
-      if (!this.account || !this.password) {
+
+      // Đồng bộ giá trị từ DOM thật (phòng trường hợp trình duyệt tự điền autofill chưa kích hoạt input event của Vue)
+      if (this.$refs.accountInput && this.$refs.accountInput.value) {
+        this.account = this.$refs.accountInput.value
+      }
+      if (this.$refs.passwordInput && this.$refs.passwordInput.value) {
+        this.password = this.$refs.passwordInput.value
+      }
+
+      const rawAccount = (this.account || '').trim()
+      const rawPassword = this.password || ''
+
+      if (!rawAccount || !rawPassword) {
         this.error = 'Vui lòng nhập tài khoản/email và mật khẩu'
         return
       }
       this.loading = true
       try {
-        const hashedPassword = await hashPasswordClient(this.password)
+        const hashedPassword = await hashPasswordClient(rawPassword)
         // Thử tối đa 2 lần: lần đầu có thể rớt do kết nối/proxy chưa sẵn sàng (backend vừa khởi động,
         // MongoDB Atlas cold-start, Vite proxy reset socket) — tự thử lại 1 lần trước khi báo lỗi.
         const maxAttempts = 2
         let lastErr = null
         for (let attempt = 1; attempt <= maxAttempts; attempt++) {
           try {
-            await useAuth().login(this.account, hashedPassword)
+            await useAuth().login(rawAccount, hashedPassword)
             lastErr = null
             break
           } catch (err) {
@@ -96,7 +110,7 @@ export default {
         }
         if (lastErr) throw lastErr
         const redirect = this.$route.query.redirect
-        const target = typeof redirect === 'string' && redirect.startsWith('/') ? redirect : '/'
+        const target = typeof redirect === 'string' && redirect.startsWith('/') ? redirect : '/dashboard'
         this.$router.replace(target)
       } catch (err) {
         this.error = err.response?.data?.error || 'Đăng nhập thất bại, vui lòng thử lại'

@@ -222,7 +222,7 @@ export default {
           email: this.email.trim(),
           password: hashedPassword,
         })
-        this.$router.replace('/')
+        this.$router.replace('/dashboard')
       } catch (err) {
         this.error = err.response?.data?.error || 'Đăng ký thất bại, vui lòng thử lại'
       } finally {
