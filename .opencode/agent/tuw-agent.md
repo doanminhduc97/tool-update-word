@@ -228,6 +228,20 @@ Hệ thống TUW bao gồm 18 phân hệ tương ứng với 18 view chuyên bi�
 
 ---
 
+### N. Kỷ luật toàn vẹn toán tử Số học & Trường mới trong MongoDB (No Increment on Null Fields)
+- **Bối cảnh lỗi (Critical Bug):** Khi bổ sung trường mới vào Schema Prisma (như `exportCount`, `balance`, `totalDeposited`), các document cũ đã tồn tại trong MongoDB Atlas không tự động có giá trị số (lưu `null` hoặc `undefined`). Khi áp dụng toán tử tăng dồn `{ increment: 1 }` hoặc `{ increment: amount }` của Prisma, MongoDB sinh mã `$inc`. Theo chuẩn BSON của MongoDB, toán tử `$inc` khi gặp field mang giá trị `null` sẽ **bỏ qua và không thay đổi giá trị**.
+- **Hậu quả:** Người dùng thực hiện hành động (tạo hồ sơ, nạp tiền) thành công nhưng số đếm `exportCount` hoặc số dư trên database và trang quản trị `/admin/users` không hề thay đổi.
+- **Quy tắc giải pháp bất biến (Code Rule):**
+  1. Tuyệt đối **không** dùng toán tử mù `{ increment: value }` cho các trường có thể bị `null` trên bản ghi cũ.
+  2. Bắt buộc lấy giá trị hiện tại của user và tính toán rõ ràng trước khi update:
+     ```javascript
+     const nextExportCount = (user.exportCount || 0) + 1;
+     const nextBalance = (user.balance || 0) + amount;
+     ```
+  3. Gán trực tiếp giá trị đã tính toán (`exportCount: nextExportCount`, `balance: nextBalance`) vào câu lệnh `prisma.user.update`. Đảm bảo tương thích 100% với MongoDB BSON và không bao giờ bị đứng số liệu.
+
+---
+
 ## 4. BẢNG PHÍ, VÍ VÀ TÍCH HỢP THANH TOÁN (PRICING & WALLET)
 
 | Vai trò (Role) | Phí xuất 1 bộ file | Ghi chú |
