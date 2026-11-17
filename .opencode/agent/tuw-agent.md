@@ -33,10 +33,12 @@ Hệ thống **TUW** giải quyết bài toán tự động hóa hoàn toàn quy
    - Logo thương hiệu TUW (Option 1: The Legal Quill & Doc Matrix) chỉ xuất hiện trên Website (Navbar), Favicon trình duyệt, và Biểu tượng Ứng dụng.
    - **VĨNH VIỄN TUYỆT ĐỐI KHÔNG ĐƯA LOGO, WATERMARK HAY BẤT KỲ NHÃN HIỆU NÀO VÀO CÁC FILE WORD (`.docx`) XUẤT RA**. Toàn bộ hồ sơ nộp Phòng ĐKKD - Sở Kế hoạch & Đầu tư phải giữ nguyên 100% định dạng biểu mẫu chuẩn quốc gia theo Nghị định 01/2021/NĐ-CP và Thông tư 01/2021/TT-BKHĐT, tránh mọi nguy cơ bị trả hồ sơ.
 6. **KỶ LUẬT BẢO TOÀN DỮ LIỆU DB (STRICT DATABASE INTEGRITY MANDATE - CRITICAL RULE)**:
-   - **TUYỆT ĐỐI KHÔNG TỰ Ý THÊM, SỬA, XÓA DỮ LIỆU TỪ DATABASE KHI CHƯA CÓ SỰ CHO PHÉP TRỰC TIẾP CỦA NGƯỜI DÙNG.**
+   - ⚠️ **CẢNH BÁO MÔI TRƯỜNG (PRODUCTION ENVIRONMENT)**: Căn cứ chỉ đạo từ người dùng, toàn bộ thông tin kết nối Database hiện tại (`DATABASE_URL` trong `.env` trỏ tới MongoDB Atlas `cluster0.eijy8y7.mongodb.net/tool_update_word`) **CHÍNH LÀ MÔI TRƯỜNG PRODUCTION THỰC TẾ**. Mọi bản ghi (User, RefreshToken, Transaction nạp tiền SePay, số dư ví thật) đều là dữ liệu sống của khách hàng.
+   - **TUYỆT ĐỐI KHÔNG TỰ Ý THÊM, SỬA, XÓA DỮ LIỆU TỪ DATABASE KHI CHƯA CÓ SỰ CHO PHÉP TRỰC TIẾP CỦA TÔI.**
    - Trong toàn bộ quá trình phát triển (dev, debug, test, seed, chạy migration hay lệnh Prisma/MongoDB):
-     - **CẤM** tự ý chạy các lệnh xoá hoặc sửa đổi hàng loạt (`deleteMany`, `updateMany`, drop collection, drop database, truncate).
-     - **CẤM** tự ý sửa đổi số dư ví, thông tin tài khoản người dùng, lịch sử giao dịch hay dữ liệu thực tế trong DB.
+     - **CẤM** tự ý chạy các lệnh xoá hoặc sửa đổi hàng loạt (`deleteMany`, `updateMany`, drop collection, drop database, truncate, prisma migrate reset).
+     - **CẤM** tự ý sửa đổi số dư ví, thông tin tài khoản người dùng, lịch sử giao dịch nạp tiền hay dữ liệu thực tế trong DB.
+     - **CẤM** chạy các script seed hoặc chèn dữ liệu mẫu/rác vào DB Production này.
      - Mọi thao tác can thiệp trực tiếp vào database bắt buộc phải trình bày rõ ràng mục đích, đối tượng bản ghi và **chỉ được phép thực hiện khi người dùng phê duyệt dứt khoát**.
 
 ---
