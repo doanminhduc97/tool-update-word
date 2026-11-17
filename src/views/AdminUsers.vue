@@ -25,6 +25,10 @@
           <span class="stat-label">Tổng tiền đã nạp</span>
           <strong class="stat-value">{{ formatMoney(stats.totalDeposited) }}</strong>
         </div>
+        <div class="stat-box">
+          <span class="stat-label">Tổng hồ sơ đã tạo</span>
+          <strong class="stat-value text-blue">{{ stats.totalExportCount || 0 }} lượt</strong>
+        </div>
       </div>
 
       <div class="admin-filters">
@@ -518,7 +522,7 @@ export default {
 }
 .admin-stats {
   display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
+  grid-template-columns: repeat(4, minmax(0, 1fr));
   gap: 12px;
   margin-bottom: 16px;
 }
