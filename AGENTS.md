@@ -1,6 +1,6 @@
 # AGENT MANDATES & WORKFLOW PROTOCOLS FOR TOOL-UPDATE-WORD
 
-Tài liệu này chứa các chỉ thị cốt lõi và bắt buộc đối với tất cả các Agent AI (antigravity, opencode, Claude Code) khi làm việc trên dự án **TUW (Tool Update Word)**.
+Tài liệu này chứa các chỉ thị cốt lõi và bắt buộc đối với tất cả các Agent AI (antigravity, opencode, Claude Code) khi làm việc trên dự án **WUT (Word Update Tool)**.
 
 ---
 

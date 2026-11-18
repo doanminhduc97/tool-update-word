@@ -6,7 +6,7 @@
         <div class="user-greeting">
           <div class="greeting-text">
             <h2>Xin chào, <strong>{{ displayName }}</strong> 👋</h2>
-            <p class="greeting-sub">Chào mừng bạn trở lại với Hệ thống soạn thảo hồ sơ pháp lý TUW</p>
+            <p class="greeting-sub">Chào mừng bạn trở lại với Hệ thống soạn thảo hồ sơ pháp lý WUT</p>
           </div>
           <span class="role-badge" :class="roleClass">{{ roleLabel }}</span>
         </div>

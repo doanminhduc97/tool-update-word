@@ -62,10 +62,10 @@
     <!-- LOGO TYPOGRAPHY -->
     <div v-if="showText" class="tuw-text-container">
       <div class="brand-title">
-        <span class="brand-tuw">TUW</span>
+        <span class="brand-tuw">WUT</span>
         <span class="badge-dot dot-emerald"></span>
       </div>
-      <div class="brand-subtitle">{{ subtitle || 'Tool Update Word' }}</div>
+      <div class="brand-subtitle">{{ subtitle || 'Word Update Tool' }}</div>
     </div>
   </div>
 </template>
@@ -84,7 +84,7 @@ export default {
     },
     subtitle: {
       type: String,
-      default: 'Tool Update Word'
+      default: 'Word Update Tool'
     },
     theme: {
       type: String,

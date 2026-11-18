@@ -6,7 +6,7 @@
       <header v-if="user" class="app-main-header">
         <nav>
           <!-- Brand Logo TUW -->
-          <router-link to="/dashboard" class="nav-brand-btn" title="Trang chủ Bảng Điều Khiển TUW">
+          <router-link to="/dashboard" class="nav-brand-btn" title="Trang chủ Bảng Điều Khiển WUT">
             <TuwLogo :size="28" :showText="true" theme="light" />
           </router-link>
 
@@ -128,7 +128,7 @@
       </header>
       <router-view :key="$route.fullPath" /> <!-- Nơi render page -->
       <footer v-if="user" class="app-footer">
-        <span>© {{ year }} Tool Update Word — Thiết kế &amp; phát triển bởi <strong>Đoàn Minh Đức (Liam)</strong></span>
+        <span>© {{ year }} Word Update Tool — Thiết kế &amp; phát triển bởi <strong>Đoàn Minh Đức (Liam)</strong></span>
         <span class="app-footer-links">
           <a href="mailto:ducdm.aptech@gmail.com">ducdm.aptech@gmail.com</a>
           <span class="app-footer-sep">|</span>
