@@ -131,6 +131,12 @@ nav a {
     flex-direction: column;
     z-index: 6000;
 
+    .dropdown-divider {
+      height: 1px;
+      margin: 4px 0;
+      background-color: #e5e7eb;
+    }
+
     .dropdown-item {
       padding: 10px 16px;
       font-size: 14px;

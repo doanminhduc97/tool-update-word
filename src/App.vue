@@ -36,28 +36,6 @@
             </div>
           </div>
 
-          <!-- Dropdown Giải Thể -->
-          <div class="dropdown-menu-container" :class="{ 'open': isGiaiTheOpen }" ref="giaiTheRef">
-            <a class="btn-menu dropdown-toggle" :class="{ 'active': isGiaiTheActive }" @click="toggleGiaiThe">
-              Giải Thể
-              <span class="caret"></span>
-            </a>
-            <div v-show="isGiaiTheOpen" class="dropdown-list">
-              <a class="dropdown-item" :class="{ 'active': isActiveMenu('/gt') || isActiveMenu('/giai-the-1tv') }" @click="selectGiaiThe('/gt', 4)">
-                1. Giải thể 1 thành viên
-              </a>
-              <a class="dropdown-item" :class="{ 'active': isActiveMenu('/giai-the-2tv') }" @click="selectGiaiThe('/giai-the-2tv', 42)">
-                2. Giải thể 2 thành viên
-              </a>
-              <a class="dropdown-item" :class="{ 'active': isActiveMenu('/giai-the-co-phan') }" @click="selectGiaiThe('/giai-the-co-phan', 43)">
-                3. Giải thể cổ phần
-              </a>
-              <a class="dropdown-item" :class="{ 'active': isActiveMenu('/giai-the-thue') }" @click="selectGiaiThe('/giai-the-thue', 44)">
-                4. Giải thể thuế
-              </a>
-            </div>
-          </div>
-
           <!-- Dropdown Cập nhật / Thay đổi CSH -->
           <div class="dropdown-menu-container" :class="{ 'open': isCshOpen }" ref="cshRef">
             <a class="btn-menu dropdown-toggle" :class="{ 'active': isCshActive }" @click="toggleCsh">
@@ -79,26 +57,6 @@
           </div>
 
           <a class="btn-menu" :class="{ 'active': isActiveMenu('/hdcn-bbtl') }" @click="changeRoute('/hdcn-bbtl', 6)">HĐCN và BBTL</a>
-
-          <!-- Dropdown Tạm ngừng công ty -->
-          <div class="dropdown-menu-container" :class="{ 'open': isDropdownOpen }" ref="dropdownRef">
-            <a class="btn-menu dropdown-toggle" :class="{ 'active': isTamNgungActive }" @click="toggleDropdown">
-              <span class="nav-label-long">Tạm ngừng công ty</span>
-              <span class="nav-label-short">Tạm ngừng</span>
-              <span class="caret"></span>
-            </a>
-            <div v-show="isDropdownOpen" class="dropdown-list">
-              <a class="dropdown-item" :class="{ 'active': isActiveMenu('/tam-ngung-1tv') }" @click="selectTamNgung('/tam-ngung-1tv', 7)">
-                1. Tạm ngừng cty 1 thành viên
-              </a>
-              <a class="dropdown-item" :class="{ 'active': isActiveMenu('/tam-ngung-2tv') }" @click="selectTamNgung('/tam-ngung-2tv', 8)">
-                2. Tạm ngừng cty 2 thành viên
-              </a>
-              <a class="dropdown-item" :class="{ 'active': isActiveMenu('/tam-ngung-cp') }" @click="selectTamNgung('/tam-ngung-cp', 9)">
-                3. Tạm ngừng cty CỔ PHẦN
-              </a>
-            </div>
-          </div>
 
           <!-- Dropdown Thay Đổi Vốn Điều Lệ -->
           <div class="dropdown-menu-container" :class="{ 'open': isThayDoiVonOpen }" ref="thayDoiVonRef">
@@ -125,6 +83,39 @@
               </a>
               <a class="dropdown-item" :class="{ 'active': isActiveMenu('/giam-von-cp') }" @click="selectThayDoiVon('/giam-von-cp')">
                 6. Giảm Vốn Cty Cổ Phần
+              </a>
+            </div>
+          </div>
+
+          <!-- Dropdown Tạm ngừng / Giải thể -->
+          <div class="dropdown-menu-container" :class="{ 'open': isTamNgungGiaiTheOpen }" ref="tamNgungGiaiTheRef">
+            <a class="btn-menu dropdown-toggle" :class="{ 'active': isTamNgungGiaiTheActive }" @click="toggleTamNgungGiaiThe">
+              <span class="nav-label-long">Tạm ngừng / Giải thể</span>
+              <span class="nav-label-short">Tạm ngừng/Giải thể</span>
+              <span class="caret"></span>
+            </a>
+            <div v-show="isTamNgungGiaiTheOpen" class="dropdown-list">
+              <a class="dropdown-item" :class="{ 'active': isActiveMenu('/tam-ngung-1tv') }" @click="selectTamNgungGiaiThe('/tam-ngung-1tv', 7)">
+                1. Tạm ngừng cty 1 thành viên
+              </a>
+              <a class="dropdown-item" :class="{ 'active': isActiveMenu('/tam-ngung-2tv') }" @click="selectTamNgungGiaiThe('/tam-ngung-2tv', 8)">
+                2. Tạm ngừng cty 2 thành viên
+              </a>
+              <a class="dropdown-item" :class="{ 'active': isActiveMenu('/tam-ngung-cp') }" @click="selectTamNgungGiaiThe('/tam-ngung-cp', 9)">
+                3. Tạm ngừng cty CỔ PHẦN
+              </a>
+              <div class="dropdown-divider"></div>
+              <a class="dropdown-item" :class="{ 'active': isActiveMenu('/gt') || isActiveMenu('/giai-the-1tv') }" @click="selectTamNgungGiaiThe('/gt', 4)">
+                4. Giải thể 1 thành viên
+              </a>
+              <a class="dropdown-item" :class="{ 'active': isActiveMenu('/giai-the-2tv') }" @click="selectTamNgungGiaiThe('/giai-the-2tv', 42)">
+                5. Giải thể 2 thành viên
+              </a>
+              <a class="dropdown-item" :class="{ 'active': isActiveMenu('/giai-the-co-phan') }" @click="selectTamNgungGiaiThe('/giai-the-co-phan', 43)">
+                6. Giải thể cổ phần
+              </a>
+              <a class="dropdown-item" :class="{ 'active': isActiveMenu('/giai-the-thue') }" @click="selectTamNgungGiaiThe('/giai-the-thue', 44)">
+                7. Giải thể thuế
               </a>
             </div>
           </div>
@@ -158,9 +149,8 @@ export default {
   data() {
     return {
       id: 1,
-      isDropdownOpen: false,
       isThanhLapMoiOpen: false,
-      isGiaiTheOpen: false,
+      isTamNgungGiaiTheOpen: false,
       isThayDoiVonOpen: false,
       isCshOpen: false,
       auth: useAuth(),
@@ -175,11 +165,11 @@ export default {
     isThanhLapMoiActive() {
       return ['/dkkd1tv', '/dkkdntv', '/tlctcp'].includes(this.$route.path);
     },
-    isGiaiTheActive() {
-      return ['/gt', '/giai-the-1tv', '/giai-the-2tv', '/giai-the-co-phan', '/giai-the-thue'].includes(this.$route.path);
-    },
-    isTamNgungActive() {
-      return ['/tam-ngung-1tv', '/tam-ngung-2tv', '/tam-ngung-cp'].includes(this.$route.path);
+    isTamNgungGiaiTheActive() {
+      return [
+        '/tam-ngung-1tv', '/tam-ngung-2tv', '/tam-ngung-cp',
+        '/gt', '/giai-the-1tv', '/giai-the-2tv', '/giai-the-co-phan', '/giai-the-thue'
+      ].includes(this.$route.path);
     },
     isCshActive() {
       return ['/csh-huong-loi', '/csh-dia-chi', '/thay-doi-csh-1tv'].includes(this.$route.path);
@@ -212,17 +202,15 @@ export default {
     },
     changeRoute(path, id) {
       this.id = id;
-      this.isDropdownOpen = false;
+      this.isTamNgungGiaiTheOpen = false;
       this.isThanhLapMoiOpen = false;
-      this.isGiaiTheOpen = false;
       this.isThayDoiVonOpen = false;
       this.isCshOpen = false;
       this.$router.push(path);
     },
     toggleThanhLapMoi(e) {
       e.stopPropagation();
-      this.isDropdownOpen = false;
-      this.isGiaiTheOpen = false;
+      this.isTamNgungGiaiTheOpen = false;
       this.isThayDoiVonOpen = false;
       this.isCshOpen = false;
       this.isThanhLapMoiOpen = !this.isThanhLapMoiOpen;
@@ -232,25 +220,24 @@ export default {
       this.isThanhLapMoiOpen = false;
       this.$router.push(path);
     },
-    toggleGiaiThe(e) {
+    toggleTamNgungGiaiThe(e) {
       e.stopPropagation();
-      this.isDropdownOpen = false;
       this.isThanhLapMoiOpen = false;
       this.isThayDoiVonOpen = false;
       this.isCshOpen = false;
-      this.isGiaiTheOpen = !this.isGiaiTheOpen;
+      this.isTamNgungGiaiTheOpen = !this.isTamNgungGiaiTheOpen;
     },
-    selectGiaiThe(path, id) {
-      this.id = id;
-      this.isGiaiTheOpen = false;
+    selectTamNgungGiaiThe(path, id) {
+      if (id) this.id = id;
+      this.isTamNgungGiaiTheOpen = false;
       this.isThayDoiVonOpen = false;
+      this.isCshOpen = false;
       this.$router.push(path);
     },
     toggleThayDoiVon(e) {
       e.stopPropagation();
-      this.isDropdownOpen = false;
+      this.isTamNgungGiaiTheOpen = false;
       this.isThanhLapMoiOpen = false;
-      this.isGiaiTheOpen = false;
       this.isCshOpen = false;
       this.isThayDoiVonOpen = !this.isThayDoiVonOpen;
     },
@@ -260,9 +247,8 @@ export default {
     },
     toggleCsh(e) {
       e.stopPropagation();
-      this.isDropdownOpen = false;
+      this.isTamNgungGiaiTheOpen = false;
       this.isThanhLapMoiOpen = false;
-      this.isGiaiTheOpen = false;
       this.isThayDoiVonOpen = false;
       this.isCshOpen = !this.isCshOpen;
     },
@@ -285,29 +271,12 @@ export default {
     notifyComingSoon(featureName) {
       alert(`Chức năng "${featureName}" đang được chuẩn bị và sẽ sớm ra mắt!`);
     },
-    toggleDropdown(e) {
-      e.stopPropagation();
-      this.isThanhLapMoiOpen = false;
-      this.isGiaiTheOpen = false;
-      this.isThayDoiVonOpen = false;
-      this.isDropdownOpen = !this.isDropdownOpen;
-    },
-    selectTamNgung(path, id) {
-      this.id = id;
-      this.isDropdownOpen = false;
-      this.isThayDoiVonOpen = false;
-      this.isCshOpen = false;
-      this.$router.push(path);
-    },
     handleOutsideClick(e) {
-      if (this.$refs.dropdownRef && !this.$refs.dropdownRef.contains(e.target)) {
-        this.isDropdownOpen = false;
+      if (this.$refs.tamNgungGiaiTheRef && !this.$refs.tamNgungGiaiTheRef.contains(e.target)) {
+        this.isTamNgungGiaiTheOpen = false;
       }
       if (this.$refs.thanhLapMoiRef && !this.$refs.thanhLapMoiRef.contains(e.target)) {
         this.isThanhLapMoiOpen = false;
-      }
-      if (this.$refs.giaiTheRef && !this.$refs.giaiTheRef.contains(e.target)) {
-        this.isGiaiTheOpen = false;
       }
       if (this.$refs.thayDoiVonRef && !this.$refs.thayDoiVonRef.contains(e.target)) {
         this.isThayDoiVonOpen = false;
