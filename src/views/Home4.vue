@@ -54,7 +54,13 @@
           <input v-else type="text" :id="'other-' + i + '-' + ph" v-model="file.formValues[ph]" required>
         </div>
       </form>
-    </section>
+      </section>
+
+      <FileExportFormatSelector
+        v-if="hasAnyForm"
+        :files="exportFilesList"
+        v-model="exportFormats"
+      />
 
       <!-- Nhóm nút bấm -->
       <section v-if="hasAnyForm" class="btn-group">
@@ -73,6 +79,8 @@ const SCOPES = "https://www.googleapis.com/auth/drive.readonly";
 import PizZip from 'pizzip';
 import Docxtemplater from 'docxtemplater';
 import { checkExportBalance, deductExportFee } from '@/services/wallet';
+import FileExportFormatSelector from '@/components/FileExportFormatSelector.vue';
+import { exportFilesWithFormats } from '@/services/fileExportService';
 import { useAuth } from '@/stores/auth';
 import { autofillLoginPlaceholders } from '@/lib/loginPlaceholders';
 import { enforceTimesNewRoman } from '@/lib/fontHelper';
@@ -80,6 +88,9 @@ import { isGenderField } from '@/lib/genderHelper';
 
 export default {
   // Giải Thể 1 thành viên
+  components: {
+    FileExportFormatSelector,
+  },
   data() {
     const files = [
       {
@@ -110,6 +121,8 @@ export default {
     }));
     return {
       files,
+      exportFilesList: files.map(f => ({ name: f.name })),
+      exportFormats: Object.fromEntries(files.map(f => [f.name, 'docx'])),
       // 1. Khối thông tin công ty
       companyPlaceholders: [],
       companyValues: {},
@@ -417,16 +430,16 @@ export default {
 
         const outBlobs = docs.map((doc, i) => this.renderToBlob(doc, renderDataList[i]));
 
-        this.files.forEach((file, i) => {
-          const url = URL.createObjectURL(outBlobs[i]);
-          const link = document.createElement('a');
-          link.href = url;
-          link.download = file.name + ".docx";
-          document.body.appendChild(link);
-          link.click();
-          document.body.removeChild(link);
-        });
-        await deductExportFee('Giải thể 1 thành viên');
+        const fileArr = this.files.map((file, i) => ({
+          name: file.name,
+          data: outBlobs[i],
+        }));
+
+        await exportFilesWithFormats(
+          fileArr,
+          this.exportFormats,
+          'Giải thể 1 thành viên'
+        );
       } catch (error) {
         alert("không thể tạo file: " + error.message);
         console.log(JSON.stringify(error, null, 2));

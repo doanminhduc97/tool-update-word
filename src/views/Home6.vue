@@ -68,6 +68,12 @@
       </form>
     </section>
 
+    <FileExportFormatSelector
+      v-if="hasAnyForm"
+      :files="exportFilesList"
+      v-model="exportFormats"
+    />
+
     <!-- Nhóm nút bấm -->
     <section v-if="hasAnyForm" class="btn-group">
       <button @click="resetAll()" class="btn-refesh">Làm Mới</button>
@@ -86,6 +92,8 @@ const SCOPES = "https://www.googleapis.com/auth/drive.readonly";
 import PizZip from 'pizzip';
 import Docxtemplater from 'docxtemplater';
 import { checkExportBalance, deductExportFee } from '@/services/wallet';
+import FileExportFormatSelector from '@/components/FileExportFormatSelector.vue';
+import { exportFilesWithFormats } from '@/services/fileExportService';
 import { useAuth } from '@/stores/auth';
 import { autofillLoginPlaceholders } from '@/lib/loginPlaceholders';
 import { enforceTimesNewRoman } from '@/lib/fontHelper';
@@ -93,6 +101,9 @@ import { isGenderField } from '@/lib/genderHelper';
 
 export default {
   name: 'Home6',
+  components: {
+    FileExportFormatSelector,
+  },
   data() {
     const files = [
       {
@@ -112,6 +123,8 @@ export default {
 
     return {
       files,
+      exportFilesList: files.map(f => ({ name: f.name })),
+      exportFormats: Object.fromEntries(files.map(f => [f.name, 'docx'])),
       // 1. Khối thông tin công ty & hợp đồng
       companyPlaceholders: [],
       companyValues: {},
@@ -472,13 +485,16 @@ export default {
 
         const outBlobs = docs.map((doc, i) => this.renderToBlob(doc, renderDataList[i]));
 
-        outBlobs.forEach((blob, i) => {
-          const a = document.createElement("a");
-          a.href = URL.createObjectURL(blob);
-          a.download = `${this.files[i].name}.docx`;
-          a.click();
-        });
-        await deductExportFee('HĐCN và BBTL');
+        const fileArr = this.files.map((file, i) => ({
+          name: file.name,
+          data: outBlobs[i],
+        }));
+
+        await exportFilesWithFormats(
+          fileArr,
+          this.exportFormats,
+          'HĐCN và BBTL'
+        );
       } catch (error) {
         alert("Lỗi khi tạo file: " + error.message);
       } finally {

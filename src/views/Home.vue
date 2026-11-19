@@ -105,6 +105,11 @@
       </div>
     </div>
   </section>
+  <FileExportFormatSelector
+    v-if="placeholdersCommon.length"
+    :files="exportFilesList"
+    v-model="exportFormats"
+  />
   <section v-if="placeholdersCommon.length" class="btn-group">
     <button @click="resetAll()" class="btn-refesh">Làm Mới</button>
     <button :disabled="updating" @click="applyChanges()" class="btn-primary">{{ updating ? 'Đang Tạo File...' : 'Tạo File Mới' }}</button>
@@ -126,12 +131,17 @@ import mayMac from '@/data/mayMac.json'
 import nganhNgheTongHop from '@/data/nganhNgheTongHop.json'
 import xayDung from '@/data/xayDung'
 import { checkExportBalance, deductExportFee } from '@/services/wallet'
+import FileExportFormatSelector from '@/components/FileExportFormatSelector.vue'
+import { exportFilesWithFormats } from '@/services/fileExportService'
 import { useAuth } from '@/stores/auth'
 import { autofillLoginPlaceholders } from '@/lib/loginPlaceholders'
 import { enforceTimesNewRoman } from '@/lib/fontHelper'
 import { isGenderField } from '@/lib/genderHelper'
 export default {
   // Đăng kí kinh doanh 1 thành viên
+  components: {
+    FileExportFormatSelector,
+  },
   data() {
     return {
       fileId: "",
@@ -143,6 +153,18 @@ export default {
       updating: false,
       previewHtml: '',
       downloadUrl: '',
+      exportFilesList: [
+        { name: 'Điều lệ' },
+        { name: 'GĐN đăng ký doanh nghiệp' },
+        { name: 'Giấy ủy quyền' },
+        { name: 'DANH SÁCH CHỦ SỞ HỮU HƯỞNG LỢI CỦA DOANH NGHIỆP' },
+      ],
+      exportFormats: {
+        'Điều lệ': 'docx',
+        'GĐN đăng ký doanh nghiệp': 'docx',
+        'Giấy ủy quyền': 'docx',
+        'DANH SÁCH CHỦ SỞ HỮU HƯỞNG LỢI CỦA DOANH NGHIỆP': 'docx',
+      },
       placeholders: [],
       placeholders2: [],
       placeholders3: [],
@@ -265,6 +287,10 @@ export default {
         const removeList = ["#d", "id", "name", "code", "/d"];
         const result = this.placeholdersCommon.filter(item => !removeList.includes(item))
         this.placeholdersCommon = result;
+
+        // Loại bỏ 'TÊN CÔNG TY' khỏi placeholders3 (Giấy ủy quyền) vì đã có 'ct_ct TÊN CÔNG TY' ở Thông Tin Chung
+        this.placeholders3 = this.placeholders3.filter(item => item !== 'TÊN CÔNG TY');
+
         this.placeholdersCommon = this.sortCustom(this.placeholdersCommon).reverse();
         const fromIndex = this.placeholdersCommon.indexOf("ct_ct Tỉnh");
         const phuongIndex = this.placeholdersCommon.indexOf("ct_ct Phường");
@@ -386,6 +412,11 @@ export default {
           this.formValues4[key] = this.formValuesCommon[key];
         }
       }
+
+      // Tự động gán Tên Công Ty từ Thông Tin Chung vào Giấy ủy quyền
+      if (this.formValuesCommon['ct_ct TÊN CÔNG TY']) {
+        this.formValues3['TÊN CÔNG TY'] = this.formValuesCommon['ct_ct TÊN CÔNG TY'];
+      }
       // if (!this.placeholders.length) return;
       this.updating = true;
       try {
@@ -451,27 +482,14 @@ export default {
             name: 'DANH SÁCH CHỦ SỞ HỮU HƯỞNG LỢI CỦA DOANH NGHIỆP',
             data: outBlob4,
           },
-        ]
-        fileArr.forEach(item => {
-          // Tạo url để người dùng tải về
-          const url = URL.createObjectURL(item.data);
-          // this.downloadUrl = url;
-          const link = document.createElement('a');
-          link.href = url;
-          link.download = item.name + ".docx";
-          
-          // Append to document (required for some browsers like Firefox)
-          document.body.appendChild(link);
-          
-          // Trigger the click event
-          link.click();
-          
-          // Clean up by removing the element from the DOM
-          document.body.removeChild(link);
-          // (Tùy chọn) mở hộp thoại Save As ngay lập tức
-          // saveAs(item.data, item.name + '.docx');
-        })
-        await deductExportFee('Đăng ký kinh doanh 1 thành viên');
+        ];
+
+        // Tải file tự động theo định dạng người dùng lựa chọn (DOCX hoặc PDF)
+        await exportFilesWithFormats(
+          fileArr,
+          this.exportFormats,
+          'Đăng ký kinh doanh 1 thành viên'
+        );
         // this.resetAll();
       } catch (error) {
         alert("không thể tạo file: " + error.message);
