@@ -56,6 +56,12 @@
       </form>
     </section>
 
+    <FileExportFormatSelector
+      v-if="hasAnyForm"
+      :files="exportFilesList"
+      v-model="exportFormats"
+    />
+
     <!-- Nhóm nút bấm -->
     <section v-if="hasAnyForm" class="btn-group">
       <button @click="resetAll()" class="btn-refesh">Làm Mới</button>
@@ -74,6 +80,8 @@ const SCOPES = "https://www.googleapis.com/auth/drive.readonly";
 import PizZip from 'pizzip';
 import Docxtemplater from 'docxtemplater';
 import { checkExportBalance, deductExportFee } from '@/services/wallet';
+import FileExportFormatSelector from '@/components/FileExportFormatSelector.vue';
+import { exportFilesWithFormats } from '@/services/fileExportService';
 import { useAuth } from '@/stores/auth';
 import { autofillLoginPlaceholders } from '@/lib/loginPlaceholders';
 import { enforceTimesNewRoman } from '@/lib/fontHelper';
@@ -120,6 +128,9 @@ const COMMON_FILES = [
 
 export default {
   name: 'Home7',
+  components: {
+    FileExportFormatSelector,
+  },
   props: {
     type: {
       type: String,
@@ -129,6 +140,8 @@ export default {
   data() {
     return {
       files: [],
+      exportFilesList: [],
+      exportFormats: {},
       // 1. Khối thông tin công ty
       companyPlaceholders: [],
       companyValues: {},
@@ -257,6 +270,9 @@ export default {
         allPlaceholders: [],
         formValues: {},
       }));
+
+      this.exportFilesList = this.files.map(f => ({ name: f.name }));
+      this.exportFormats = Object.fromEntries(this.files.map(f => [f.name, 'docx']));
     },
 
     async initGapi() {
@@ -473,13 +489,16 @@ export default {
 
         const outBlobs = docs.map((doc, i) => this.renderToBlob(doc, renderDataList[i]));
 
-        outBlobs.forEach((blob, i) => {
-          const a = document.createElement("a");
-          a.href = URL.createObjectURL(blob);
-          a.download = `${this.files[i].name}.docx`;
-          a.click();
-        });
-        await deductExportFee(`Tạm ngừng doanh nghiệp (${this.type})`);
+        const fileArr = this.files.map((file, i) => ({
+          name: file.name,
+          data: outBlobs[i],
+        }));
+
+        await exportFilesWithFormats(
+          fileArr,
+          this.exportFormats,
+          `Tạm ngừng doanh nghiệp (${this.type})`
+        );
       } catch (error) {
         alert("Lỗi khi tạo file: " + error.message);
       } finally {

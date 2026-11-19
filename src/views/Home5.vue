@@ -104,6 +104,12 @@
       </form>
     </section>
 
+    <FileExportFormatSelector
+      v-if="hasAnyForm"
+      :files="exportFilesList"
+      v-model="exportFormats"
+    />
+
     <!-- Nhóm nút bấm -->
     <section class="btn-group">
       <button @click="resetAll()" class="btn-refesh">Làm Mới</button>
@@ -122,6 +128,8 @@ const SCOPES = "https://www.googleapis.com/auth/drive.readonly";
 import PizZip from 'pizzip';
 import Docxtemplater from 'docxtemplater';
 import { checkExportBalance, deductExportFee } from '@/services/wallet';
+import FileExportFormatSelector from '@/components/FileExportFormatSelector.vue';
+import { exportFilesWithFormats } from '@/services/fileExportService';
 import { useAuth } from '@/stores/auth';
 import { autofillLoginPlaceholders } from '@/lib/loginPlaceholders';
 import { enforceTimesNewRoman } from '@/lib/fontHelper';
@@ -130,6 +138,9 @@ import { filterCshHuongLoiList } from '@/lib/cshHelper';
 
 export default {
   name: 'Home5',
+  components: {
+    FileExportFormatSelector,
+  },
   data() {
     const files = [
       {
@@ -154,9 +165,10 @@ export default {
       allPlaceholders: [],
       formValues: {},
     }));
-
     return {
       files,
+      exportFilesList: files.map(f => ({ name: f.name })),
+      exportFormats: Object.fromEntries(files.map(f => [f.name, 'docx'])),
       // 1. Khối thông tin công ty
       companyPlaceholders: [],
       companyValues: {},
@@ -561,16 +573,16 @@ export default {
           return this.renderToBlob(doc, renderDataList[i], { rotateDobVertical: isFileCSH });
         });
 
-        this.files.forEach((file, i) => {
-          const url = URL.createObjectURL(outBlobs[i]);
-          const link = document.createElement('a');
-          link.href = url;
-          link.download = file.name + ".docx";
-          document.body.appendChild(link);
-          link.click();
-          document.body.removeChild(link);
-        });
-        await deductExportFee('Cập nhật CSH hưởng lợi');
+        const fileArr = this.files.map((file, i) => ({
+          name: file.name,
+          data: outBlobs[i],
+        }));
+
+        await exportFilesWithFormats(
+          fileArr,
+          this.exportFormats,
+          'Cập nhật CSH hưởng lợi'
+        );
       } catch (error) {
         alert("Không thể tạo file: " + error.message);
         console.error("Lỗi applyChanges:", error);

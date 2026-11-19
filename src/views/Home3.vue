@@ -154,6 +154,11 @@
       </div>
     </div>
   </section>
+  <FileExportFormatSelector
+    v-show="placeholdersCommon.length"
+    :files="exportFilesList"
+    v-model="exportFormats"
+  />
   <section v-show="placeholdersCommon.length" class="btn-group">
     <button @click="resetAll()" class="btn-refesh">Làm Mới</button>
     <button :disabled="updating" @click="applyChanges()" class="btn-primary">{{ updating ? 'Đang Tạo File...' : 'Tạo File Mới' }}</button>
@@ -175,12 +180,17 @@ import mayMac from '@/data/mayMac.json'
 import nganhNgheTongHop from '@/data/nganhNgheTongHop.json'
 import xayDung from '@/data/xayDung'
 import { checkExportBalance, deductExportFee } from '@/services/wallet'
+import FileExportFormatSelector from '@/components/FileExportFormatSelector.vue'
+import { exportFilesWithFormats } from '@/services/fileExportService'
 import { useAuth } from '@/stores/auth'
 import { autofillLoginPlaceholders } from '@/lib/loginPlaceholders'
 import { enforceTimesNewRoman } from '@/lib/fontHelper'
 import { isGenderField } from '@/lib/genderHelper'
 import { filterCshHuongLoiList } from '@/lib/cshHelper'
 export default {
+  components: {
+    FileExportFormatSelector,
+  },
   data() {
     return {
       fileId: "",
@@ -198,6 +208,20 @@ export default {
       updating: false,
       previewHtml: '',
       downloadUrl: '',
+      exportFilesList: [
+        { name: '2. Điều lệ công ty' },
+        { name: '1. GĐN Đăng ký doanh nghiệp' },
+        { name: '4. Giấy ủy quyền' },
+        { name: '5. DANH SÁCH CHỦ SỞ HỮU HƯỞNG LỢI CỦA DOANH NGHIỆP' },
+        { name: '3. Danh sách thành viên' },
+      ],
+      exportFormats: {
+        '2. Điều lệ công ty': 'docx',
+        '1. GĐN Đăng ký doanh nghiệp': 'docx',
+        '4. Giấy ủy quyền': 'docx',
+        '5. DANH SÁCH CHỦ SỞ HỮU HƯỞNG LỢI CỦA DOANH NGHIỆP': 'docx',
+        '3. Danh sách thành viên': 'docx',
+      },
       placeholders: [],
       placeholders2: [],
       placeholders3: [],
@@ -612,27 +636,14 @@ export default {
             name: '3. Danh sách thành viên',
             data: outBlob5,
           },  
-        ]
-        fileArr.forEach(item => {
-          // Tạo url để người dùng tải về
-          const url = URL.createObjectURL(item.data);
-          // this.downloadUrl = url;
-          const link = document.createElement('a');
-          link.href = url;
-          link.download = item.name + ".docx";
-          
-          // Append to document (required for some browsers like Firefox)
-          document.body.appendChild(link);
-          
-          // Trigger the click event
-          link.click();
-          
-          // Clean up by removing the element from the DOM
-          document.body.removeChild(link);
-          // (Tùy chọn) mở hộp thoại Save As ngay lập tức
-          // saveAs(item.data, item.name + '.docx');
-        })
-        await deductExportFee('Thành lập công ty cổ phần');
+        ];
+
+        // Tải file tự động theo định dạng người dùng lựa chọn (DOCX hoặc PDF)
+        await exportFilesWithFormats(
+          fileArr,
+          this.exportFormats,
+          'Thành lập công ty cổ phần'
+        );
         // this.resetAll();
       } catch (error) {
         alert("không thể tạo file: " + error.message);
