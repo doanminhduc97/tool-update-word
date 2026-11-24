@@ -191,9 +191,27 @@ export default {
     },
     formatLabel(ph) {
       if (!ph) return '';
-      const s = String(ph);
+      let s = String(ph).trim();
       if (s === 'số HĐ' || s === 'số hđ') return 'Số Hợp Đồng';
-      return s.startsWith('Login_') ? s.slice(6) : s;
+      if (s.startsWith('Login_')) return s.slice(6).trim();
+      if (s.startsWith('ct_')) {
+        const raw = s.slice(3).trim();
+        if (raw) {
+          const capitalized = raw.charAt(0).toUpperCase() + raw.slice(1);
+          return capitalized + ' (Công ty)';
+        }
+      }
+      if (s.startsWith('CSH cũ_')) {
+        const raw = s.slice(7).trim();
+        if (raw) {
+          const capitalized = raw.charAt(0).toUpperCase() + raw.slice(1);
+          return capitalized + ' (CSH cũ)';
+        }
+      }
+      if (s.toLowerCase() === 'họ tên csh cũ') {
+        return 'Họ tên (CSH cũ)';
+      }
+      return s;
     },
 
     // Tự nhận diện biến thuộc Thông tin Công ty & Hợp đồng

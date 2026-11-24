@@ -282,8 +282,26 @@ export default {
 
     formatLabel(ph) {
       if (!ph) return '';
-      const s = String(ph);
-      return s.startsWith('Login_') ? s.slice(6) : s;
+      let s = String(ph).trim();
+      if (s.startsWith('Login_')) return s.slice(6).trim();
+      if (s.startsWith('ct_')) {
+        const raw = s.slice(3).trim();
+        if (raw) {
+          const capitalized = raw.charAt(0).toUpperCase() + raw.slice(1);
+          return capitalized + ' (Công ty)';
+        }
+      }
+      if (s.startsWith('CSH cũ_')) {
+        const raw = s.slice(7).trim();
+        if (raw) {
+          const capitalized = raw.charAt(0).toUpperCase() + raw.slice(1);
+          return capitalized + ' (CSH cũ)';
+        }
+      }
+      if (s.toLowerCase() === 'họ tên csh cũ') {
+        return 'Họ tên (CSH cũ)';
+      }
+      return s;
     },
 
     // Biến thuộc loop / thành viên (lấy từ Danh Sách Thành Viên, không đưa vào form tự do)

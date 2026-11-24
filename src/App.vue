@@ -56,6 +56,26 @@
             </div>
           </div>
 
+          <!-- Dropdown Chuyển Đổi Loại Hình -->
+          <div class="dropdown-menu-container" :class="{ 'open': isChuyenDoiOpen }" ref="chuyenDoiRef">
+            <a class="btn-menu dropdown-toggle" :class="{ 'active': isChuyenDoiActive }" @click="toggleChuyenDoi">
+              <span class="nav-label-long">Chuyển Đổi Loại Hình</span>
+              <span class="nav-label-short">Chuyển Đổi</span>
+              <span class="caret"></span>
+            </a>
+            <div v-show="isChuyenDoiOpen" class="dropdown-list">
+              <a class="dropdown-item" :class="{ 'active': isActiveMenu('/chuyen-doi-1tv-sang-2tv') }" @click="selectChuyenDoi('/chuyen-doi-1tv-sang-2tv')">
+                1. Cty 1TV sang Cty 2TV (Đại diện PL mới)
+              </a>
+              <a class="dropdown-item" :class="{ 'active': isActiveMenu('/chuyen-doi-1tv-sang-2tv-csh-cu-ddpl') }" @click="selectChuyenDoi('/chuyen-doi-1tv-sang-2tv-csh-cu-ddpl')">
+                2. Cty 1TV sang Cty 2TV (CSH cũ là đại diện PL)
+              </a>
+              <a class="dropdown-item" :class="{ 'active': isActiveMenu('/chuyen-doi-1tv-sang-2tv-tv-moi-ddpl') }" @click="selectChuyenDoi('/chuyen-doi-1tv-sang-2tv-tv-moi-ddpl')">
+                3. Cty 1TV sang Cty 2TV (TV mới là đại diện PL)
+              </a>
+            </div>
+          </div>
+
           <a class="btn-menu" :class="{ 'active': isActiveMenu('/hdcn-bbtl') }" @click="changeRoute('/hdcn-bbtl', 6)">HĐCN và BBTL</a>
 
           <!-- Dropdown Thay Đổi Vốn Điều Lệ -->
@@ -153,6 +173,7 @@ export default {
       isTamNgungGiaiTheOpen: false,
       isThayDoiVonOpen: false,
       isCshOpen: false,
+      isChuyenDoiOpen: false,
       auth: useAuth(),
       touchTimer: null,
       year: new Date().getFullYear(),
@@ -173,6 +194,9 @@ export default {
     },
     isCshActive() {
       return ['/csh-huong-loi', '/csh-dia-chi', '/thay-doi-csh-1tv'].includes(this.$route.path);
+    },
+    isChuyenDoiActive() {
+      return ['/chuyen-doi-1tv-sang-2tv', '/chuyen-doi-1tv-sang-2tv-csh-cu-ddpl', '/chuyen-doi-1tv-sang-2tv-tv-moi-ddpl'].includes(this.$route.path);
     },
     isThayDoiVonActive() {
       return this.$route.path.startsWith('/tang-von') || this.$route.path.startsWith('/giam-von');
@@ -206,6 +230,7 @@ export default {
       this.isThanhLapMoiOpen = false;
       this.isThayDoiVonOpen = false;
       this.isCshOpen = false;
+      this.isChuyenDoiOpen = false;
       this.$router.push(path);
     },
     toggleThanhLapMoi(e) {
@@ -213,6 +238,7 @@ export default {
       this.isTamNgungGiaiTheOpen = false;
       this.isThayDoiVonOpen = false;
       this.isCshOpen = false;
+      this.isChuyenDoiOpen = false;
       this.isThanhLapMoiOpen = !this.isThanhLapMoiOpen;
     },
     selectThanhLapMoi(path, id) {
@@ -225,6 +251,7 @@ export default {
       this.isThanhLapMoiOpen = false;
       this.isThayDoiVonOpen = false;
       this.isCshOpen = false;
+      this.isChuyenDoiOpen = false;
       this.isTamNgungGiaiTheOpen = !this.isTamNgungGiaiTheOpen;
     },
     selectTamNgungGiaiThe(path, id) {
@@ -232,6 +259,7 @@ export default {
       this.isTamNgungGiaiTheOpen = false;
       this.isThayDoiVonOpen = false;
       this.isCshOpen = false;
+      this.isChuyenDoiOpen = false;
       this.$router.push(path);
     },
     toggleThayDoiVon(e) {
@@ -239,6 +267,7 @@ export default {
       this.isTamNgungGiaiTheOpen = false;
       this.isThanhLapMoiOpen = false;
       this.isCshOpen = false;
+      this.isChuyenDoiOpen = false;
       this.isThayDoiVonOpen = !this.isThayDoiVonOpen;
     },
     selectThayDoiVon(path) {
@@ -250,6 +279,7 @@ export default {
       this.isTamNgungGiaiTheOpen = false;
       this.isThanhLapMoiOpen = false;
       this.isThayDoiVonOpen = false;
+      this.isChuyenDoiOpen = false;
       this.isCshOpen = !this.isCshOpen;
     },
     selectCsh(path, id) {
@@ -264,6 +294,18 @@ export default {
         };
         this.notifyComingSoon(featureNames[path] || path);
       }
+    },
+    toggleChuyenDoi(e) {
+      e.stopPropagation();
+      this.isTamNgungGiaiTheOpen = false;
+      this.isThanhLapMoiOpen = false;
+      this.isThayDoiVonOpen = false;
+      this.isCshOpen = false;
+      this.isChuyenDoiOpen = !this.isChuyenDoiOpen;
+    },
+    selectChuyenDoi(path) {
+      this.isChuyenDoiOpen = false;
+      this.$router.push(path);
     },
     hasRoute(path) {
       return this.$router.getRoutes().some(r => r.path === path);
@@ -283,6 +325,9 @@ export default {
       }
       if (this.$refs.cshRef && !this.$refs.cshRef.contains(e.target)) {
         this.isCshOpen = false;
+      }
+      if (this.$refs.chuyenDoiRef && !this.$refs.chuyenDoiRef.contains(e.target)) {
+        this.isChuyenDoiOpen = false;
       }
     },
     isActiveMenu(path) {

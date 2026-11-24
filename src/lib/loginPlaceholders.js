@@ -12,14 +12,36 @@
  */
 
 /**
- * Chuyển đổi tên placeholder hiển thị trên label (bỏ tiền tố Login_)
- * Ví dụ: "Login_Họ tên Người được ủy quyền" -> "Họ tên Người được ủy quyền"
+ * Chuyển đổi tên placeholder hiển thị trên label:
+ * - Bỏ tiền tố Login_
+ * - Đổi tiền tố ct_ thành "... (Công ty)", ví dụ: "ct_số nhà" -> "Số nhà (Công ty)"
+ * - Đổi tiền tố CSH cũ_ thành "... (CSH cũ)", ví dụ: "CSH cũ_số nhà" -> "Số nhà (CSH cũ)"
  */
 export function formatPlaceholderLabel(key) {
   if (!key) return ''
-  let label = String(key)
+  let label = String(key).trim()
   if (label.startsWith('Login_')) {
-    label = label.slice(6)
+    label = label.slice(6).trim()
+  }
+  if (label.startsWith('ct_')) {
+    const raw = label.slice(3).trim()
+    if (raw) {
+      const capitalized = raw.charAt(0).toUpperCase() + raw.slice(1)
+      return `${capitalized} (Công ty)`
+    }
+  }
+  if (label.startsWith('CSH cũ_')) {
+    const raw = label.slice(7).trim()
+    if (raw) {
+      const capitalized = raw.charAt(0).toUpperCase() + raw.slice(1)
+      return `${capitalized} (CSH cũ)`
+    }
+  }
+  if (label.toLowerCase() === 'họ tên csh cũ') {
+    return 'Họ tên (CSH cũ)'
+  }
+  if (label.toLowerCase() === 'csh cũ') {
+    return 'Chủ sở hữu cũ (CSH cũ)'
   }
   return label
 }
@@ -226,3 +248,4 @@ export function autofillLoginPlaceholders(formTarget, user) {
     }
   })
 }
+

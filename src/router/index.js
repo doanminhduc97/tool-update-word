@@ -19,6 +19,9 @@ import Home15 from '@/views/Home15.vue'
 import Home16 from '@/views/Home16.vue'
 import Home17 from '@/views/Home17.vue'
 import Home18 from '@/views/Home18.vue'
+import Home19 from '@/views/Home19.vue'
+import Home20 from '@/views/Home20.vue'
+import Home21 from '@/views/Home21.vue'
 import Profile from '@/views/Profile.vue'
 import { useAuth } from '@/stores/auth'
 
@@ -54,6 +57,9 @@ const routes = [
   { path: '/csh-huong-loi', component: Home5, meta: { requiresAuth: true } },
   { path: '/csh-dia-chi', component: Home18, meta: { requiresAuth: true } },
   { path: '/thay-doi-csh-1tv', component: Home17, meta: { requiresAuth: true } },
+  { path: '/chuyen-doi-1tv-sang-2tv', component: Home19, meta: { requiresAuth: true } },
+  { path: '/chuyen-doi-1tv-sang-2tv-csh-cu-ddpl', component: Home20, meta: { requiresAuth: true } },
+  { path: '/chuyen-doi-1tv-sang-2tv-tv-moi-ddpl', component: Home21, meta: { requiresAuth: true } },
   { path: '/thong-tin-ca-nhan', component: Profile, meta: { requiresAuth: true } },
   { path: '/hdcn-bbtl', component: Home6, meta: { requiresAuth: true } },
   // Tạm ngừng công ty

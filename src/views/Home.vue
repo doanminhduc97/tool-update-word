@@ -237,9 +237,26 @@ export default {
 
     formatLabel(ph, type) {
       if (!ph) return ''
-      let s = String(ph)
+      let s = String(ph).trim()
       if (s.startsWith('Login_')) {
-        return s.slice(6)
+        return s.slice(6).trim()
+      }
+      if (s.startsWith('ct_')) {
+        const raw = s.slice(3).trim()
+        if (raw) {
+          const capitalized = raw.charAt(0).toUpperCase() + raw.slice(1)
+          return capitalized + ' (Công ty)'
+        }
+      }
+      if (s.startsWith('CSH cũ_')) {
+        const raw = s.slice(7).trim()
+        if (raw) {
+          const capitalized = raw.charAt(0).toUpperCase() + raw.slice(1)
+          return capitalized + ' (CSH cũ)'
+        }
+      }
+      if (s.toLowerCase() === 'họ tên csh cũ') {
+        return 'Họ tên (CSH cũ)'
       }
       if (type === 'c1' || type === 'c2' || type === 'f0' || type === 'f1') {
         return s.includes('ct_ct') ? s.slice(5) : s.slice(4)

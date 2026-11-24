@@ -244,6 +244,7 @@ export default {
       isRefreshing: false,
       categories: [
         { id: 'thanh-lap', name: 'Thành Lập Mới' },
+        { id: 'chuyen-doi', name: 'Chuyển Đổi Loại Hình' },
         { id: 'thay-doi-csh', name: 'Đổi CSH / Địa Chỉ' },
         { id: 'von', name: 'Tăng / Giảm Vốn' },
         { id: 'tam-ngung-giai-the', name: 'Tạm Ngừng / Giải Thể' },
@@ -271,7 +272,28 @@ export default {
           docs: ['Điều lệ.docx', 'GĐN đăng ký doanh nghiệp.docx', 'Danh sách cổ đông sáng lập.docx', 'Giấy ủy quyền.docx', 'Danh sách CSH hưởng lợi.docx'],
         },
         {
-          name: '4. Cập nhật Chủ sở hữu hưởng lợi (CSH)',
+          name: '4. Chuyển đổi Cty 1TV sang Cty 2TV (Đại diện PL mới)',
+          path: '/chuyen-doi-1tv-sang-2tv',
+          category: 'chuyen-doi',
+          description: 'Hồ sơ chuyển đổi loại hình công ty TNHH 1TV sang 2TV bổ nhiệm người đại diện PL mới.',
+          docs: ['1. GĐN ĐKDN.docx', '2. Điều lệ công ty.docx', '3. Danh sách thành viên.docx', '4. Danh sách CSH hưởng lợi.docx', '5. HĐ chuyển nhượng.docx', '6. BB thanh lý HĐCN.docx', '7. Giấy ủy quyền.docx'],
+        },
+        {
+          name: '5. Chuyển đổi Cty 1TV sang Cty 2TV (CSH cũ là đại diện PL)',
+          path: '/chuyen-doi-1tv-sang-2tv-csh-cu-ddpl',
+          category: 'chuyen-doi',
+          description: 'Chuyển đổi loại hình 1TV sang 2TV với CSH cũ tiếp tục giữ vai trò đại diện theo pháp luật.',
+          docs: ['1. GĐN ĐKDN.docx', '2. Điều lệ công ty.docx', '3. Danh sách thành viên.docx', '4. Danh sách CSH hưởng lợi.docx', '5. HĐ chuyển nhượng.docx', '6. BB thanh lý HĐCN.docx', '7. Giấy ủy quyền.docx'],
+        },
+        {
+          name: '6. Chuyển đổi Cty 1TV sang Cty 2TV (TV mới là đại diện PL)',
+          path: '/chuyen-doi-1tv-sang-2tv-tv-moi-ddpl',
+          category: 'chuyen-doi',
+          description: 'Chuyển đổi loại hình 1TV sang 2TV bổ nhiệm Thành viên mới làm Người đại diện theo pháp luật.',
+          docs: ['1. GĐN ĐKDN.docx', '2. Điều lệ công ty.docx', '3. Danh sách thành viên.docx', '4. Danh sách CSH hưởng lợi.docx', '5. HĐ chuyển nhượng.docx', '6. BB thanh lý HĐCN.docx', '7. Giấy ủy quyền.docx'],
+        },
+        {
+          name: '7. Cập nhật Chủ sở hữu hưởng lợi (CSH)',
           path: '/csh-huong-loi',
           category: 'thay-doi-csh',
           description: 'Kê khai và cập nhật danh sách cá nhân sở hữu từ 25% vốn hoặc cổ phần theo luật.',
