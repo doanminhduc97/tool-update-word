@@ -314,6 +314,15 @@ export default {
     },
   },
 
+  watch: {
+    userInfoForm: {
+      handler() {
+        this.syncExportFilesList();
+      },
+      deep: true,
+    },
+  },
+
   async mounted() {
     await this.loadData();
   },
@@ -415,6 +424,7 @@ export default {
         homeNumber: '', ward: '', city: 'Thành phố Hà Nội',
         position: 'Thành viên', vbs: '', vbc: '', tl: ''
       });
+      this.syncExportFilesList();
     },
 
     removeUser(index) {
@@ -423,6 +433,33 @@ export default {
         return;
       }
       this.userInfoForm.splice(index, 1);
+      this.syncExportFilesList();
+    },
+
+    syncExportFilesList() {
+      const list = [];
+      const newFormats = { ...this.exportFormats };
+
+      this.files.forEach(f => {
+        if (f.name.includes('5. Hợp đồng chuyển nhượng') || f.name.includes('6. Biên bản thanh lý')) {
+          return;
+        }
+        list.push({ name: f.name });
+        if (!newFormats[f.name]) newFormats[f.name] = 'docx';
+      });
+
+      this.userInfoForm.forEach((_, idx) => {
+        const num = idx + 1;
+        const hdName = `5. Hợp đồng chuyển nhượng số ${num}`;
+        const tlName = `6. Biên bản thanh lý HĐCN số ${num}`;
+        list.push({ name: hdName });
+        list.push({ name: tlName });
+        if (!newFormats[hdName]) newFormats[hdName] = 'docx';
+        if (!newFormats[tlName]) newFormats[tlName] = 'docx';
+      });
+
+      this.exportFilesList = list;
+      this.exportFormats = newFormats;
     },
 
     async getFile() {
@@ -529,6 +566,8 @@ export default {
         autofillLoginPlaceholders(this.companyValues, currentUser);
         autofillLoginPlaceholders(this.authorizedPersonValues, currentUser);
       }
+
+      this.syncExportFilesList();
     },
 
     async getPlaceholdersFromFile(fileInfo) {
@@ -733,27 +772,76 @@ export default {
           nganhList,
         };
 
-        const outBlobs = buffers.map((buf, i) => {
-          const zip = new PizZip(buf);
-          const doc = new Docxtemplater(zip, {
-            paragraphLoop: true,
-            linebreaks: true,
-            delimiters: { start: '[[', end: ']]' },
-          });
+        const fileArr = [];
 
-          const isCshDoc = this.files[i]?.name?.includes('DANH SÁCH CHỦ SỞ HỮU HƯỞNG LỢI');
-          const fileData = {
-            ...masterData,
-            listUser: isCshDoc ? listUserCsh : listUser,
-          };
+        this.files.forEach((file, i) => {
+          const buf = buffers[i];
+          const isHdDoc = file.name.includes('5. Hợp đồng chuyển nhượng');
+          const isTlDoc = file.name.includes('6. Biên bản thanh lý');
+          const isCshDoc = file.name.includes('DANH SÁCH CHỦ SỞ HỮU HƯỞNG LỢI');
 
-          return this.renderToBlob(doc, fileData, { rotateDobVertical: isCshDoc });
+          if (isHdDoc || isTlDoc) {
+            // Nhân bản cho từng thành viên userInfoForm
+            this.userInfoForm.forEach((tv, idx) => {
+              const num = idx + 1;
+              const docName = isHdDoc
+                ? `5. Hợp đồng chuyển nhượng số ${num}`
+                : `6. Biên bản thanh lý HĐCN số ${num}`;
+
+              const zip = new PizZip(buf);
+              const doc = new Docxtemplater(zip, {
+                paragraphLoop: true,
+                linebreaks: true,
+                delimiters: { start: '[[', end: ']]' },
+              });
+
+              const memberData = {
+                ...masterData,
+                'số HĐ': `${String(num).padStart(2, '0')}/HĐCN`,
+                'số tiền bằng số': tv.vbs || this.transferValues['số tiền bằng số'] || '',
+                'số tiền bằng chữ': tv.vbc || this.transferValues['số tiền bằng chữ'] || '',
+                'Tỷ lệ % vốn góp': tv.tl || this.transferValues['Tỷ lệ % vốn góp'] || '',
+                // Bên nhận chuyển nhượng (Bên B) - hỗ trợ cả tv_* và tv1_*
+                'tv_Họ tên': tv.name || '',
+                'tv_Giới tính': tv.gender || 'Nam',
+                'tv_ngày sinh': tv.birthday || '',
+                'tv_Số định danh cá nhân': tv.idNumber || '',
+                'tv_số nhà': tv.homeNumber || '',
+                'tv_phường': tv.ward || '',
+                'tv_tỉnh': tv.city || '',
+                'tv1_Họ tên': tv.name || '',
+                'tv1_Giới tính': tv.gender || 'Nam',
+                'tv1_ngày sinh': tv.birthday || '',
+                'tv1_Số định danh cá nhân': tv.idNumber || '',
+                'tv1_số nhà': tv.homeNumber || '',
+                'tv1_phường': tv.ward || '',
+                'tv1_tỉnh': tv.city || '',
+              };
+
+              fileArr.push({
+                name: docName,
+                data: this.renderToBlob(doc, memberData),
+              });
+            });
+          } else {
+            const zip = new PizZip(buf);
+            const doc = new Docxtemplater(zip, {
+              paragraphLoop: true,
+              linebreaks: true,
+              delimiters: { start: '[[', end: ']]' },
+            });
+
+            const fileData = {
+              ...masterData,
+              listUser: isCshDoc ? listUserCsh : listUser,
+            };
+
+            fileArr.push({
+              name: file.name,
+              data: this.renderToBlob(doc, fileData, { rotateDobVertical: isCshDoc }),
+            });
+          }
         });
-
-        const fileArr = this.files.map((file, i) => ({
-          name: file.name,
-          data: outBlobs[i],
-        }));
 
         await exportFilesWithFormats(
           fileArr,
